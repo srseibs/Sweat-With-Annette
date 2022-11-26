@@ -33,7 +33,7 @@ fun CircleButton(
             contentColor = contentColorFor(backgroundColor = backgroundColor )
         ),
         border = BorderStroke(
-            width = 6.dp,
+            width = 4.dp,
             color = borderColor
         )
 

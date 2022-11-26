@@ -25,7 +25,7 @@ import com.sailinghawklabs.exercisetime.screens.welcome.components.CircleButton
 import com.sailinghawklabs.exercisetime.ui.theme.ExerciseTimeTheme
 
 @Composable
-fun StartSreen(
+fun StartScreen(
     modifier: Modifier = Modifier
 ) {
     StartScreenContent()
@@ -57,14 +57,14 @@ fun StartScreenContent(
                     + expandIn(animationSpec = tween(2000)),
 
             ) {
-
-            Image(
-                modifier = Modifier.fillMaxWidth(),
-                contentScale = ContentScale.FillWidth,
-                painter = painterResource(id = R.drawable.start_logo),
-                contentDescription = "app logo"
-            )
+                Image(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentScale = ContentScale.FillWidth,
+                    painter = painterResource(id = R.drawable.start_logo),
+                    contentDescription = "app logo"
+                )
         }
+
         CircleButton(
             modifier = Modifier.fillMaxWidth(0.4f),
             buttonText = "Start",
@@ -78,7 +78,7 @@ fun StartScreenContent(
 
 @Preview
 @Composable
-fun StartSreenPreview() {
+fun StartScreenPreview() {
     ExerciseTimeTheme {
         StartScreenContent()
     }
