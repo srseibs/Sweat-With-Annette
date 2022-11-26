@@ -1,5 +1,6 @@
 package com.sailinghawklabs.exercisetime.screens.exerciseScreen.components
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
@@ -12,7 +13,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,16 +31,17 @@ fun CircularProgress(
     remainingTime: Float,
     modifier: Modifier = Modifier,
     maxTime: Float,
-    ringColor: Color = MaterialTheme.colorScheme.primary,
-    backgroundColor: Color =  MaterialTheme.colorScheme.primaryContainer,
+    ringColor: Color = MaterialTheme.colorScheme.secondary,
+    backgroundColor: Color =  MaterialTheme.colorScheme.onSecondary
 ) {
 
+    var percentRemaining by remember { mutableStateOf(1f)}
 
-    val percentRemaining: Float = remember {
-        ( (maxTime - remainingTime) / maxTime)
-            .coerceAtMost(1f)
-            .coerceAtLeast(0.01f)
+    LaunchedEffect(key1 = remainingTime) {
+        percentRemaining = remainingTime / maxTime
     }
+
+    Log.d("Timer", "CircularProgress: $percentRemaining")
 
     Box(
         contentAlignment = Alignment.Center,
@@ -73,8 +80,8 @@ fun CircularProgress(
         )
 
         Text(
-            text = "Hello",
-            style = MaterialTheme.typography.titleLarge,
+            text = remainingTime.toInt().toString(),
+            style = MaterialTheme.typography.displaySmall,
             color = backgroundColor,
         )
 
@@ -87,12 +94,12 @@ fun CircularProgress(
 @Composable
 fun CircularProgressPreview() {
 
-    ExerciseTimeTheme() {
+    ExerciseTimeTheme {
 
         CircularProgress(
             modifier = Modifier.size(240.dp),
-            maxTime = 6f,
-            remainingTime = 5f,
+            maxTime = 10000f,
+            remainingTime = 0.0976f,
         )
 
     }
