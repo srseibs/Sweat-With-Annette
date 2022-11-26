@@ -3,7 +3,8 @@ package com.sailinghawklabs.exercisetime
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.sailinghawklabs.exercisetime.screens.welcome.StartScreen
+import androidx.navigation.compose.rememberNavController
+import com.sailinghawklabs.exercisetime.navigation.Navigation
 import com.sailinghawklabs.exercisetime.ui.theme.ExerciseTimeTheme
 
 class MainActivity : ComponentActivity() {
@@ -11,8 +12,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ExerciseTimeTheme {
-
-                StartScreen()
+                Navigation(navController = rememberNavController())
             }
         }
     }

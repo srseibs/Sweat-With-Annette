@@ -26,14 +26,16 @@ import com.sailinghawklabs.exercisetime.ui.theme.ExerciseTimeTheme
 
 @Composable
 fun StartScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onStart: () -> Unit,
 ) {
-    StartScreenContent()
+    StartScreenContent(onStart = onStart)
 }
 
 @Composable
 fun StartScreenContent(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onStart: () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -68,7 +70,7 @@ fun StartScreenContent(
         CircleButton(
             modifier = Modifier.fillMaxWidth(0.4f),
             buttonText = "Start",
-            onClicked = { /*TODO*/ }
+            onClicked = onStart,
         )
 
 
@@ -80,6 +82,6 @@ fun StartScreenContent(
 @Composable
 fun StartScreenPreview() {
     ExerciseTimeTheme {
-        StartScreenContent()
+        StartScreenContent(onStart = {})
     }
 }
