@@ -25,6 +25,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,8 +48,12 @@ fun ExerciseScreen(
 ) {
     val viewModel:TimerViewModel = viewModel()
 
-    LaunchedEffect(true) {
-        viewModel.startTimer(timerDuration = 10.seconds, interval = 100.milliseconds)
+    val timerDuration by remember { mutableStateOf( 10.seconds) }
+
+    LaunchedEffect(timerDuration) {
+        viewModel.startTimer(
+            timerDuration = timerDuration,
+            interval = 100.milliseconds)
     }
 
     val elapsedTime = viewModel.elapsedTime.value
