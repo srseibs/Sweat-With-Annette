@@ -1,6 +1,10 @@
 package com.sailinghawklabs.exercisetime.screens.exerciseScreen.components
 
 import android.util.Log
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
@@ -10,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
@@ -62,13 +67,20 @@ fun CircularProgress(
             .fillMaxSize(0.95f)
         )
 
+        val barProgress  by animateFloatAsState(
+                targetValue = percentRemaining,
+                animationSpec = tween(
+                    easing = LinearEasing,
+                )
+        )
+
         CircularProgressIndicator(
             modifier = Modifier
                 .fillMaxWidth(0.90f)
                 .aspectRatio(1f),
             color = ringColor,
             strokeWidth = 5.dp,
-            progress = percentRemaining
+            progress = barProgress
         )
 
         Box(modifier = Modifier
