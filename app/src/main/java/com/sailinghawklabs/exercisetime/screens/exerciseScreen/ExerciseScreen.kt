@@ -53,7 +53,7 @@ fun ExerciseScreen(
     LaunchedEffect(timerDuration) {
         viewModel.startTimer(
             timerDuration = timerDuration,
-            interval = 100.milliseconds)
+            interval = 200.milliseconds)
     }
 
     val elapsedTime = viewModel.elapsedTime.value
