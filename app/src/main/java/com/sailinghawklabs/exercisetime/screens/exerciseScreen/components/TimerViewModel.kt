@@ -1,4 +1,4 @@
-package com.sailinghawklabs.exercisetime.screens
+package com.sailinghawklabs.exercisetime.screens.exerciseScreen.components
 
 import android.os.SystemClock
 import androidx.compose.runtime.MutableState
@@ -35,6 +35,7 @@ class TimerViewModel : ViewModel() {
         initialTime = SystemClock.elapsedRealtime().milliseconds
         isTimerRunning.value = true
 
+        // viewModelScope coroutines are automatically canceled in the ViewModel.clear()
         timerJob = viewModelScope.launchPeriodicJob(repeatMillis = interval.inWholeMilliseconds) {
 
             elapsedTime.value =
@@ -49,11 +50,6 @@ class TimerViewModel : ViewModel() {
     private fun cancelTimer() {
         timerJob?.cancel()
         isTimerRunning.value = false
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        cancelTimer()
     }
 
     private fun CoroutineScope.launchPeriodicJob(

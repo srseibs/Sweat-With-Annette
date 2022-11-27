@@ -1,7 +1,5 @@
 package com.sailinghawklabs.exercisetime.screens.exerciseScreen
 
-import android.os.CountDownTimer
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,22 +19,18 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.sailinghawklabs.exercisetime.screens.TimerViewModel
+import com.sailinghawklabs.exercisetime.screens.exerciseScreen.components.TimerViewModel
 import com.sailinghawklabs.exercisetime.screens.exerciseScreen.components.CircularProgress
 import com.sailinghawklabs.exercisetime.ui.theme.ExerciseTimeTheme
-import java.util.Timer
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
@@ -46,7 +40,7 @@ fun ExerciseScreen(
     modifier: Modifier = Modifier,
     goBack: () -> Unit,
 ) {
-    val viewModel:TimerViewModel = viewModel()
+    val viewModel: TimerViewModel = viewModel()
 
     val timerDuration by remember { mutableStateOf( 10.seconds) }
 
