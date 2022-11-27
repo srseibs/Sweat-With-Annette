@@ -1,44 +1,71 @@
 package com.sailinghawklabs.exercisetime.screens
 
 import android.os.SystemClock
-import androidx.compose.runtime.getValue
+import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import java.util.*
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 
+// https://stackoverflow.com/questions/54827455/how-to-implement-timer-with-kotlin-coroutines
 class TimerViewModel : ViewModel() {
 
-    private var timer: Timer = Timer()
-    private var initialTimeMillis: Long = 0
+    private var initialTime: Duration = 0.seconds
+    private var timerJob: Job? = null
 
-    var elapsedTimeMillis = MutableStateFlow<Long>(0)
+    var isTimerRunning: MutableState<Boolean> = mutableStateOf(false)
         private set
 
-    var timerRunning by mutableStateOf(false)
+    var elapsedTime: MutableState<Duration> = mutableStateOf(1.seconds)
+        private set
 
-    fun startTimer(timeInMillis: Long, periodMillis: Long = 1000) {
-        initialTimeMillis = SystemClock.elapsedRealtime()
-        timer.scheduleAtFixedRate(object : TimerTask() {
-            override fun run() {
-                val localElapsedTime: Long =
-                    (SystemClock.elapsedRealtime() - initialTimeMillis)
-                if (localElapsedTime >= timeInMillis)
-                    timerRunning = false
-                viewModelScope.launch {
-                    elapsedTimeMillis.emit(localElapsedTime)
-                }
+    fun startTimer(timerDuration: Duration, interval: Duration = 1.seconds) {
+        cancelTimer()
+
+        initialTime = SystemClock.elapsedRealtime().milliseconds
+        isTimerRunning.value = true
+
+        timerJob = viewModelScope.launchPeriodicJob(repeatMillis = interval.inWholeMilliseconds) {
+
+            elapsedTime.value =
+                (SystemClock.elapsedRealtime().milliseconds - initialTime)
+
+            if (elapsedTime.value >= timerDuration) {
+                cancelTimer()
             }
-        }, periodMillis, periodMillis)
-        timerRunning = true
+        }
+    }
+
+    private fun cancelTimer() {
+        timerJob?.cancel()
+        isTimerRunning.value = false
     }
 
     override fun onCleared() {
         super.onCleared()
-        timer.cancel()
+        cancelTimer()
+    }
+
+    private fun CoroutineScope.launchPeriodicJob(
+        repeatMillis: Long,
+        action: () -> Unit
+    ) = viewModelScope.launch {
+        if (repeatMillis > 0) {
+            while (isActive) {
+                action()
+                delay(repeatMillis)
+            }
+        } else {
+            action()
+        }
     }
 }

@@ -25,24 +25,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sailinghawklabs.exercisetime.ui.theme.ExerciseTimeTheme
+import kotlin.math.roundToInt
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.DurationUnit
 
 @Composable
 fun CircularProgress(
-    remainingTime: Float,
+    remainingTimeInMillis: Long,
+    maxTimeTimeInMillis: Long,
     modifier: Modifier = Modifier,
-    maxTime: Float,
     ringColor: Color = MaterialTheme.colorScheme.secondary,
     backgroundColor: Color =  MaterialTheme.colorScheme.onSecondary
 ) {
 
     var percentRemaining by remember { mutableStateOf(1f)}
 
-    LaunchedEffect(key1 = remainingTime) {
-        percentRemaining = remainingTime / maxTime
+    LaunchedEffect(key1 = remainingTimeInMillis) {
+        percentRemaining =
+            (remainingTimeInMillis.toFloat() / maxTimeTimeInMillis.toFloat())
+                .coerceAtLeast(0.01f)
     }
-
-    Log.d("Timer", "CircularProgress: $percentRemaining")
-
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
@@ -80,13 +82,12 @@ fun CircularProgress(
         )
 
         Text(
-            text = remainingTime.toInt().toString(),
+            text = ((percentRemaining * maxTimeTimeInMillis)/1000).roundToInt().toString(),
             style = MaterialTheme.typography.displaySmall,
             color = backgroundColor,
         )
 
     }
-
 }
 
 
@@ -98,8 +99,8 @@ fun CircularProgressPreview() {
 
         CircularProgress(
             modifier = Modifier.size(240.dp),
-            maxTime = 10000f,
-            remainingTime = 0.0976f,
+            maxTimeTimeInMillis = 10000,
+            remainingTimeInMillis = 4000,
         )
 
     }
