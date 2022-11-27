@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -28,7 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.sailinghawklabs.exercisetime.screens.exerciseScreen.components.TimerViewModel
+import com.sailinghawklabs.exercisetime.screens.exerciseScreen.components.ExerciseTimer
 import com.sailinghawklabs.exercisetime.screens.exerciseScreen.components.CircularProgress
 import com.sailinghawklabs.exercisetime.ui.theme.ExerciseTimeTheme
 import kotlin.time.Duration
@@ -40,7 +41,7 @@ fun ExerciseScreen(
     modifier: Modifier = Modifier,
     goBack: () -> Unit,
 ) {
-    val viewModel: TimerViewModel = viewModel()
+    val viewModel: ExerciseViewModel = viewModel()
 
     val timerDuration by remember { mutableStateOf( 10.seconds) }
 
@@ -109,7 +110,8 @@ fun ExerciseScreenContent(
             )
             Spacer(modifier = Modifier.size(16.dp))
             CircularProgress(
-                modifier = Modifier.size(200.dp),
+                textStyle = MaterialTheme.typography.displaySmall,
+                modifier = Modifier.fillMaxWidth(0.3f),
                 remainingTimeInMillis = exerciseDuration.inWholeMilliseconds - elapsedTime.inWholeMilliseconds,
                 maxTimeTimeInMillis = exerciseDuration.inWholeMilliseconds,
             )
@@ -118,10 +120,6 @@ fun ExerciseScreenContent(
 
     }
 }
-
-/// use a viewModel for the timer?
-// https://stackoverflow.com/a/68458856/7589309
-
 
 @Preview
 @Composable

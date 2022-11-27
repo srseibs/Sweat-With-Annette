@@ -27,8 +27,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.sailinghawklabs.exercisetime.ui.theme.ExerciseTimeTheme
 import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.seconds
@@ -39,6 +42,7 @@ fun CircularProgress(
     remainingTimeInMillis: Long,
     maxTimeTimeInMillis: Long,
     modifier: Modifier = Modifier,
+    textStyle: TextStyle = MaterialTheme.typography.displaySmall,
     ringColor: Color = MaterialTheme.colorScheme.secondary,
     backgroundColor: Color =  MaterialTheme.colorScheme.onSecondary
 ) {
@@ -95,7 +99,7 @@ fun CircularProgress(
 
         Text(
             text = ((percentRemaining * maxTimeTimeInMillis)/1000).roundToInt().toString(),
-            style = MaterialTheme.typography.displaySmall,
+            style = textStyle,
             color = backgroundColor,
         )
 

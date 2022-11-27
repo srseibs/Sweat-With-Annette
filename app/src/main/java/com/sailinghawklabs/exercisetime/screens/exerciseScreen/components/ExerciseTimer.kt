@@ -17,7 +17,9 @@ import kotlin.time.Duration.Companion.seconds
 
 // https://stackoverflow.com/questions/54827455/how-to-implement-timer-with-kotlin-coroutines
 
-class TimerViewModel : ViewModel() {
+class ExerciseTimer(
+    private val coroutineScope: CoroutineScope,
+) {
 
     private var initialTime: Duration = 0.seconds
     private var timerJob: Job? = null
@@ -36,7 +38,7 @@ class TimerViewModel : ViewModel() {
         isTimerRunning.value = true
 
         // viewModelScope coroutines are automatically canceled in the ViewModel.clear()
-        timerJob = viewModelScope.launchPeriodicJob(repeatMillis = interval.inWholeMilliseconds) {
+        timerJob = coroutineScope.launchPeriodicJob(repeatMillis = interval.inWholeMilliseconds) {
 
             elapsedTime.value =
                 (SystemClock.elapsedRealtime().milliseconds - initialTime)
@@ -47,7 +49,7 @@ class TimerViewModel : ViewModel() {
         }
     }
 
-    private fun cancelTimer() {
+    fun cancelTimer() {
         timerJob?.cancel()
         isTimerRunning.value = false
     }
@@ -55,7 +57,7 @@ class TimerViewModel : ViewModel() {
     private fun CoroutineScope.launchPeriodicJob(
         repeatMillis: Long,
         action: () -> Unit
-    ) = viewModelScope.launch {
+    ) = coroutineScope.launch {
         if (repeatMillis > 0) {
             while (isActive) {
                 action()
