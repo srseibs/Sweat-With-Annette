@@ -4,8 +4,6 @@ import android.os.SystemClock
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -20,30 +18,35 @@ import kotlin.time.Duration.Companion.seconds
 
 class ExerciseTimer(
     private val coroutineScope: CoroutineScope,
+    private val doneCallback: (() -> Unit)? = null
 ) {
-
     private var initialTime: Duration = 0.seconds
     private var timerJob: Job? = null
 
     var isTimerRunning: MutableState<Boolean> = mutableStateOf(false)
         private set
-
+    var timerDuration: MutableState<Duration> = mutableStateOf(0.seconds)
     var elapsedTime: MutableState<Duration> = mutableStateOf(1.seconds)
         private set
 
-    fun startTimer(timerDuration: Duration, interval: Duration = 1.seconds) {
+    fun startTimer(timeDuration: Duration, interval: Duration = 1.seconds) {
+        Log.d("ExerciseTimer", "startTimer: START, isTimerRunning = ${isTimerRunning.value}")
         if (isTimerRunning.value)
             return
 
         initialTime = SystemClock.elapsedRealtime().milliseconds
+        timerDuration.value = timeDuration
         isTimerRunning.value = true
 
         timerJob = coroutineScope.launchPeriodicJob(repeatMillis = interval.inWholeMilliseconds) {
             elapsedTime.value =
                 (SystemClock.elapsedRealtime().milliseconds - initialTime)
+            Log.d("ExerciseTimer", "job: elapsed= ${elapsedTime.value.inWholeMilliseconds}")
 
-            if (elapsedTime.value >= timerDuration) {
+            if (elapsedTime.value >= timeDuration) {
                 cancelTimer()
+                Log.d("ExerciseTimer", "job: DONE")
+                doneCallback?.invoke()
             }
         }
     }

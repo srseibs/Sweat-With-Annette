@@ -56,6 +56,8 @@ fun ExerciseScreen(
         elapsedTime = elapsedTime.value,
         imageId = viewModel.exerciseImageId,
         textPrompt = viewModel.timerPrompt,
+        exerciseState = viewModel.exerciseState,
+        timeDuration = viewModel.timeDuration.value,
     )
 }
 
@@ -65,11 +67,11 @@ fun ExerciseScreenContent(
     modifier: Modifier = Modifier,
     goBack: () -> Unit,
     elapsedTime: Duration,
+    timeDuration: Duration,
     @DrawableRes imageId: Int?,
     textPrompt: String,
+    exerciseState: ExerciseState,
 ) {
-
-    val exerciseDuration = 10.seconds
 
     Scaffold(
         topBar = {
@@ -101,6 +103,8 @@ fun ExerciseScreenContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ){
+
+            Text(text = exerciseState.javaClass.simpleName )
             imageId?.let {
                 Image(
                     modifier = Modifier.fillMaxWidth(),
@@ -120,8 +124,8 @@ fun ExerciseScreenContent(
             CircularProgress(
                 textStyle = MaterialTheme.typography.displaySmall,
                 modifier = Modifier.fillMaxWidth(0.3f),
-                remainingTimeInMillis = exerciseDuration.inWholeMilliseconds - elapsedTime.inWholeMilliseconds,
-                maxTimeTimeInMillis = exerciseDuration.inWholeMilliseconds,
+                remainingTimeInMillis = timeDuration.inWholeMilliseconds - elapsedTime.inWholeMilliseconds,
+                maxTimeTimeInMillis = timeDuration.inWholeMilliseconds,
             )
         }
 
@@ -137,7 +141,9 @@ fun ExerciseScreenPreview() {
             goBack = {},
             textPrompt = "Previewing text",
             elapsedTime = 10.seconds,
+            timeDuration = 15.seconds,
             imageId = R.drawable.ic_side_plank,
+            exerciseState = ExerciseState.Resting,
         )
     }
 }

@@ -1,7 +1,6 @@
 package com.sailinghawklabs.exercisetime.screens.exerciseScreen.components
 
 import android.util.Log
-import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -14,12 +13,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,13 +25,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.sailinghawklabs.exercisetime.ui.theme.ExerciseTimeTheme
+import kotlin.math.abs
 import kotlin.math.roundToInt
-import kotlin.time.Duration.Companion.seconds
-import kotlin.time.DurationUnit
 
 @Composable
 fun CircularProgress(
@@ -44,16 +37,19 @@ fun CircularProgress(
     modifier: Modifier = Modifier,
     textStyle: TextStyle = MaterialTheme.typography.displaySmall,
     ringColor: Color = MaterialTheme.colorScheme.secondary,
-    backgroundColor: Color =  MaterialTheme.colorScheme.onSecondary
+    backgroundColor: Color = MaterialTheme.colorScheme.onSecondary
 ) {
 
-    var percentRemaining by remember { mutableStateOf(1f)}
+    var percentRemaining by remember { mutableStateOf(1f) }
+
+    var firstTime by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = remainingTimeInMillis) {
         percentRemaining =
             (remainingTimeInMillis.toFloat() / maxTimeTimeInMillis.toFloat())
                 .coerceAtLeast(0.01f)
     }
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
@@ -61,21 +57,24 @@ fun CircularProgress(
             .aspectRatio(1f),
     ) {
 
-        Box(modifier = Modifier
-            .background(ringColor, shape = CircleShape)
-            .fillMaxSize(1.0f)
+        Box(
+            modifier = Modifier
+                .background(ringColor, shape = CircleShape)
+                .fillMaxSize(1.0f)
         )
 
-        Box(modifier = Modifier
-            .background(backgroundColor, shape = CircleShape)
-            .fillMaxSize(0.95f)
+        Box(
+            modifier = Modifier
+                .background(backgroundColor, shape = CircleShape)
+                .fillMaxSize(0.95f)
         )
 
-        val barProgress  by animateFloatAsState(
-                targetValue = percentRemaining,
-                animationSpec = tween(
-                    easing = LinearEasing,
-                )
+        val animatedPercentRemaining by animateFloatAsState(
+            targetValue = percentRemaining,
+            animationSpec = tween(
+                durationMillis = 200,
+                easing = LinearEasing,
+            )
         )
 
         CircularProgressIndicator(
@@ -84,21 +83,24 @@ fun CircularProgress(
                 .aspectRatio(1f),
             color = ringColor,
             strokeWidth = 5.dp,
-            progress = barProgress
+            progress = animatedPercentRemaining
         )
 
-        Box(modifier = Modifier
-            .background(backgroundColor, shape = CircleShape)
-            .fillMaxSize(0.85f)
+
+        Box(
+            modifier = Modifier
+                .background(backgroundColor, shape = CircleShape)
+                .fillMaxSize(0.85f)
         )
 
-        Box(modifier = Modifier
-            .background(ringColor, shape = CircleShape)
-            .fillMaxSize(0.80f)
+        Box(
+            modifier = Modifier
+                .background(ringColor, shape = CircleShape)
+                .fillMaxSize(0.80f)
         )
 
         Text(
-            text = ((percentRemaining * maxTimeTimeInMillis)/1000).roundToInt().toString(),
+            text = ((percentRemaining * maxTimeTimeInMillis) / 1000).roundToInt().toString(),
             style = textStyle,
             color = backgroundColor,
         )
