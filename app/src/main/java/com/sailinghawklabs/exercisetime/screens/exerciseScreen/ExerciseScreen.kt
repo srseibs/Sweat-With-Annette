@@ -1,5 +1,7 @@
 package com.sailinghawklabs.exercisetime.screens.exerciseScreen
 
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,10 +27,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.sailinghawklabs.exercisetime.R
 import com.sailinghawklabs.exercisetime.screens.exerciseScreen.components.ExerciseTimer
 import com.sailinghawklabs.exercisetime.screens.exerciseScreen.components.CircularProgress
 import com.sailinghawklabs.exercisetime.ui.theme.ExerciseTimeTheme
@@ -43,21 +48,14 @@ fun ExerciseScreen(
 ) {
     val viewModel: ExerciseViewModel = viewModel()
 
-    val timerDuration by remember { mutableStateOf( 10.seconds) }
-
-    LaunchedEffect(timerDuration) {
-        viewModel.startTimer(
-            timerDuration = timerDuration,
-            interval = 200.milliseconds)
-    }
-
-    val elapsedTime = viewModel.elapsedTime.value
+    val elapsedTime = viewModel.elapsedTime
 
     ExerciseScreenContent(
         modifier = modifier,
         goBack = goBack,
-        elapsedTime = elapsedTime,
-        isRunning = viewModel.isTimerRunning.value,
+        elapsedTime = elapsedTime.value,
+        imageId = viewModel.exerciseImageId,
+        textPrompt = viewModel.timerPrompt,
     )
 }
 
@@ -67,7 +65,8 @@ fun ExerciseScreenContent(
     modifier: Modifier = Modifier,
     goBack: () -> Unit,
     elapsedTime: Duration,
-    isRunning:Boolean,
+    @DrawableRes imageId: Int?,
+    textPrompt: String,
 ) {
 
     val exerciseDuration = 10.seconds
@@ -102,8 +101,17 @@ fun ExerciseScreenContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ){
+            imageId?.let {
+                Image(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentScale = ContentScale.FillWidth,
+                    painter = painterResource(imageId),
+                    contentDescription = "Exercise pic"
+                )
+            }
+
             Text(
-                text = "Get ready to start",
+                text = textPrompt,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.headlineMedium,
@@ -127,8 +135,9 @@ fun ExerciseScreenPreview() {
     ExerciseTimeTheme {
         ExerciseScreenContent(
             goBack = {},
-            isRunning = false,
+            textPrompt = "Previewing text",
             elapsedTime = 10.seconds,
+            imageId = R.drawable.ic_side_plank,
         )
     }
 }
