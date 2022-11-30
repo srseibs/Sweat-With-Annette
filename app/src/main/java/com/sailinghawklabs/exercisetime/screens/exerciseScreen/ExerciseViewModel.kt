@@ -2,6 +2,7 @@ package com.sailinghawklabs.exercisetime.screens.exerciseScreen
 
 import android.speech.tts.TextToSpeech
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -12,6 +13,7 @@ import com.sailinghawklabs.exercisetime.model.Exercise
 import com.sailinghawklabs.exercisetime.screens.exerciseScreen.components.ExerciseTimer
 import com.sailinghawklabs.exercisetime.util.DefaultExerciseList
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.E
@@ -67,10 +69,25 @@ class ExerciseViewModel @Inject constructor(
 
     private var activeExercise: Exercise? = null
 
+    private var observedTtsInit = false
+
     val elapsedTime: MutableState<Duration> = exerciseTimer.elapsedTime
     val timeDuration: MutableState<Duration> = exerciseTimer.timerDuration
 
+
     init {
+        // don't start until the TextToSpeech is initialized
+        viewModelScope.launch{
+            tts.initializedFlow.collect{it ->
+                observedTtsInit = it
+                if (it) {
+                    startSequence()
+                }
+            }
+        }
+    }
+
+    private fun startSequence() {
         getExerciseList()
     }
 
@@ -80,9 +97,7 @@ class ExerciseViewModel @Inject constructor(
     }
 
     private fun speak(string: String) {
-        if (tts.isInitialized) {
-            tts.textToSpeech.speak(string, TextToSpeech.QUEUE_FLUSH, null, "" )
-        }
+        tts.textToSpeech.speak(string, TextToSpeech.QUEUE_FLUSH, null, "" )
     }
 
     private fun advanceToNextState() {
@@ -117,26 +132,26 @@ class ExerciseViewModel @Inject constructor(
                 exercisesComplete = 0
                 activeExercise = exerciseList[exercisesComplete]
                 exerciseImageId = null
-                textPrompt = "Get ready for Exercise:"
+                textPrompt = "Get ready for:"
                 textValue = activeExercise!!.name
+                speak("Get ready for ${activeExercise!!.name}")
                 startTimer(REST_TIME, TIMER_INTERVAL)
             }
 
             ExerciseState.Exercising -> {
                 exerciseImageId = activeExercise!!.imageResourceId
                 textPrompt = "Workout:"
-                textValue = activeExercise?.name ?: "missing"
+                textValue = activeExercise!!.name
                 startTimer(EXERCISE_TIME, TIMER_INTERVAL)
-                if (activeExercise?.name != null) {
-                    speak(activeExercise!!.name)
-                }
+                speak(activeExercise!!.name)
             }
 
             ExerciseState.Resting -> {
                 activeExercise = exerciseList[exercisesComplete]
                 exerciseImageId = null
-                textPrompt = "Get ready for Exercise:"
-                textValue = activeExercise?.name ?: "missing"
+                textPrompt = "Get ready for:"
+                textValue = activeExercise!!.name
+                speak("Get ready for ${activeExercise!!.name}")
                 startTimer(REST_TIME, TIMER_INTERVAL)
             }
         }
