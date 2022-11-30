@@ -21,32 +21,28 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sailinghawklabs.exercisetime.R
-import com.sailinghawklabs.exercisetime.screens.exerciseScreen.components.ExerciseTimer
 import com.sailinghawklabs.exercisetime.screens.exerciseScreen.components.CircularProgress
 import com.sailinghawklabs.exercisetime.ui.theme.ExerciseTimeTheme
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun ExerciseScreen(
     modifier: Modifier = Modifier,
     goBack: () -> Unit,
+    viewModel: ExerciseViewModel = hiltViewModel()
 ) {
-    val viewModel: ExerciseViewModel = viewModel()
 
     val elapsedTime = viewModel.elapsedTime
 
@@ -55,7 +51,8 @@ fun ExerciseScreen(
         goBack = goBack,
         elapsedTime = elapsedTime.value,
         imageId = viewModel.exerciseImageId,
-        textPrompt = viewModel.timerPrompt,
+        textPrompt = viewModel.textPrompt,
+        textValue = viewModel.textValue,
         exerciseState = viewModel.exerciseState,
         timeDuration = viewModel.timeDuration.value,
     )
@@ -70,6 +67,7 @@ fun ExerciseScreenContent(
     timeDuration: Duration,
     @DrawableRes imageId: Int?,
     textPrompt: String,
+    textValue: String,
     exerciseState: ExerciseState,
 ) {
 
@@ -83,17 +81,20 @@ fun ExerciseScreenContent(
                     Text(
                         text = "Sweat with Annette",
                         style = MaterialTheme.typography.titleLarge
-                        )
+                    )
                 },
                 navigationIcon = {
                     IconButton(onClick = goBack) {
-                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back arrow")
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back arrow"
+                        )
                     }
                 }
             )
         },
 
-    ) {scaffoldPadding ->
+        ) { scaffoldPadding ->
 
         Column(
             modifier = modifier
@@ -101,13 +102,14 @@ fun ExerciseScreenContent(
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.surfaceVariant),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ){
+            verticalArrangement = Arrangement.Center,
+        ) {
 
-            Text(text = exerciseState.javaClass.simpleName )
             imageId?.let {
                 Image(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
                     contentScale = ContentScale.FillWidth,
                     painter = painterResource(imageId),
                     contentDescription = "Exercise pic"
@@ -118,7 +120,14 @@ fun ExerciseScreenContent(
                 text = textPrompt,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = MaterialTheme.typography.headlineSmall,
+            )
+            Text(
+                text = textValue,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.size(16.dp))
             CircularProgress(
@@ -127,6 +136,9 @@ fun ExerciseScreenContent(
                 remainingTimeInMillis = timeDuration.inWholeMilliseconds - elapsedTime.inWholeMilliseconds,
                 maxTimeTimeInMillis = timeDuration.inWholeMilliseconds,
             )
+            Spacer(modifier = Modifier.size(16.dp))
+
+
         }
 
 
@@ -139,7 +151,8 @@ fun ExerciseScreenPreview() {
     ExerciseTimeTheme {
         ExerciseScreenContent(
             goBack = {},
-            textPrompt = "Previewing text",
+            textPrompt = "Text Prompt",
+            textValue = "Text Value",
             elapsedTime = 10.seconds,
             timeDuration = 15.seconds,
             imageId = R.drawable.ic_side_plank,

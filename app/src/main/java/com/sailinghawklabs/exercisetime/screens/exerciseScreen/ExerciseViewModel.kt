@@ -1,21 +1,27 @@
 package com.sailinghawklabs.exercisetime.screens.exerciseScreen
 
+import android.speech.tts.TextToSpeech
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sailinghawklabs.exercisetime.di.TextToSpeechWithInit
 import com.sailinghawklabs.exercisetime.model.Exercise
 import com.sailinghawklabs.exercisetime.screens.exerciseScreen.components.ExerciseTimer
 import com.sailinghawklabs.exercisetime.util.DefaultExerciseList
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 import kotlin.math.E
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
-class ExerciseViewModel(
+@HiltViewModel
+class ExerciseViewModel @Inject constructor(
+  private val tts: TextToSpeechWithInit,
 ) : ViewModel() {
 
     companion object {
@@ -24,7 +30,6 @@ class ExerciseViewModel(
         val EXERCISE_TIME: Duration = if (debug) 6.seconds else 12.seconds
         val TIMER_INTERVAL: Duration = 200.milliseconds
     }
-
 
     // timer setup
     private val exerciseTimer = ExerciseTimer(
@@ -41,8 +46,6 @@ class ExerciseViewModel(
         advanceToNextState()
     }
 
-
-
     // observable states
     var exerciseList: List<Exercise> by mutableStateOf(emptyList())
         private set
@@ -53,7 +56,10 @@ class ExerciseViewModel(
     var exerciseImageId: Int? by mutableStateOf(null)
         private set
 
-    var timerPrompt by mutableStateOf("")
+    var textPrompt by mutableStateOf("")
+        private set
+
+    var textValue by mutableStateOf("")
         private set
 
     var exercisesComplete: Int by mutableStateOf(0)
@@ -73,6 +79,11 @@ class ExerciseViewModel(
         exercisesComplete = 0
     }
 
+    private fun speak(string: String) {
+        if (tts.isInitialized) {
+            tts.textToSpeech.speak(string, TextToSpeech.QUEUE_FLUSH, null, "" )
+        }
+    }
 
     private fun advanceToNextState() {
         exerciseState = when(exerciseState) {
@@ -106,24 +117,29 @@ class ExerciseViewModel(
                 exercisesComplete = 0
                 activeExercise = exerciseList[exercisesComplete]
                 exerciseImageId = null
-                timerPrompt = "Get ready for Exercise:\n${activeExercise!!.name}"
+                textPrompt = "Get ready for Exercise:"
+                textValue = activeExercise!!.name
                 startTimer(REST_TIME, TIMER_INTERVAL)
             }
 
             ExerciseState.Exercising -> {
                 exerciseImageId = activeExercise!!.imageResourceId
-                timerPrompt = "Workout:\n${activeExercise?.name ?: "missing"}"
+                textPrompt = "Workout:"
+                textValue = activeExercise?.name ?: "missing"
                 startTimer(EXERCISE_TIME, TIMER_INTERVAL)
+                if (activeExercise?.name != null) {
+                    speak(activeExercise!!.name)
+                }
             }
 
             ExerciseState.Resting -> {
                 activeExercise = exerciseList[exercisesComplete]
                 exerciseImageId = null
-                timerPrompt = "Get ready for Exercise:\n${activeExercise!!.name}"
+                textPrompt = "Get ready for Exercise:"
+                textValue = activeExercise?.name ?: "missing"
                 startTimer(REST_TIME, TIMER_INTERVAL)
             }
         }
-
     }
 
 
@@ -139,5 +155,7 @@ class ExerciseViewModel(
     override fun onCleared() {
         super.onCleared()
         cancelTimer()
+        tts.textToSpeech.stop()
+//        tts.textToSpeech.shutdown()
     }
 }
