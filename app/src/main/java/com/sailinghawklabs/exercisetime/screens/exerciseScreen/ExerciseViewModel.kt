@@ -1,8 +1,6 @@
 package com.sailinghawklabs.exercisetime.screens.exerciseScreen
 
-import android.media.MediaPlayer
 import android.speech.tts.TextToSpeech
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -52,8 +50,7 @@ class ExerciseViewModel @Inject constructor(
     }
 
     // observable states
-    var exerciseList: List<Exercise> by mutableStateOf(emptyList())
-        private set
+    private var exerciseList: List<Exercise> by mutableStateOf(emptyList())
 
     var exerciseState: ExerciseState by mutableStateOf(ExerciseState.None)
         private set
@@ -75,11 +72,11 @@ class ExerciseViewModel @Inject constructor(
     val elapsedTime: MutableState<Duration> = exerciseTimer.elapsedTime
     val timeDuration: MutableState<Duration> = exerciseTimer.timerDuration
 
-    fun startUI() {
+    private fun startUI() {
 
         // don't start until the TextToSpeech is ready
         viewModelScope.launch {
-            tts.initializedFlow.collect { it ->
+            tts.initializedFlow.collect {
                 if (it) {
                     startSequence()
                 }
