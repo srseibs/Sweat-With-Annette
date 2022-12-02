@@ -1,20 +1,26 @@
 package com.sailinghawklabs.exercisetime.screens.exerciseScreen
 
+import android.content.Context
+import android.content.res.AssetFileDescriptor
+import android.media.MediaPlayer
 import android.speech.tts.TextToSpeech
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sailinghawklabs.exercisetime.R
-import com.sailinghawklabs.exercisetime.di.TextToSpeechWithInit
 import com.sailinghawklabs.exercisetime.model.Exercise
 import com.sailinghawklabs.exercisetime.screens.exerciseScreen.components.ExerciseTimer
 import com.sailinghawklabs.exercisetime.util.DefaultExerciseList
-import com.sailinghawklabs.exercisetime.util.SoundPlayer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.io.Closeable
+import java.util.*
 import javax.inject.Inject
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
@@ -22,15 +28,53 @@ import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class ExerciseViewModel @Inject constructor(
-    private val tts: TextToSpeechWithInit,
-    private var soundPlayer: SoundPlayer,
-) : ViewModel() {
+//    private val tts: TextToSpeechWithInit,
+//    private var soundPlayer: SoundPlayer,
+) : ViewModel(), DefaultLifecycleObserver {
 
     companion object {
         private const val debug = true
         val REST_TIME: Duration = if (debug) 5.seconds else 10.seconds
         val EXERCISE_TIME: Duration = if (debug) 6.seconds else 12.seconds
         val TIMER_INTERVAL: Duration = 200.milliseconds
+    }
+
+    // MediaPlayer
+    private var mediaPlayer = MediaPlayer().apply {
+        setOnPreparedListener { start() }
+        setOnCompletionListener { reset() }
+    }
+
+    fun playSound(assetFileDescriptor: AssetFileDescriptor) {
+        mediaPlayer.run {
+            reset()
+            setDataSource(
+                assetFileDescriptor.fileDescriptor,
+                assetFileDescriptor.startOffset,
+                assetFileDescriptor.declaredLength
+            )
+            prepareAsync()
+        }
+    }
+
+    // TextToSpeech
+    private var textToSpeech: TextToSpeech? = null
+    fun textToSpeech(context: Context, text: String) {
+        textToSpeech = TextToSpeech(context) {
+            if (it == TextToSpeech.SUCCESS) {
+                textToSpeech?.let { txtToSpeech ->
+                    txtToSpeech.language = Locale.US
+                    txtToSpeech.setSpeechRate(1.0f)
+                    txtToSpeech.speak(
+                        text,
+                        TextToSpeech.QUEUE_FLUSH,
+                        null,
+                        null
+                    )
+
+                }
+            }
+        }
     }
 
     // timer setup .......................................
@@ -50,7 +94,7 @@ class ExerciseViewModel @Inject constructor(
     }
 
     // observable states
-    private var exerciseList: List<Exercise> by mutableStateOf(emptyList())
+    var exerciseList: List<Exercise> by mutableStateOf(emptyList())
 
     var exerciseState: ExerciseState by mutableStateOf(ExerciseState.None)
         private set
@@ -64,7 +108,13 @@ class ExerciseViewModel @Inject constructor(
     var textValue by mutableStateOf("")
         private set
 
-    var exercisesComplete: Int by mutableStateOf(0)
+    var spokenPrompt by mutableStateOf("")
+        private set
+
+    var playSound: Int? by mutableStateOf(null)
+        private set
+
+    var exercisesComplete by mutableStateOf(0)
         private set
 
     private var activeExercise: Exercise? = null
@@ -72,29 +122,9 @@ class ExerciseViewModel @Inject constructor(
     val elapsedTime: MutableState<Duration> = exerciseTimer.elapsedTime
     val timeDuration: MutableState<Duration> = exerciseTimer.timerDuration
 
-    private fun startUI() {
-
-        // don't start until the TextToSpeech is ready
-        viewModelScope.launch {
-            tts.initializedFlow.collect {
-                if (it) {
-                    startSequence()
-                }
-            }
-        }
-    }
-
-    private fun startSequence() {
-        getExerciseList()
-    }
-
     private fun resetState() {
         exerciseState = ExerciseState.None
         exercisesComplete = 0
-    }
-
-    private fun speak(string: String) {
-        tts.textToSpeech.speak(string, TextToSpeech.QUEUE_FLUSH, null, "")
     }
 
     private fun advanceToNextState() {
@@ -115,12 +145,11 @@ class ExerciseViewModel @Inject constructor(
                 ExerciseState.Exercising
             }
         }
-
         setupState(exerciseState)
     }
 
-
     private fun setupState(newState: ExerciseState) {
+        Log.d("ExerciseViewModel", "setupState: #complete $exercisesComplete")
 
         when (newState) {
             ExerciseState.None -> {}
@@ -131,31 +160,30 @@ class ExerciseViewModel @Inject constructor(
                 exerciseImageId = null
                 textPrompt = "Get ready for:"
                 textValue = activeExercise!!.name
-                speak("Get ready for ${activeExercise!!.name}")
+                spokenPrompt = "Get ready for ${activeExercise!!.name}"
                 startTimer(REST_TIME, TIMER_INTERVAL)
             }
 
             ExerciseState.Exercising -> {
+                playSound = null
                 exerciseImageId = activeExercise!!.imageResourceId
                 textPrompt = "Workout:"
                 textValue = activeExercise!!.name
                 startTimer(EXERCISE_TIME, TIMER_INTERVAL)
-                speak(activeExercise!!.name)
+                spokenPrompt = activeExercise!!.name
             }
 
             ExerciseState.Resting -> {
-                soundPlayer.playSound(R.raw.start)
-
+                playSound = R.raw.start
                 activeExercise = exerciseList[exercisesComplete]
                 exerciseImageId = null
                 textPrompt = "Get ready for:"
                 textValue = activeExercise!!.name
-                speak("Get ready for ${activeExercise!!.name}")
+                spokenPrompt = "Get ready for ${activeExercise!!.name}"
                 startTimer(REST_TIME, TIMER_INTERVAL)
             }
         }
     }
-
 
     private fun getExerciseList() {
         // repository.getExerciseList() eventually
@@ -166,14 +194,45 @@ class ExerciseViewModel @Inject constructor(
         }
     }
 
-    override fun onCleared() {
-        super.onCleared()
+    fun stopBackground() {
+        Log.d("ExerciseViewModel", "stopBackground")
         cancelTimer()
-        tts.textToSpeech.stop()
+        textToSpeech?.stop()
+        textToSpeech?.shutdown()
+        resetState()
+    }
+
+    override fun onCleared() {
+        Log.d("ExerciseViewModel", "onCleared")
+        stopBackground()
+        super.onCleared()
+
+    }
+
+    override fun onPause(owner: LifecycleOwner) {
+        super.onPause(owner)
+        Log.d("ExerciseViewModel", "onPause")
+        stopBackground()
+    }
+
+    override fun onStop(owner: LifecycleOwner) {
+        super.onStop(owner)
+        Log.d("ExerciseViewModel", "onStop")
+    }
+
+    override fun onDestroy(owner: LifecycleOwner) {
+        super.onDestroy(owner)
+        Log.d("ExerciseViewModel", "onDestroy")
+    }
+
+    override fun addCloseable(closeable: Closeable) {
+        super.addCloseable(closeable)
     }
 
     init {
-        startUI()
+        getExerciseList()
     }
+
+
 }
 
