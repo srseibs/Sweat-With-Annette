@@ -1,5 +1,6 @@
 package com.sailinghawklabs.exercisetime.screens.exerciseScreen
 
+import androidx.activity.compose.BackHandler
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -22,6 +23,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -33,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sailinghawklabs.exercisetime.R
+import com.sailinghawklabs.exercisetime.screens.exerciseScreen.components.AreYouSureDialog
 import com.sailinghawklabs.exercisetime.screens.exerciseScreen.components.CircularProgress
 import com.sailinghawklabs.exercisetime.screens.exerciseScreen.components.NumberedProgressIndicator
 import com.sailinghawklabs.exercisetime.ui.theme.ExerciseTimeTheme
@@ -47,6 +53,26 @@ fun ExerciseScreen(
     allDone: () -> Unit,
     viewModel: ExerciseViewModel = hiltViewModel()
 ) {
+
+    var showAlertDialog by remember { mutableStateOf(false) }
+
+    BackHandler() {
+        showAlertDialog = true
+    }
+
+    if (showAlertDialog) {
+        AreYouSureDialog(
+            title = "Quit Exercises?",
+            detail = "Are you sure you want to abandon your exercise?",
+            onConfirm = {
+                showAlertDialog = false
+                goBack()
+            },
+            onDismiss = {
+                showAlertDialog = false
+            }
+        )
+    }
 
     val elapsedTime = viewModel.elapsedTime
     val context = LocalContext.current
@@ -70,7 +96,9 @@ fun ExerciseScreen(
 
     ExerciseScreenContent(
         modifier = modifier,
-        goBack = goBack,
+        goBack = {
+            showAlertDialog = true
+        },
         elapsedTime = elapsedTime.value,
         imageId = viewModel.exerciseImageId,
         textPrompt = viewModel.textPrompt,
@@ -80,6 +108,7 @@ fun ExerciseScreen(
         exercisesComplete = viewModel.exercisesComplete
     )
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -170,7 +199,6 @@ fun ExerciseScreenContent(
                     activeExerciseIndex = exercisesComplete,
                 )
                 Spacer(modifier = Modifier.size(16.dp))
-
             }
 
         }

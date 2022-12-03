@@ -1,7 +1,6 @@
 package com.sailinghawklabs.exercisetime.screens.exerciseScreen.components
 
 import android.os.SystemClock
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.CoroutineScope
@@ -23,14 +22,13 @@ class ExerciseTimer(
     private var initialTime: Duration = 0.seconds
     private var timerJob: Job? = null
 
-    var isTimerRunning: MutableState<Boolean> = mutableStateOf(false)
-        private set
+    private var isTimerRunning: MutableState<Boolean> = mutableStateOf(false)
     var timerDuration: MutableState<Duration> = mutableStateOf(0.seconds)
     var elapsedTime: MutableState<Duration> = mutableStateOf(1.seconds)
         private set
 
     fun startTimer(timeDuration: Duration, interval: Duration = 1.seconds) {
-        Log.d("ExerciseTimer", "startTimer: START, isTimerRunning = ${isTimerRunning.value}")
+        //Log.d("ExerciseTimer", "startTimer: START, isTimerRunning = ${isTimerRunning.value}")
         if (isTimerRunning.value)
             return
 
@@ -38,14 +36,14 @@ class ExerciseTimer(
         timerDuration.value = timeDuration
         isTimerRunning.value = true
 
-        timerJob = coroutineScope.launchPeriodicJob(repeatMillis = interval.inWholeMilliseconds) {
+        timerJob = launchPeriodicJob(repeatMillis = interval.inWholeMilliseconds) {
             elapsedTime.value =
                 (SystemClock.elapsedRealtime().milliseconds - initialTime)
-            Log.d("ExerciseTimer", "job: elapsed= ${elapsedTime.value.inWholeMilliseconds}")
+            //Log.d("ExerciseTimer", "job: elapsed= ${elapsedTime.value.inWholeMilliseconds}")
 
             if (elapsedTime.value >= timeDuration) {
                 cancelTimer()
-                Log.d("ExerciseTimer", "job: DONE")
+                //Log.d("ExerciseTimer", "job: DONE")
                 doneCallback?.invoke()
             }
         }
@@ -56,7 +54,7 @@ class ExerciseTimer(
         isTimerRunning.value = false
     }
 
-    private fun CoroutineScope.launchPeriodicJob(
+    private fun launchPeriodicJob(
         repeatMillis: Long,
         action: () -> Unit
     ) = coroutineScope.launch {
