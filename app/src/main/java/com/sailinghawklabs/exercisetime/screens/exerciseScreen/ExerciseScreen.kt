@@ -44,6 +44,7 @@ import kotlin.time.Duration.Companion.seconds
 fun ExerciseScreen(
     modifier: Modifier = Modifier,
     goBack: () -> Unit,
+    allDone: () -> Unit,
     viewModel: ExerciseViewModel = hiltViewModel()
 ) {
 
@@ -60,6 +61,11 @@ fun ExerciseScreen(
                 context.resources.openRawResourceFd(it),
             )
         }
+    }
+
+    LaunchedEffect(key1 = viewModel.allDoneWithExercises) {
+        if (viewModel.allDoneWithExercises)
+            allDone()
     }
 
     ExerciseScreenContent(
@@ -158,7 +164,7 @@ fun ExerciseScreenContent(
                     remainingTimeInMillis = timeDuration.inWholeMilliseconds - elapsedTime.inWholeMilliseconds,
                     maxTimeTimeInMillis = timeDuration.inWholeMilliseconds,
                 )
-
+                Spacer(modifier = Modifier.size(16.dp))
                 NumberedProgressIndicator(
                     numExercises = numExercises,
                     activeExerciseIndex = exercisesComplete,

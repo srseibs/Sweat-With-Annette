@@ -5,4 +5,5 @@ sealed class ExerciseState {
     object Exercising : ExerciseState()
     object Resting : ExerciseState()
     object None: ExerciseState()
+    object Complete: ExerciseState()
 }

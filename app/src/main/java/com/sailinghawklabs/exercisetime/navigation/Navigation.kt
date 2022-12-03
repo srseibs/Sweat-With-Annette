@@ -1,11 +1,11 @@
 package com.sailinghawklabs.exercisetime.navigation
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.sailinghawklabs.exercisetime.screens.exerciseScreen.ExerciseScreen
+import com.sailinghawklabs.exercisetime.screens.finishedScreen.FinishedScreen
 import com.sailinghawklabs.exercisetime.screens.welcome.StartScreen
 
 
@@ -33,9 +33,25 @@ fun Navigation(
 
             ExerciseScreen(
                 goBack = {
-                        navController.popBackStack()
+                    navController.popBackStack()
+                },
+                allDone = {
+                    navController.navigate(NavigationRoutes.FinishedScreen.route)
                 }
             )
+        }
+
+        composable(
+            route = NavigationRoutes.FinishedScreen.route
+        ) {
+            FinishedScreen(
+                goBack = {
+                    navController.popBackStack(NavigationRoutes.StartScreen.route, inclusive = true)
+                    navController.navigate(NavigationRoutes.StartScreen.route)
+
+                }
+            )
+
         }
 
     }

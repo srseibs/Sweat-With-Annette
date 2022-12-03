@@ -28,8 +28,6 @@ import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class ExerciseViewModel @Inject constructor(
-//    private val tts: TextToSpeechWithInit,
-//    private var soundPlayer: SoundPlayer,
 ) : ViewModel(), DefaultLifecycleObserver {
 
     companion object {
@@ -39,7 +37,7 @@ class ExerciseViewModel @Inject constructor(
         val TIMER_INTERVAL: Duration = 200.milliseconds
     }
 
-    // MediaPlayer
+    // MediaPlayer ===================================================
     private var mediaPlayer = MediaPlayer().apply {
         setOnPreparedListener { start() }
         setOnCompletionListener { reset() }
@@ -57,7 +55,7 @@ class ExerciseViewModel @Inject constructor(
         }
     }
 
-    // TextToSpeech
+    // TextToSpeech =================================================
     private var textToSpeech: TextToSpeech? = null
     fun textToSpeech(context: Context, text: String) {
         textToSpeech = TextToSpeech(context) {
@@ -77,7 +75,7 @@ class ExerciseViewModel @Inject constructor(
         }
     }
 
-    // timer setup .......................................
+    // Exercise Timer ===============================================
     private val exerciseTimer = ExerciseTimer(
         coroutineScope = viewModelScope,
         doneCallback = { timerDone() }
@@ -95,9 +93,6 @@ class ExerciseViewModel @Inject constructor(
 
     // observable states
     var exerciseList: List<Exercise> by mutableStateOf(emptyList())
-
-    var exerciseState: ExerciseState by mutableStateOf(ExerciseState.None)
-        private set
 
     var exerciseImageId: Int? by mutableStateOf(null)
         private set
@@ -117,20 +112,24 @@ class ExerciseViewModel @Inject constructor(
     var exercisesComplete by mutableStateOf(0)
         private set
 
+    var allDoneWithExercises by mutableStateOf(false)
+        private set
+
+
     private var activeExercise: Exercise? = null
+    private var exerciseState: ExerciseState by mutableStateOf(ExerciseState.None)
 
     val elapsedTime: MutableState<Duration> = exerciseTimer.elapsedTime
     val timeDuration: MutableState<Duration> = exerciseTimer.timerDuration
 
     private fun resetState() {
         exerciseState = ExerciseState.None
-        exercisesComplete = 0
     }
 
     private fun advanceToNextState() {
         exerciseState = when (exerciseState) {
             ExerciseState.None -> {
-                exercisesComplete = 0
+                allDoneWithExercises = false
                 ExerciseState.ReadyToStart
             }
             ExerciseState.ReadyToStart -> {
@@ -139,10 +138,16 @@ class ExerciseViewModel @Inject constructor(
             }
             ExerciseState.Exercising -> {
                 exercisesComplete++
-                ExerciseState.Resting
+                if (exercisesComplete >= exerciseList.size) {
+                    ExerciseState.Complete
+                } else
+                    ExerciseState.Resting
             }
             ExerciseState.Resting -> {
                 ExerciseState.Exercising
+            }
+            ExerciseState.Complete -> {
+                ExerciseState.Complete
             }
         }
         setupState(exerciseState)
@@ -181,6 +186,11 @@ class ExerciseViewModel @Inject constructor(
                 textValue = activeExercise!!.name
                 spokenPrompt = "Get ready for ${activeExercise!!.name}"
                 startTimer(REST_TIME, TIMER_INTERVAL)
+            }
+
+            ExerciseState.Complete -> {
+                playSound = R.raw.start
+                allDoneWithExercises = true
             }
         }
     }

@@ -45,10 +45,10 @@ fun NumberedProgressIndicator(
              val backgroundColor =
                 if (index > activeExerciseIndex) upcomingColor else doneColor
 
+            val dotValue = (index + 1).toString()
 
             val dotSize =
                 if (index == activeExerciseIndex) 36.dp else 28.dp
-
 
             Box(
                 contentAlignment = Alignment.Center,
@@ -58,7 +58,7 @@ fun NumberedProgressIndicator(
                     .background(backgroundColor)
             ) {
                 Text(
-                    text = index.toString(),
+                    text = dotValue,
                     style = MaterialTheme.typography.labelSmall,
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.contentColorFor(backgroundColor)
