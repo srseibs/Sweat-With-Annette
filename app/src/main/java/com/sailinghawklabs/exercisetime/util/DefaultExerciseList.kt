@@ -14,16 +14,16 @@ val DefaultExerciseList = listOf(
         name = "Wall Sit",
         imageResourceId = R.drawable.ic_wall_sit,
     ),
-//    Exercise(
-//        id = 3,
-//        name = "Push Up",
-//        imageResourceId = R.drawable.ic_push_up,
-//    ),
-//    Exercise(
-//        id = 4,
-//        name = "Abdominal Crunch",
-//        imageResourceId = R.drawable.ic_abdominal_crunch,
-//    ),
+    Exercise(
+        id = 3,
+        name = "Push Up",
+        imageResourceId = R.drawable.ic_push_up,
+    ),
+    Exercise(
+        id = 4,
+        name = "Abdominal Crunch",
+        imageResourceId = R.drawable.ic_abdominal_crunch,
+    ),
 //    Exercise(
 //        id = 5,
 //        name = "Chair Step-up",

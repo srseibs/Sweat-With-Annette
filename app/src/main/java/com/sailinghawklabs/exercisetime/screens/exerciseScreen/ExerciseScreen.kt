@@ -160,7 +160,7 @@ fun ExerciseScreenContent(
                 )
                 CircularProgress(
                     textStyle = MaterialTheme.typography.displaySmall,
-                    modifier = Modifier.fillMaxWidth(0.25f),
+                    modifier = Modifier.fillMaxWidth(0.20f),
                     remainingTimeInMillis = timeDuration.inWholeMilliseconds - elapsedTime.inWholeMilliseconds,
                     maxTimeTimeInMillis = timeDuration.inWholeMilliseconds,
                 )
