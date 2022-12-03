@@ -70,16 +70,20 @@ fun StartScreenContent(
         }
 
         CircleButton(
-            modifier = Modifier.fillMaxWidth(0.4f),
+            modifier = Modifier.fillMaxWidth(0.38f),
+            borderColor = MaterialTheme.colorScheme.secondary,
+            backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
+            buttonStyle = MaterialTheme.typography.headlineMedium,
             buttonText = "Start",
             onClicked = onStart,
         )
 
         CircleButton(
-            modifier = Modifier.fillMaxWidth(0.30f),
-            backgroundColor = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.fillMaxWidth(0.28f),
+            backgroundColor = MaterialTheme.colorScheme.tertiary,
+            borderColor = MaterialTheme.colorScheme.secondaryContainer,
             buttonText = "Calculate BMI",
-            buttonStyle = MaterialTheme.typography.titleMedium,
+            buttonStyle = MaterialTheme.typography.titleSmall,
             onClicked = {   },
         )
     }
