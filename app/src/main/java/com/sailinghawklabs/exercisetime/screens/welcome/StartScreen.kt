@@ -28,16 +28,20 @@ import com.sailinghawklabs.exercisetime.ui.theme.ExerciseTimeTheme
 fun StartScreen(
     modifier: Modifier = Modifier,
     onStart: () -> Unit,
+    goToBmi: () -> Unit,
 ) {
     StartScreenContent(
         modifier = modifier,
-        onStart = onStart)
+        onStart = onStart,
+        goToBmi = goToBmi,
+    )
 }
 
 @Composable
 fun StartScreenContent(
     modifier: Modifier = Modifier,
     onStart: () -> Unit,
+    goToBmi: () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -84,7 +88,7 @@ fun StartScreenContent(
             borderColor = MaterialTheme.colorScheme.secondaryContainer,
             buttonText = "Calculate BMI",
             buttonStyle = MaterialTheme.typography.titleSmall,
-            onClicked = {   },
+            onClicked = goToBmi,
         )
     }
 }
@@ -94,6 +98,6 @@ fun StartScreenContent(
 @Composable
 fun StartScreenPreview() {
     ExerciseTimeTheme {
-        StartScreenContent(onStart = {})
+        StartScreenContent(onStart = {}, goToBmi = {})
     }
 }
