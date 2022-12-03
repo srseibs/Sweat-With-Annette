@@ -90,6 +90,8 @@ class ExerciseViewModel @Inject constructor(
     private fun timerDone() {
         advanceToNextState()
     }
+    fun pauseTimer() = exerciseTimer.pauseTimer(true)
+    fun resumeTimer() = exerciseTimer.pauseTimer(false)
 
     // observable states
     var exerciseList: List<Exercise> by mutableStateOf(emptyList())

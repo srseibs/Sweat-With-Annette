@@ -21,6 +21,7 @@ class ExerciseTimer(
 ) {
     private var initialTime: Duration = 0.seconds
     private var timerJob: Job? = null
+    private var timerPaused = false
 
     private var isTimerRunning: MutableState<Boolean> = mutableStateOf(false)
     var timerDuration: MutableState<Duration> = mutableStateOf(0.seconds)
@@ -37,8 +38,14 @@ class ExerciseTimer(
         isTimerRunning.value = true
 
         timerJob = launchPeriodicJob(repeatMillis = interval.inWholeMilliseconds) {
-            elapsedTime.value =
-                (SystemClock.elapsedRealtime().milliseconds - initialTime)
+            val newElapsedTime = (SystemClock.elapsedRealtime().milliseconds - initialTime)
+
+            if (timerPaused) {
+                initialTime = initialTime + newElapsedTime - elapsedTime.value
+                return@launchPeriodicJob
+            }
+            elapsedTime.value = newElapsedTime
+
             //Log.d("ExerciseTimer", "job: elapsed= ${elapsedTime.value.inWholeMilliseconds}")
 
             if (elapsedTime.value >= timeDuration) {
@@ -47,6 +54,10 @@ class ExerciseTimer(
                 doneCallback?.invoke()
             }
         }
+    }
+
+    fun pauseTimer(pause: Boolean) {
+        timerPaused = pause
     }
 
     fun cancelTimer() {
