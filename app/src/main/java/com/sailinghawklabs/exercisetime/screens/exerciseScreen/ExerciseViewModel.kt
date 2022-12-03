@@ -179,7 +179,7 @@ class ExerciseViewModel @Inject constructor(
             }
 
             ExerciseState.Resting -> {
-                playSound = R.raw.start
+                playSound = R.raw.done_sound
                 activeExercise = exerciseList[exercisesComplete]
                 exerciseImageId = null
                 textPrompt = "Get ready for:"
@@ -189,7 +189,7 @@ class ExerciseViewModel @Inject constructor(
             }
 
             ExerciseState.Complete -> {
-                playSound = R.raw.start
+                playSound = R.raw.done_sound
                 allDoneWithExercises = true
             }
         }
