@@ -1,6 +1,5 @@
 package com.sailinghawklabs.exercisetime.screens.exerciseScreen.components
 
-import android.util.Log
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -27,7 +26,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sailinghawklabs.exercisetime.ui.theme.ExerciseTimeTheme
-import kotlin.math.abs
 import kotlin.math.roundToInt
 
 @Composable
@@ -41,8 +39,6 @@ fun CircularProgress(
 ) {
 
     var percentRemaining by remember { mutableStateOf(1f) }
-
-    var firstTime by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = remainingTimeInMillis) {
         percentRemaining =
@@ -66,7 +62,7 @@ fun CircularProgress(
         Box(
             modifier = Modifier
                 .background(backgroundColor, shape = CircleShape)
-                .fillMaxSize(0.95f)
+                .fillMaxSize(0.96f)
         )
 
         val animatedPercentRemaining by animateFloatAsState(
@@ -79,10 +75,10 @@ fun CircularProgress(
 
         CircularProgressIndicator(
             modifier = Modifier
-                .fillMaxWidth(0.90f)
+                .fillMaxWidth(0.91f)
                 .aspectRatio(1f),
             color = ringColor,
-            strokeWidth = 5.dp,
+            strokeWidth = 9.dp,
             progress = animatedPercentRemaining
         )
 
@@ -90,7 +86,7 @@ fun CircularProgress(
         Box(
             modifier = Modifier
                 .background(backgroundColor, shape = CircleShape)
-                .fillMaxSize(0.85f)
+                .fillMaxSize(0.84f)
         )
 
         Box(

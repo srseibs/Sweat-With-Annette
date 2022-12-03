@@ -29,7 +29,9 @@ fun StartScreen(
     modifier: Modifier = Modifier,
     onStart: () -> Unit,
 ) {
-    StartScreenContent(onStart = onStart)
+    StartScreenContent(
+        modifier = modifier,
+        onStart = onStart)
 }
 
 @Composable
@@ -73,7 +75,13 @@ fun StartScreenContent(
             onClicked = onStart,
         )
 
-
+        CircleButton(
+            modifier = Modifier.fillMaxWidth(0.30f),
+            backgroundColor = MaterialTheme.colorScheme.primary,
+            buttonText = "Calculate BMI",
+            buttonStyle = MaterialTheme.typography.titleMedium,
+            onClicked = {   },
+        )
     }
 }
 
