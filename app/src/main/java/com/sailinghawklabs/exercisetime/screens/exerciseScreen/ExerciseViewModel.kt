@@ -13,11 +13,14 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sailinghawklabs.exercisetime.R
 import com.sailinghawklabs.exercisetime.model.Exercise
 import com.sailinghawklabs.exercisetime.screens.exerciseScreen.components.ExerciseTimer
 import com.sailinghawklabs.exercisetime.util.DefaultExerciseList
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.Closeable
 import java.util.*
@@ -58,20 +61,27 @@ class ExerciseViewModel @Inject constructor(
     // TextToSpeech =================================================
     private var textToSpeech: TextToSpeech? = null
     fun textToSpeech(context: Context, text: String) {
-        textToSpeech = TextToSpeech(context) {
-            if (it == TextToSpeech.SUCCESS) {
-                textToSpeech?.let { txtToSpeech ->
-                    txtToSpeech.language = Locale.US
-                    txtToSpeech.setSpeechRate(1.0f)
-                    txtToSpeech.speak(
-                        text,
-                        TextToSpeech.QUEUE_FLUSH,
-                        null,
-                        null
-                    )
 
+        textToSpeech = TextToSpeech(context) {
+
+            viewModelScope.launch {
+                if (it == TextToSpeech.SUCCESS) {
+                    textToSpeech?.let { txtToSpeech ->
+
+                        delay(500) // to allow sounds to play first
+
+                        txtToSpeech.language = Locale.US
+                        txtToSpeech.setSpeechRate(1.0f)
+                        txtToSpeech.speak(
+                            text,
+                            TextToSpeech.QUEUE_FLUSH,
+                            null,
+                            null
+                        )
+                    }
                 }
             }
+
         }
     }
 
