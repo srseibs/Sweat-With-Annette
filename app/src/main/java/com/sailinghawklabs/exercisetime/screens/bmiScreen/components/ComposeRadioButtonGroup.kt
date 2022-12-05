@@ -13,9 +13,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,26 +27,23 @@ import com.sailinghawklabs.exercisetime.ui.theme.ExerciseTimeTheme
 @Composable
 fun ComposeRadioButtonGroup(
     modifier: Modifier = Modifier,
+
     groupOptions: List<String> = listOf("US", "Metric", "Roman"),
-    onSelectedChanged: (Int) -> Unit,
+    selectedOption: Int = 0,
+    onButtonPressed: (Int) -> Unit,
+
     backgroundColor: Color = MaterialTheme.colorScheme.surfaceVariant,
     selectedColor: Color = MaterialTheme.colorScheme.secondary,
     unselectedColor: Color = MaterialTheme.colorScheme.inversePrimary,
 ) {
 
-    var selected by remember { mutableStateOf(0) }
-
-    Column(
+        Column(
         modifier = modifier
             .fillMaxWidth()
             .background(backgroundColor)
     ) {
-        val updateSelection = { index: Int ->
-            selected = index
-            onSelectedChanged(selected)
-        }
         val isSelected = { index: Int ->
-            index == selected
+            index == selectedOption
         }
         val buttonColor = { enabled: Boolean ->
             if (enabled) {
@@ -81,7 +75,7 @@ fun ComposeRadioButtonGroup(
                 ) {
 
                     Button(
-                        onClick = { updateSelection(index) },
+                        onClick = { onButtonPressed(index) },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = animatedButtonColor,
                         )
@@ -105,7 +99,7 @@ fun ComposeRadioButtonGroup(
 fun ComposeRadioButtonGroupPreview() {
     ExerciseTimeTheme {
         ComposeRadioButtonGroup(
-            onSelectedChanged = {}
+            onButtonPressed = {},
         )
     }
 }
