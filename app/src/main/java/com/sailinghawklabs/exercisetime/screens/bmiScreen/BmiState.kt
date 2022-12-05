@@ -5,12 +5,13 @@ import com.sailinghawklabs.exercisetime.util.NullBmiDiagnosis
 import com.sailinghawklabs.exercisetime.util.NullBmiString
 
 sealed class BmiUnits(val string: String) {
-    object MetricUnits : BmiUnits("Metric Units")
     object UsUnits : BmiUnits("US Units")
+    object MetricUnits : BmiUnits("Metric Units")
+
 
     companion object {
         fun toList() =
-            listOf(MetricUnits, UsUnits)
+            listOf(UsUnits, MetricUnits)
 
         fun toStringList() =
             toList().map{ it.string }

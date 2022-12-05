@@ -10,9 +10,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -20,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.sailinghawklabs.exercisetime.R
 import com.sailinghawklabs.exercisetime.screens.welcome.components.CircleButton
 import com.sailinghawklabs.exercisetime.ui.theme.ExerciseTimeTheme
@@ -72,24 +77,39 @@ fun StartScreenContent(
                     contentDescription = "app logo"
                 )
         }
+        Row(
+            modifier = Modifier.fillMaxWidth().wrapContentHeight(),
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
 
-        CircleButton(
-            modifier = Modifier.fillMaxWidth(0.38f),
-            borderColor = MaterialTheme.colorScheme.secondary,
-            backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
-            buttonStyle = MaterialTheme.typography.headlineMedium,
-            buttonText = "Start",
-            onClicked = onStart,
-        )
+            CircleButton(
+                modifier = Modifier.size(180.dp),
+                borderColor = MaterialTheme.colorScheme.secondary,
+                backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
+                buttonStyle = MaterialTheme.typography.headlineMedium,
+                buttonText = "Start",
+                onClicked = onStart,
+            )
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = "Calculate"
+                )
+                CircleButton(
+                    modifier = Modifier.size(100.dp),
+                    backgroundColor = MaterialTheme.colorScheme.tertiary,
+                    borderColor = MaterialTheme.colorScheme.secondaryContainer,
+                    buttonText = "BMI",
+                    buttonStyle = MaterialTheme.typography.headlineMedium,
+                    onClicked = goToBmi,
+                )
 
-        CircleButton(
-            modifier = Modifier.fillMaxWidth(0.28f),
-            backgroundColor = MaterialTheme.colorScheme.tertiary,
-            borderColor = MaterialTheme.colorScheme.secondaryContainer,
-            buttonText = "Calculate BMI",
-            buttonStyle = MaterialTheme.typography.titleSmall,
-            onClicked = goToBmi,
-        )
+            }
+
+
+        }
+
+
     }
 }
 

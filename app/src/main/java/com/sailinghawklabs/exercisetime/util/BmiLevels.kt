@@ -1,13 +1,13 @@
 package com.sailinghawklabs.exercisetime.util
 
-class BmiDiagnosis(
+data class BmiDiagnosis(
     val bmiLessThan: Float,
     val label: String,
     val diagnosis: String
 )
 
 val NullBmiDiagnosis = BmiDiagnosis(-99f, "null", "null")
-val NullBmiString = "?"
+const val NullBmiString = "?"
 
 val BmiLevels = listOf<BmiDiagnosis>(
     BmiDiagnosis(
