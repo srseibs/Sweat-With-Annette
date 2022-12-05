@@ -36,11 +36,16 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sailinghawklabs.exercisetime.screens.bmiScreen.components.ComposeRadioButtonGroup
 import com.sailinghawklabs.exercisetime.ui.theme.ExerciseTimeTheme
+import com.sailinghawklabs.exercisetime.util.BmiDiagnosis
+import com.sailinghawklabs.exercisetime.util.BmiLevels
+import com.sailinghawklabs.exercisetime.util.NullBmiDiagnosis
+import com.sailinghawklabs.exercisetime.util.NullBmiString
 import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -101,6 +106,7 @@ fun BmiScreen(
             heightFeet = viewModel.bmiState.heightFeet,
             heightInches = viewModel.bmiState.heightInches,
             bmiValue = viewModel.bmiState.bmiCalculated,
+            bmiDiagnosis = viewModel.bmiState.bmiDiagnosis,
         )
     }
 
@@ -119,6 +125,7 @@ fun BmiScreenContent(
     heightInches: String,
     heightFeet: String,
     bmiValue:String,
+    bmiDiagnosis: BmiDiagnosis,
     ) {
 
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -218,14 +225,24 @@ fun BmiScreenContent(
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "BMI",
+            text = "Your BMI",
             style = MaterialTheme.typography.titleMedium
         )
         Text(
             text = bmiValue,
             style = MaterialTheme.typography.displayMedium
         )
-
+        if (bmiDiagnosis != NullBmiDiagnosis && bmiValue != NullBmiString) {
+            Text(
+                text = bmiDiagnosis.label,
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                text = bmiDiagnosis.diagnosis,
+                style = MaterialTheme.typography.titleSmall,
+                textAlign = TextAlign.Center,
+            )
+        }
 
     }
 }
@@ -244,7 +261,8 @@ fun BmiScreenPreview() {
             unitsTitleList = BmiUnits.toStringList(),
             heightFeet = "5",
             heightInches = "2.5",
-            bmiValue = "1.23"
+            bmiValue = "31.2",
+            bmiDiagnosis = BmiLevels[5],
         )
 
     }

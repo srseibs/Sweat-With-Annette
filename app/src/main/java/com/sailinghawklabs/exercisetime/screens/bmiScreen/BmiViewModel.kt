@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sailinghawklabs.exercisetime.util.diagnoseBmi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -69,9 +70,10 @@ class BmiViewModel @Inject constructor() : ViewModel() {
             bmiCalculated = BmiState().bmiCalculated
         )
         if (validateInputs()) {
+            val bmi = weightInKilograms / (heightInMeters * heightInMeters)
             bmiState = bmiState.copy(
-                bmiCalculated =
-                "%.1f".format(weightInKilograms / (heightInMeters * heightInMeters))
+                bmiCalculated = "%.1f".format(bmi),
+                bmiDiagnosis = diagnoseBmi(bmi),
             )
         } else {
             viewModelScope.launch{ _isMessageShown.emit(true) }
