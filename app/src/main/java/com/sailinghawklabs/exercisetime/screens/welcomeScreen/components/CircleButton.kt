@@ -1,9 +1,16 @@
-package com.sailinghawklabs.exercisetime.screens.welcome.components
+package com.sailinghawklabs.exercisetime.screens.welcomeScreen.components
 
+import android.graphics.drawable.Icon
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -11,6 +18,8 @@ import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,6 +30,7 @@ import com.sailinghawklabs.exercisetime.ui.theme.ExerciseTimeTheme
 fun CircleButton(
     modifier: Modifier = Modifier,
     buttonText: String,
+    buttonIcon: ImageVector? = null,
     buttonStyle: TextStyle = MaterialTheme.typography.displaySmall,
     backgroundColor: Color = MaterialTheme.colorScheme.secondaryContainer,
     borderColor: Color = MaterialTheme.colorScheme.secondary,
@@ -41,12 +51,22 @@ fun CircleButton(
         )
 
     ) {
-        Text(
-            text = buttonText,
-            style = buttonStyle,
-            color = textColor,
-            textAlign = TextAlign.Center,
-        )
+        if (buttonIcon != null) {
+            Icon(
+                modifier = Modifier
+                    .fillMaxSize(),
+                tint = textColor,
+                imageVector = buttonIcon,
+                contentDescription = "History"
+            )
+        } else {
+            Text(
+                text = buttonText,
+                style = buttonStyle,
+                color = textColor,
+                textAlign = TextAlign.Center,
+            )
+        }
     }
 }
 
@@ -58,6 +78,17 @@ fun CircleButtonPreview() {
         CircleButton(
             buttonText = "Start",
             onClicked = {}
+        )
+    }
+}
+@Preview
+@Composable
+fun CircleButtonPreviewImage() {
+    ExerciseTimeTheme {
+        CircleButton(
+            buttonText = "Start",
+            onClicked = {},
+            buttonIcon = Icons.Default.DateRange
         )
     }
 }

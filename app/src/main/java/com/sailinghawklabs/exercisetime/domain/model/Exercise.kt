@@ -1,4 +1,4 @@
-package com.sailinghawklabs.exercisetime.model
+package com.sailinghawklabs.exercisetime.domain.model
 
 data class Exercise(
     var id: Int,

@@ -1,7 +1,9 @@
 package com.sailinghawklabs.exercisetime.screens.exerciseScreen
 
+import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.annotation.DrawableRes
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -45,17 +47,20 @@ import com.sailinghawklabs.exercisetime.R
 import com.sailinghawklabs.exercisetime.screens.exerciseScreen.components.AreYouSureDialog
 import com.sailinghawklabs.exercisetime.screens.exerciseScreen.components.CircularProgress
 import com.sailinghawklabs.exercisetime.screens.exerciseScreen.components.NumberedProgressIndicator
+import com.sailinghawklabs.exercisetime.screens.historyScreen.HistoryViewModel
 import com.sailinghawklabs.exercisetime.ui.theme.ExerciseTimeTheme
 import com.sailinghawklabs.exercisetime.util.DefaultExerciseList
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ExerciseScreen(
     modifier: Modifier = Modifier,
     goBack: () -> Unit,
     allDone: () -> Unit,
-    viewModel: ExerciseViewModel = hiltViewModel()
+    viewModel: ExerciseViewModel = hiltViewModel(),
+    finishedViewModel: HistoryViewModel = hiltViewModel(),
 ) {
 
     var showAlertDialog by remember { mutableStateOf(false) }
@@ -71,6 +76,7 @@ fun ExerciseScreen(
             detail = "Are you sure you want to abandon your exercise?",
             onConfirm = {
                 showAlertDialog = false
+                finishedViewModel.addWorkoutToDatabase(false)
                 goBack()
             },
             onDismiss = {
@@ -96,8 +102,9 @@ fun ExerciseScreen(
     }
 
     LaunchedEffect(key1 = viewModel.allDoneWithExercises) {
-        if (viewModel.allDoneWithExercises)
+        if (viewModel.allDoneWithExercises) {
             allDone()
+        }
     }
 
     ExerciseScreenContent(

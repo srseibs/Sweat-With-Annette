@@ -14,7 +14,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sailinghawklabs.exercisetime.R
-import com.sailinghawklabs.exercisetime.model.Exercise
+import com.sailinghawklabs.exercisetime.domain.model.Exercise
 import com.sailinghawklabs.exercisetime.screens.exerciseScreen.components.ExerciseTimer
 import com.sailinghawklabs.exercisetime.util.DefaultExerciseList
 import dagger.hilt.android.lifecycle.HiltViewModel

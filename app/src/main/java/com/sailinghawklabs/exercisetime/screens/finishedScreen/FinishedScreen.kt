@@ -1,5 +1,7 @@
 package com.sailinghawklabs.exercisetime.screens.finishedScreen
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,19 +28,23 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.sailinghawklabs.exercisetime.R
+import com.sailinghawklabs.exercisetime.screens.historyScreen.HistoryViewModel
 import com.sailinghawklabs.exercisetime.ui.theme.ExerciseTimeTheme
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun FinishedScreen(
     modifier: Modifier = Modifier,
     goBack: () -> Unit,
+    historyViewModel: HistoryViewModel = hiltViewModel(),
 ) {
     FinishedScreenContent(
         modifier = modifier,
         goBack = goBack,
+        storeWorkout = { historyViewModel.addWorkoutToDatabase(completed = true) }
     )
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,6 +52,7 @@ fun FinishedScreen(
 fun FinishedScreenContent(
     modifier: Modifier = Modifier,
     goBack: () -> Unit,
+    storeWorkout: () -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -97,7 +104,10 @@ fun FinishedScreenContent(
             )
             Button(
                 modifier = Modifier.fillMaxWidth(0.8f),
-                onClick = goBack
+                onClick = {
+                    storeWorkout()
+                    goBack()
+                }
             ) {
                 Text(
                     text = "Finish",
@@ -114,7 +124,8 @@ fun FinishedScreenContent(
 fun FinishedScreenPreview() {
     ExerciseTimeTheme {
         FinishedScreenContent(
-            goBack = {}
+            goBack = {},
+            storeWorkout = {},
         )
     }
 }

@@ -5,5 +5,6 @@ sealed class NavigationRoutes(val route: String) {
     object ExerciseScreen: NavigationRoutes("exercise_screen" )
     object FinishedScreen: NavigationRoutes("finished_screen" )
     object BmiScreen: NavigationRoutes("bmi_screen")
+    object HistoryScreen: NavigationRoutes("history_screen")
 }
 

@@ -7,7 +7,8 @@ import androidx.navigation.compose.composable
 import com.sailinghawklabs.exercisetime.screens.bmiScreen.BmiScreen
 import com.sailinghawklabs.exercisetime.screens.exerciseScreen.ExerciseScreen
 import com.sailinghawklabs.exercisetime.screens.finishedScreen.FinishedScreen
-import com.sailinghawklabs.exercisetime.screens.welcome.StartScreen
+import com.sailinghawklabs.exercisetime.screens.historyScreen.HistoryScreen
+import com.sailinghawklabs.exercisetime.screens.welcomeScreen.StartScreen
 
 
 @Composable
@@ -27,6 +28,9 @@ fun Navigation(
                 },
                 goToBmi = {
                     navController.navigate(NavigationRoutes.BmiScreen.route)
+                },
+                goToHistory = {
+                    navController.navigate(NavigationRoutes.HistoryScreen.route)
                 }
             )
         }
@@ -51,7 +55,6 @@ fun Navigation(
                 goBack = {
                     navController.popBackStack(NavigationRoutes.StartScreen.route, inclusive = true)
                     navController.navigate(NavigationRoutes.StartScreen.route)
-
                 }
             )
 
@@ -61,6 +64,16 @@ fun Navigation(
             route = NavigationRoutes.BmiScreen.route
         ){
             BmiScreen(
+                goBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(
+            route = NavigationRoutes.HistoryScreen.route
+        ) {
+            HistoryScreen(
                 goBack = {
                     navController.popBackStack()
                 }
