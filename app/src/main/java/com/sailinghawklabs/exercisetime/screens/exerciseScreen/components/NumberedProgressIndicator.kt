@@ -6,28 +6,20 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Devices.NEXUS_5
-import androidx.compose.ui.tooling.preview.Devices.NEXUS_6P
-import androidx.compose.ui.tooling.preview.Devices.NEXUS_7_2013
 import androidx.compose.ui.tooling.preview.Devices.PIXEL
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.sailinghawklabs.exercisetime.ui.theme.ExerciseTimeTheme
 
@@ -49,31 +41,23 @@ fun NumberedProgressIndicator(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-
-        val highlightedDotSize = 32.dp
-        val normalDotSize = 28.dp
-
         repeat(numExercises) { index ->
 
             val backgroundColor: Color
-            val dotSize: Dp
             val borderColor: Color
             val textColor: Color
 
 
             if (index < activeExerciseIndex) {
                 backgroundColor = MaterialTheme.colorScheme.secondary
-                dotSize = normalDotSize
                 borderColor = backgroundColor
                 textColor = MaterialTheme.colorScheme.onSecondary
             } else if (index == activeExerciseIndex) {
-                dotSize = highlightedDotSize
                 backgroundColor = MaterialTheme.colorScheme.primaryContainer
                 borderColor = MaterialTheme.colorScheme.secondary
                 textColor = MaterialTheme.colorScheme.onPrimaryContainer
             } else { // index > activeExerciseIndex
                 backgroundColor = MaterialTheme.colorScheme.primary
-                dotSize = normalDotSize
                 borderColor = backgroundColor
                 textColor = MaterialTheme.colorScheme.onPrimary
             }
@@ -105,21 +89,9 @@ fun NumberedProgressIndicator(
                             )
                         }
                     }
-            ){
-
+            ) {
                 Text(
-                    modifier = Modifier
-                        .padding(4.dp),
-//                        .drawBehind {
-//                            drawCircle(
-//                                color = borderColor,
-//                                radius = dotSize.toPx() + 1.dp.toPx(),
-//                            )
-//                            drawCircle(
-//                                color = backgroundColor,
-//                                radius = dotSize.toPx(),
-//                            )
-//                        },
+                    modifier = Modifier.padding(4.dp),
                     text = dotValue,
                     style = MaterialTheme.typography.bodySmall,
                     textAlign = TextAlign.Center,
@@ -129,7 +101,6 @@ fun NumberedProgressIndicator(
         }
     }
 }
-
 
 @Preview(showSystemUi = true, device = PIXEL)
 @Composable
