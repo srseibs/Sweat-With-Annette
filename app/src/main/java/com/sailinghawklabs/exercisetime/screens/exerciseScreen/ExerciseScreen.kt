@@ -2,6 +2,9 @@ package com.sailinghawklabs.exercisetime.screens.exerciseScreen
 
 import androidx.activity.compose.BackHandler
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -34,6 +37,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -56,7 +60,7 @@ fun ExerciseScreen(
 
     var showAlertDialog by remember { mutableStateOf(false) }
 
-    BackHandler() {
+    BackHandler {
         showAlertDialog = true
     }
 
@@ -163,10 +167,13 @@ fun ExerciseScreenContent(
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceBetween,
             ) {
 
-                imageId?.let {
+                var useLogoImage by remember { mutableStateOf(false) }
+                useLogoImage = (imageId == null)
+
+
+                if (imageId != null) {
                     Image(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -177,15 +184,35 @@ fun ExerciseScreenContent(
                     )
                 }
 
+                AnimatedVisibility(
+                    visible = useLogoImage,
+                    enter = fadeIn(animationSpec = tween(800)),
+//                    exit = fadeOut()
+                ) {
+                    Image(
+                        modifier = Modifier
+                            .fillMaxWidth(.85f)
+                            .weight(1f),
+                        contentScale = ContentScale.FillWidth,
+                        painter = painterResource(R.drawable.annette_headonly),
+                        contentDescription = "Logo Head"
+                    )
+                }
+
+                Spacer(modifier = Modifier.size(16.dp))
                 Text(
                     text = textPrompt,
                     textAlign = TextAlign.Center,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.headlineSmall,
                 )
                 Text(
                     text = textValue,
                     textAlign = TextAlign.Center,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,

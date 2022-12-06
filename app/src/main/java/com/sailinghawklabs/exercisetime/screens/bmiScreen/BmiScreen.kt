@@ -155,6 +155,7 @@ fun BmiScreenContent(
             OutlinedTextField(
                 value = weightInKgs,
                 modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
                 label = { Text("WEIGHT (kg)") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 onValueChange = { onEvent(BmiEventsToViewModel.WeightKgChanged(it)) }
@@ -163,6 +164,7 @@ fun BmiScreenContent(
             OutlinedTextField(
                 value = weightInLbs,
                 modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
                 label = { Text("WEIGHT (lbs)") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 onValueChange = { onEvent(BmiEventsToViewModel.WeightLbChanged(it)) }
@@ -178,6 +180,7 @@ fun BmiScreenContent(
                 OutlinedTextField(
                     value = heightInCm,
                     modifier = Modifier.fillMaxWidth(),
+                    singleLine = true,
                     label = { Text("HEIGHT (cm)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     onValueChange = { onEvent(BmiEventsToViewModel.HeightCmChanged(it)) }
@@ -190,6 +193,7 @@ fun BmiScreenContent(
                 OutlinedTextField(
                     value = heightFeet,
                     modifier = Modifier.weight(1f),
+                    singleLine = true,
                     label = { Text("HEIGHT (Feet)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     onValueChange = { onEvent(BmiEventsToViewModel.HeightFtChanged(it)) }
@@ -198,6 +202,7 @@ fun BmiScreenContent(
                 OutlinedTextField(
                     value = heightInches,
                     modifier = Modifier.weight(1f),
+                    singleLine = true,
                     label = { Text("HEIGHT (Inches)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     onValueChange = { onEvent(BmiEventsToViewModel.HeightInchesChanged(it)) }
