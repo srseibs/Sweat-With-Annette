@@ -25,6 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices.NEXUS_5
 import androidx.compose.ui.tooling.preview.Devices.NEXUS_6P
 import androidx.compose.ui.tooling.preview.Devices.NEXUS_7_2013
+import androidx.compose.ui.tooling.preview.Devices.PIXEL
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -44,9 +45,8 @@ fun NumberedProgressIndicator(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            .background(Color.Green),
-        horizontalArrangement = Arrangement.SpaceAround,
+            .padding(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
 
@@ -83,7 +83,6 @@ fun NumberedProgressIndicator(
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .size(dotSize)
                     .background(backgroundColor, shape = CircleShape)
                     .border(BorderStroke(2.dp, borderColor), shape = CircleShape)
                     .layout() { measurable, constraints ->
@@ -93,7 +92,9 @@ fun NumberedProgressIndicator(
                         //get the current max dimension to assign width=height
                         val currentHeight = placeable.height
                         val currentWidth = placeable.width
-                        val newDiameter = maxOf(currentHeight, currentWidth)
+                        var newDiameter = maxOf(currentHeight, currentWidth)
+                        if (index == activeExerciseIndex)
+                            newDiameter += 12
 
                         //assign the dimension and the center position
                         layout(newDiameter, newDiameter) {
@@ -108,7 +109,7 @@ fun NumberedProgressIndicator(
 
                 Text(
                     modifier = Modifier
-                        .padding(1.dp),
+                        .padding(4.dp),
 //                        .drawBehind {
 //                            drawCircle(
 //                                color = borderColor,
@@ -130,7 +131,7 @@ fun NumberedProgressIndicator(
 }
 
 
-@Preview(showSystemUi = true, device = NEXUS_5)
+@Preview(showSystemUi = true, device = PIXEL)
 @Composable
 fun ExerciseProgressIndicatorPreview() {
     ExerciseTimeTheme {
