@@ -1,5 +1,8 @@
 # Sweat-With-Annette
 
+<img src="https://github.com/srseibs/Sweat-With-Annette/blob/master/app/src/main/res/drawable/start_logo.png" width="20%">
+
+
 This project is based on the 7 Minute Workout app that is part by Udemy Course called "The Complete Android 12 & Kotlin Development Masterclass" by Denis Panjuta. The course is an excellent course which was created several years ago. 
 
 I recently used this app from that course as a vehicle to practice what I have learned in the 2 years since I took the cours. I added many new elements:
@@ -18,6 +21,12 @@ I recently used this app from that course as a vehicle to practice what I have l
   * Inject the ViewModels into the top level Compose Screens.
   * Inject the Repositories into the ViewModels.
   * Inject the Database and Dao into the Repositories.
+- The following is implemented in the ViewModel to keep the concerns separated from UI:
+  * TextToSpeech
+  * MediaPlayer for sound effects
+  * Timer
+   + Timer will now Pause when deciding to abort a workout
+
   
 
 
