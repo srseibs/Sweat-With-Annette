@@ -12,6 +12,7 @@ I recently used this app from that course as a vehicle to practice what I have l
   * Domain models are separate from the database entity models. Simple mappers are created to go between them.
 - _**Jetpack Compose**_ was used for all screens
   * Animation is used in several places
+  * **Compose BOM** is demonstrated in the build.gradle file.
 - _**Material 3**_ design was used.
   * A custom color scheme is implemented and applied logically throughout the app.
 - Single Activity was used, no fragments
