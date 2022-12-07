@@ -6,12 +6,12 @@ plugins {
 }
 
 android {
-    namespace 'com.sailinghawklabs.exercisetime'
+    namespace 'com.sailinghawklabs.sweatwithannette'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.sailinghawklabs.exercisetime"
-        minSdk 24
+        applicationId "com.sailinghawklabs.sweatwithannette"
+        minSdk 26
         targetSdk 33
         versionCode 1
         versionName "1.0"
