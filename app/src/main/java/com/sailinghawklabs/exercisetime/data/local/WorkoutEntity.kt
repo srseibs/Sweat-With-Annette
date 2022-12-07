@@ -9,7 +9,7 @@ data class WorkoutEntity(
 
     @PrimaryKey
     val date: String,
-
+    val setName: String,
     val complete: Boolean,
 
 

@@ -224,6 +224,7 @@ fun ExerciseScreenContent(
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                 )
+                Spacer(modifier = Modifier.size(8.dp))
                 CircularProgress(
                     textStyle = MaterialTheme.typography.displaySmall,
                     modifier = Modifier.fillMaxWidth(0.20f),

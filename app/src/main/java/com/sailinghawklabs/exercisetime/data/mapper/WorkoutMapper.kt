@@ -7,6 +7,7 @@ fun Workout.toWorkoutEntity() =
     WorkoutEntity(
         date = date,
         complete = complete,
+        setName = setName,
     )
 
 
@@ -14,4 +15,5 @@ fun WorkoutEntity.toWorkout() =
     Workout(
         date = date,
         complete = complete,
+        setName = setName
     )

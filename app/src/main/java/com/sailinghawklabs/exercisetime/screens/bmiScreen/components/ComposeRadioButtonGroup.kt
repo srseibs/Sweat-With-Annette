@@ -31,8 +31,6 @@ fun ComposeRadioButtonGroup(
     groupOptions: List<String> = listOf("US", "Metric", "Roman"),
     selectedOption: Int = 0,
     onButtonPressed: (Int) -> Unit,
-
-    backgroundColor: Color = MaterialTheme.colorScheme.surfaceVariant,
     selectedColor: Color = MaterialTheme.colorScheme.secondary,
     unselectedColor: Color = MaterialTheme.colorScheme.inversePrimary,
 ) {
@@ -40,7 +38,7 @@ fun ComposeRadioButtonGroup(
         Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(backgroundColor)
+            .background(Color.Transparent)
     ) {
         val isSelected = { index: Int ->
             index == selectedOption

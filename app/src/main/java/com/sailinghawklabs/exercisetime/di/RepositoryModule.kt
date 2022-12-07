@@ -1,8 +1,8 @@
 package com.sailinghawklabs.exercisetime.di
 
 import com.sailinghawklabs.exercisetime.data.local.WorkoutDao
-import com.sailinghawklabs.exercisetime.data.local.repository.WorkoutRepositoryImpl
-import com.sailinghawklabs.exercisetime.domain.WorkoutRepository
+import com.sailinghawklabs.exercisetime.data.local.repository.WorkoutHistoryRepositoryImpl
+import com.sailinghawklabs.exercisetime.domain.WorkoutHistoryRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,8 +15,8 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideRepository(dao: WorkoutDao): WorkoutRepository =
-        WorkoutRepositoryImpl(dao)
+    fun provideRepository(dao: WorkoutDao): WorkoutHistoryRepository =
+        WorkoutHistoryRepositoryImpl(dao)
 
 
 
