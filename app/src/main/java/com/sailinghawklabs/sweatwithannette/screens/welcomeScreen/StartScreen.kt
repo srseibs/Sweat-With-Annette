@@ -27,6 +27,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.sailinghawklabs.sweatwithannette.R
 import com.sailinghawklabs.sweatwithannette.screens.welcomeScreen.components.CircleButton
 import com.sailinghawklabs.sweatwithannette.ui.theme.ExerciseTimeTheme
@@ -37,6 +38,7 @@ fun StartScreen(
     onStart: () -> Unit,
     goToBmi: () -> Unit,
     goToHistory: () -> Unit,
+    viewModel: WelcomeViewModel = hiltViewModel()
 ) {
     StartScreenContent(
         modifier = modifier,
@@ -83,7 +85,9 @@ fun StartScreenContent(
                 )
         }
         Column(
-            modifier = Modifier.fillMaxWidth().wrapContentHeight(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
