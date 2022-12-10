@@ -2,8 +2,10 @@ package com.sailinghawklabs.sweatwithannette.data.mapper
 
 import com.sailinghawklabs.sweatwithannette.data.local.entity.ExerciseMasterEntity
 import com.sailinghawklabs.sweatwithannette.data.local.entity.WorkoutEntity
+import com.sailinghawklabs.sweatwithannette.data.local.entity.WorkoutSetEntity
 import com.sailinghawklabs.sweatwithannette.domain.model.Exercise
 import com.sailinghawklabs.sweatwithannette.domain.model.Workout
+import com.sailinghawklabs.sweatwithannette.domain.model.WorkoutSet
 
 fun Workout.toWorkoutEntity() =
     WorkoutEntity(

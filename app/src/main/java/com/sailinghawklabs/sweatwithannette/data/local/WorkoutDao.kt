@@ -6,15 +6,19 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
+import com.sailinghawklabs.sweatwithannette.data.local.entity.ActiveSet
 import com.sailinghawklabs.sweatwithannette.data.local.entity.ExerciseMasterEntity
 import com.sailinghawklabs.sweatwithannette.data.local.entity.WorkoutEntity
 import com.sailinghawklabs.sweatwithannette.data.local.entity.WorkoutSetEntity
+import com.sailinghawklabs.sweatwithannette.domain.model.WorkoutSet
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface WorkoutDao {
 
+    // Workout History ----------------------------------------------------------
     @Insert
     suspend fun insertWorkout(history: WorkoutEntity)
 
@@ -24,18 +28,25 @@ interface WorkoutDao {
     @Query("SELECT * FROM ${WorkoutEntity.TABLE_NAME} ORDER BY date DESC")
     fun fetchAllWorkouts(): Flow<List<WorkoutEntity>>
 
+    // Master list of Exercises ---------------------------------------------------
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMasterExercise(masterExercise: ExerciseMasterEntity)
+    suspend fun setMasterExerciseList(masterExercises: List<ExerciseMasterEntity>)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMasterExerciseList(masterExercises: List<ExerciseMasterEntity>)
+    @Query("SELECT * FROM ${ExerciseMasterEntity.TABLE_NAME} WHERE id = :masterIndex")
+    suspend fun getMasterExercise(masterIndex: Int): ExerciseMasterEntity
 
+
+    // Custom workout sets -------------------------------------------------------
     @Insert
     suspend fun insertWorkoutSet(workoutSet: WorkoutSetEntity)
+
+    @Query("DELETE FROM ${WorkoutSetEntity.TABLE_NAME} WHERE name = :workoutSetName")
+    suspend fun deleteWorkoutSet(workoutSetName: String)
 
     @Update
     suspend fun updateWorkoutSet(workoutSet: WorkoutSetEntity)
 
+    @Transaction
     suspend fun insertOrUpdateWorkOutSet(workoutSet: WorkoutSetEntity) {
         try {
             insertWorkoutSet(workoutSet)
@@ -43,6 +54,12 @@ interface WorkoutDao {
             updateWorkoutSet(workoutSet)
         }
     }
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun setActiveWorkoutSet(activeSet: ActiveSet)
+
+    @Query("SELECT setName FROM ${ActiveSet.TABLE_NAME}")
+    suspend fun getActiveWorkoutSet(): ActiveSet
 
 
 }
