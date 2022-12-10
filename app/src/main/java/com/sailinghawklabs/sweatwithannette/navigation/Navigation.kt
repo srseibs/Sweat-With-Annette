@@ -11,6 +11,7 @@ import com.sailinghawklabs.sweatwithannette.screens.exerciseScreen.ExerciseScree
 import com.sailinghawklabs.sweatwithannette.screens.finishedScreen.FinishedScreen
 import com.sailinghawklabs.sweatwithannette.screens.historyScreen.HistoryScreen
 import com.sailinghawklabs.sweatwithannette.screens.welcomeScreen.StartScreen
+import com.sailinghawklabs.sweatwithannette.screens.workoutSetsScreen.WorkoutSetsScreen
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -34,6 +35,9 @@ fun Navigation(
                 },
                 goToHistory = {
                     navController.navigate(NavigationRoutes.HistoryScreen.route)
+                },
+                goToWorkoutSets = {
+                    navController.navigate(NavigationRoutes.WorkoutSetsScreen.route)
                 }
             )
         }
@@ -65,7 +69,7 @@ fun Navigation(
 
         composable(
             route = NavigationRoutes.BmiScreen.route
-        ){
+        ) {
             BmiScreen(
                 goBack = {
                     navController.popBackStack()
@@ -77,6 +81,16 @@ fun Navigation(
             route = NavigationRoutes.HistoryScreen.route
         ) {
             HistoryScreen(
+                goBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(
+            route = NavigationRoutes.WorkoutSetsScreen.route
+        ) {
+            WorkoutSetsScreen(
                 goBack = {
                     navController.popBackStack()
                 }

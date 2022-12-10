@@ -8,6 +8,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,9 +18,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +43,7 @@ fun StartScreen(
     onStart: () -> Unit,
     goToBmi: () -> Unit,
     goToHistory: () -> Unit,
+    goToWorkoutSets: () -> Unit,
     viewModel: WelcomeViewModel = hiltViewModel()
 ) {
     StartScreenContent(
@@ -45,6 +51,8 @@ fun StartScreen(
         onStart = onStart,
         goToBmi = goToBmi,
         goToHistory = goToHistory,
+        goToWorkoutSets = goToWorkoutSets,
+        selectedWorkout = viewModel.workoutSetName.collectAsState().value
     )
 }
 
@@ -54,6 +62,8 @@ fun StartScreenContent(
     onStart: () -> Unit,
     goToBmi: () -> Unit,
     goToHistory: () -> Unit,
+    goToWorkoutSets: () -> Unit,
+    selectedWorkout: String,
 ) {
     Column(
         modifier = modifier
@@ -77,12 +87,12 @@ fun StartScreenContent(
                     + expandIn(animationSpec = tween(2000)),
 
             ) {
-                Image(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentScale = ContentScale.FillWidth,
-                    painter = painterResource(id = R.drawable.start_logo),
-                    contentDescription = "app logo"
-                )
+            Image(
+                modifier = Modifier.fillMaxWidth(),
+                contentScale = ContentScale.FillWidth,
+                painter = painterResource(id = R.drawable.start_logo),
+                contentDescription = "app logo"
+            )
         }
         Column(
             modifier = Modifier
@@ -92,6 +102,24 @@ fun StartScreenContent(
             verticalArrangement = Arrangement.Center,
         ) {
 
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+            ){
+                IconButton(onClick = goToWorkoutSets) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = "Edit Icon"
+                    )
+                }
+                Text(
+                    modifier = Modifier.clickable { goToWorkoutSets() },
+                    text = "Workout: $selectedWorkout",
+                    style = MaterialTheme.typography.headlineSmall
+                )
+
+            }
             CircleButton(
                 modifier = Modifier.size(120.dp),
                 borderColor = MaterialTheme.colorScheme.secondary,
@@ -110,7 +138,8 @@ fun StartScreenContent(
 
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = "Calculate"
+                        text = "Calculate",
+                        style = MaterialTheme.typography.headlineSmall
                     )
                     CircleButton(
                         modifier = Modifier.size(100.dp),
@@ -123,7 +152,8 @@ fun StartScreenContent(
                 }
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = "History"
+                        text = "History",
+                        style = MaterialTheme.typography.headlineSmall
                     )
                     CircleButton(
                         modifier = Modifier.size(100.dp),
@@ -138,7 +168,6 @@ fun StartScreenContent(
             }
 
 
-
         }
 
 
@@ -150,6 +179,12 @@ fun StartScreenContent(
 @Composable
 fun StartScreenPreview() {
     ExerciseTimeTheme {
-        StartScreenContent(onStart = {}, goToBmi = {}, goToHistory = {})
+        StartScreenContent(
+            onStart = {},
+            goToBmi = {},
+            goToHistory = {},
+            selectedWorkout = "Default",
+            goToWorkoutSets = {},
+        )
     }
 }

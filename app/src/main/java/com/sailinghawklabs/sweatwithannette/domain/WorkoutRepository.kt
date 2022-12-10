@@ -7,6 +7,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface WorkoutHistoryRepository {
 
+    suspend fun setupDefaults()
+
     // Workout history maintenance
     suspend fun addWorkout(workout: Workout)
     suspend fun deleteWorkout(workout: Workout)
