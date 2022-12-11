@@ -12,7 +12,6 @@ import com.sailinghawklabs.sweatwithannette.data.local.entity.ActiveSet
 import com.sailinghawklabs.sweatwithannette.data.local.entity.ExerciseMasterEntity
 import com.sailinghawklabs.sweatwithannette.data.local.entity.WorkoutEntity
 import com.sailinghawklabs.sweatwithannette.data.local.entity.WorkoutSetEntity
-import com.sailinghawklabs.sweatwithannette.domain.model.WorkoutSet
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -54,6 +53,12 @@ interface WorkoutDao {
             updateWorkoutSet(workoutSet)
         }
     }
+
+    @Query("SELECT * FROM ${WorkoutSetEntity.TABLE_NAME} WHERE name = :workoutSetName")
+    fun getWorkoutSet(workoutSetName: String): WorkoutSetEntity
+
+    @Query("SELECT * FROM ${WorkoutSetEntity.TABLE_NAME}")
+    fun getAllWorkoutSet(): List<WorkoutSetEntity>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun setActiveWorkoutSet(activeSet: ActiveSet)

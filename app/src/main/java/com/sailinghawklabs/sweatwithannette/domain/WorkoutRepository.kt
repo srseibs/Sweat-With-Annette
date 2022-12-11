@@ -21,6 +21,8 @@ interface WorkoutHistoryRepository {
     // Workout Sets - user-customizable sets of exercises
     suspend fun addWorkoutSet(workoutSet: WorkoutSet)
     suspend fun deleteWorkoutSet(workoutSetName: String)
+    suspend fun getAllWorkoutSets(): List<WorkoutSet>
+    suspend fun getWorkoutSet(workoutSetName: String): WorkoutSet
     suspend fun setActiveWorkoutSetName(workoutSetName: String)
     suspend fun getActiveWorkoutSetName(): String
 

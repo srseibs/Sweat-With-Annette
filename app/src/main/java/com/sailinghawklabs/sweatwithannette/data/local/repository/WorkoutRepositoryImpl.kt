@@ -4,12 +4,14 @@ import com.sailinghawklabs.sweatwithannette.data.local.WorkoutDao
 import com.sailinghawklabs.sweatwithannette.data.local.entity.ActiveSet
 import com.sailinghawklabs.sweatwithannette.data.local.entity.ExerciseMasterEntity
 import com.sailinghawklabs.sweatwithannette.data.local.entity.WorkoutSetEntity
+import com.sailinghawklabs.sweatwithannette.data.mapper.toExercise
 import com.sailinghawklabs.sweatwithannette.data.mapper.toMasterExerciseEntities
 import com.sailinghawklabs.sweatwithannette.data.mapper.toWorkout
 import com.sailinghawklabs.sweatwithannette.data.mapper.toWorkoutEntity
 import com.sailinghawklabs.sweatwithannette.domain.WorkoutHistoryRepository
 import com.sailinghawklabs.sweatwithannette.domain.model.Workout
 import com.sailinghawklabs.sweatwithannette.domain.model.WorkoutSet
+import com.sailinghawklabs.sweatwithannette.util.AerobicOnlyExerciseList
 import com.sailinghawklabs.sweatwithannette.util.DEFAULT_WORKOUT_SET_NAME
 import com.sailinghawklabs.sweatwithannette.util.DefaultExerciseList
 import kotlinx.coroutines.Dispatchers
@@ -28,6 +30,9 @@ class WorkoutHistoryRepositoryImpl @Inject constructor(
         setMasterExerciseList(DefaultExerciseList.toMasterExerciseEntities())
         addWorkoutSet(
             workoutSet = WorkoutSet(DEFAULT_WORKOUT_SET_NAME, DefaultExerciseList)
+        )
+        addWorkoutSet(
+            workoutSet = WorkoutSet("Aerobics Only", AerobicOnlyExerciseList)
         )
         val selectedWorkoutSet = dao.getActiveWorkoutSet().setName
         if (selectedWorkoutSet == "") {
@@ -77,6 +82,30 @@ class WorkoutHistoryRepositoryImpl @Inject constructor(
     override suspend fun getActiveWorkoutSetName(): String = withContext(Dispatchers.IO) {
         dao.getActiveWorkoutSet().setName
     }
+
+    override suspend fun getAllWorkoutSets(): List<WorkoutSet> = withContext(Dispatchers.IO) {
+        val allWorkoutSetEntities = dao.getAllWorkoutSet()
+        allWorkoutSetEntities.map{ it ->
+            WorkoutSet(
+                name = it.name,
+                exerciseList = it.exercises.map{ id ->
+                    dao.getMasterExercise(id).toExercise()
+                }
+            )
+        }
+    }
+
+    override suspend fun getWorkoutSet(workoutSetName: String): WorkoutSet = withContext(Dispatchers.IO) {
+        val workoutSetEnity = dao.getWorkoutSet(workoutSetName)
+
+        WorkoutSet(
+            name = workoutSetEnity.name,
+            exerciseList = workoutSetEnity.exercises.map{
+                dao.getMasterExercise(it).toExercise()
+            }
+        )
+    }
+
 
     // Master Exercise List functions -------------------------------------------------------------
 

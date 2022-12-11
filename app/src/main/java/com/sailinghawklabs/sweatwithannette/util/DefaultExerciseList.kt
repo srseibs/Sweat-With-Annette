@@ -67,3 +67,28 @@ val DefaultExerciseList = listOf(
         imageResourceId = R.drawable.ic_side_plank,
     ),
 )
+
+val AerobicOnlyExerciseList = listOf(
+    Exercise(
+        id = 1,
+        name = "Jumping Jacks",
+        imageResourceId = R.drawable.ic_jumping_jacks,
+    ),
+    Exercise(
+        id = 3,
+        name = "Push Up",
+        imageResourceId = R.drawable.ic_push_up,
+    ),
+
+    Exercise(
+        id = 5,
+        name = "Chair Step-up",
+        imageResourceId = R.drawable.ic_step_up_onto_chair,
+    ),
+    Exercise(
+        id = 9,
+        name = "High-knees Running in Place",
+        imageResourceId = R.drawable.ic_high_knees_running_in_place,
+    ),
+
+)

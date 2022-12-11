@@ -16,11 +16,8 @@ class WelcomeViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             repository.setupDefaults()
-
             getWorkoutSetName()
         }
-
-
     }
 
     val workoutSetName = MutableStateFlow("")
