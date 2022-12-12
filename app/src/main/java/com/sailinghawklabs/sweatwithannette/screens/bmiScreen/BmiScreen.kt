@@ -41,7 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sailinghawklabs.sweatwithannette.screens.bmiScreen.components.ComposeRadioButtonGroup
-import com.sailinghawklabs.sweatwithannette.ui.theme.ExerciseTimeTheme
+import com.sailinghawklabs.sweatwithannette.ui.theme.SweatAnnetteTheme
 import com.sailinghawklabs.sweatwithannette.util.BmiDiagnosis
 import com.sailinghawklabs.sweatwithannette.util.BmiLevels
 import com.sailinghawklabs.sweatwithannette.util.NullBmiDiagnosis
@@ -256,7 +256,7 @@ fun BmiScreenContent(
 @Composable
 fun BmiScreenPreview() {
 
-    ExerciseTimeTheme {
+    SweatAnnetteTheme {
         BmiScreenContent(
             weightInKgs = "84.2",
             weightInLbs = "124.2",

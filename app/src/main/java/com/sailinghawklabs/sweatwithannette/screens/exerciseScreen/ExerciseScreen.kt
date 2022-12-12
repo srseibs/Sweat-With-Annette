@@ -48,7 +48,7 @@ import com.sailinghawklabs.sweatwithannette.screens.exerciseScreen.components.Ar
 import com.sailinghawklabs.sweatwithannette.screens.exerciseScreen.components.CircularProgress
 import com.sailinghawklabs.sweatwithannette.screens.exerciseScreen.components.NumberedProgressIndicator
 import com.sailinghawklabs.sweatwithannette.screens.historyScreen.HistoryViewModel
-import com.sailinghawklabs.sweatwithannette.ui.theme.ExerciseTimeTheme
+import com.sailinghawklabs.sweatwithannette.ui.theme.SweatAnnetteTheme
 import com.sailinghawklabs.sweatwithannette.util.DefaultExerciseList
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -247,7 +247,7 @@ fun ExerciseScreenContent(
 @Preview
 @Composable
 fun ExerciseScreenPreview() {
-    ExerciseTimeTheme {
+    SweatAnnetteTheme {
         ExerciseScreenContent(
             goBack = {},
             textPrompt = "Text Prompt",

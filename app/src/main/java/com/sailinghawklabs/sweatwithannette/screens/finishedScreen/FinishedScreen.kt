@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sailinghawklabs.sweatwithannette.R
 import com.sailinghawklabs.sweatwithannette.screens.historyScreen.HistoryViewModel
-import com.sailinghawklabs.sweatwithannette.ui.theme.ExerciseTimeTheme
+import com.sailinghawklabs.sweatwithannette.ui.theme.SweatAnnetteTheme
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -122,7 +122,7 @@ fun FinishedScreenContent(
 @Preview(showSystemUi = true)
 @Composable
 fun FinishedScreenPreview() {
-    ExerciseTimeTheme {
+    SweatAnnetteTheme {
         FinishedScreenContent(
             goBack = {},
             storeWorkout = {},

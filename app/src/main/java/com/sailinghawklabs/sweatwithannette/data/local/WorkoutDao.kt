@@ -64,7 +64,7 @@ interface WorkoutDao {
     suspend fun setActiveWorkoutSet(activeSet: ActiveSet)
 
     @Query("SELECT setName FROM ${ActiveSet.TABLE_NAME}")
-    suspend fun getActiveWorkoutSet(): ActiveSet
+    suspend fun getActiveWorkoutSet(): ActiveSet?
 
 
 }

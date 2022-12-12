@@ -27,6 +27,13 @@ class WorkoutSetViewModel @Inject constructor(
         getWorkoutSets()
     }
 
+    fun selectWorkoutSet(newName: String) {
+        workoutSetName.value = newName
+        viewModelScope.launch {
+            repository.setActiveWorkoutSetName(newName)
+        }
+    }
+
     private fun getWorkoutSets() = viewModelScope.launch {
         val results = repository.getAllWorkoutSets()
         workOutSets.value = results

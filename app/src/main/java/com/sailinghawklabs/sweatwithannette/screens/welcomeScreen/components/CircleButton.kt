@@ -20,7 +20,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.sailinghawklabs.sweatwithannette.ui.theme.ExerciseTimeTheme
+import com.sailinghawklabs.sweatwithannette.ui.theme.SweatAnnetteTheme
 
 @Composable
 fun CircleButton(
@@ -70,7 +70,7 @@ fun CircleButton(
 @Preview
 @Composable
 fun CircleButtonPreview() {
-    ExerciseTimeTheme {
+    SweatAnnetteTheme {
         CircleButton(
             buttonText = "Start",
             onClicked = {}
@@ -80,7 +80,7 @@ fun CircleButtonPreview() {
 @Preview
 @Composable
 fun CircleButtonPreviewImage() {
-    ExerciseTimeTheme {
+    SweatAnnetteTheme {
         CircleButton(
             buttonText = "Start",
             onClicked = {},

@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sailinghawklabs.sweatwithannette.R
 import com.sailinghawklabs.sweatwithannette.screens.welcomeScreen.components.CircleButton
-import com.sailinghawklabs.sweatwithannette.ui.theme.ExerciseTimeTheme
+import com.sailinghawklabs.sweatwithannette.ui.theme.SweatAnnetteTheme
 
 @Composable
 fun StartScreen(
@@ -178,7 +178,7 @@ fun StartScreenContent(
 @Preview
 @Composable
 fun StartScreenPreview() {
-    ExerciseTimeTheme {
+    SweatAnnetteTheme {
         StartScreenContent(
             onStart = {},
             goToBmi = {},

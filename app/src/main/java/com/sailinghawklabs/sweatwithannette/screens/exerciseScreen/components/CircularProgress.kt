@@ -25,7 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.sailinghawklabs.sweatwithannette.ui.theme.ExerciseTimeTheme
+import com.sailinghawklabs.sweatwithannette.ui.theme.SweatAnnetteTheme
 import kotlin.math.roundToInt
 
 @Composable
@@ -109,7 +109,7 @@ fun CircularProgress(
 @Composable
 fun CircularProgressPreview() {
 
-    ExerciseTimeTheme {
+    SweatAnnetteTheme {
 
         CircularProgress(
             modifier = Modifier.size(240.dp),

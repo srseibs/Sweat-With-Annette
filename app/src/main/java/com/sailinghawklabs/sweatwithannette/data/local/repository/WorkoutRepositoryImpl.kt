@@ -34,10 +34,10 @@ class WorkoutHistoryRepositoryImpl @Inject constructor(
         addWorkoutSet(
             workoutSet = WorkoutSet("Aerobics Only", AerobicOnlyExerciseList)
         )
-        val selectedWorkoutSet = dao.getActiveWorkoutSet().setName
-        if (selectedWorkoutSet == "") {
+
+        if (getActiveWorkoutSetName() == "")
             setActiveWorkoutSetName(DEFAULT_WORKOUT_SET_NAME)
-        }
+
     }
 
     // Workout history functions ---------------------------------------------------------
@@ -67,8 +67,7 @@ class WorkoutHistoryRepositoryImpl @Inject constructor(
 
     override suspend fun deleteWorkoutSet(workoutSetName: String) {
         // remove this from the selected, and replace with DEFAULT, if needed
-        val selectedWorkoutSet = dao.getActiveWorkoutSet().setName
-        if (selectedWorkoutSet == workoutSetName) {
+        if (getActiveWorkoutSetName() == workoutSetName) {
             setActiveWorkoutSetName(DEFAULT_WORKOUT_SET_NAME)
         }
         dao.deleteWorkoutSet(workoutSetName)
@@ -80,31 +79,32 @@ class WorkoutHistoryRepositoryImpl @Inject constructor(
         }
 
     override suspend fun getActiveWorkoutSetName(): String = withContext(Dispatchers.IO) {
-        dao.getActiveWorkoutSet().setName
+        dao.getActiveWorkoutSet()?.setName ?: ""
     }
 
     override suspend fun getAllWorkoutSets(): List<WorkoutSet> = withContext(Dispatchers.IO) {
         val allWorkoutSetEntities = dao.getAllWorkoutSet()
-        allWorkoutSetEntities.map{ it ->
+        allWorkoutSetEntities.map { it ->
             WorkoutSet(
                 name = it.name,
-                exerciseList = it.exercises.map{ id ->
+                exerciseList = it.exercises.map { id ->
                     dao.getMasterExercise(id).toExercise()
                 }
             )
         }
     }
 
-    override suspend fun getWorkoutSet(workoutSetName: String): WorkoutSet = withContext(Dispatchers.IO) {
-        val workoutSetEnity = dao.getWorkoutSet(workoutSetName)
+    override suspend fun getWorkoutSet(workoutSetName: String): WorkoutSet =
+        withContext(Dispatchers.IO) {
+            val workoutSetEnity = dao.getWorkoutSet(workoutSetName)
 
-        WorkoutSet(
-            name = workoutSetEnity.name,
-            exerciseList = workoutSetEnity.exercises.map{
-                dao.getMasterExercise(it).toExercise()
-            }
-        )
-    }
+            WorkoutSet(
+                name = workoutSetEnity.name,
+                exerciseList = workoutSetEnity.exercises.map {
+                    dao.getMasterExercise(it).toExercise()
+                }
+            )
+        }
 
 
     // Master Exercise List functions -------------------------------------------------------------

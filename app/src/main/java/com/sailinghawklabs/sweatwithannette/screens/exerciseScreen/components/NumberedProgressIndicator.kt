@@ -21,7 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices.PIXEL
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.sailinghawklabs.sweatwithannette.ui.theme.ExerciseTimeTheme
+import com.sailinghawklabs.sweatwithannette.ui.theme.SweatAnnetteTheme
 
 @Composable
 fun NumberedProgressIndicator(
@@ -105,7 +105,7 @@ fun NumberedProgressIndicator(
 @Preview(showSystemUi = true, device = PIXEL)
 @Composable
 fun ExerciseProgressIndicatorPreview() {
-    ExerciseTimeTheme {
+    SweatAnnetteTheme {
         NumberedProgressIndicator(
             activeExerciseIndex = 3,
             numExercises = 12,

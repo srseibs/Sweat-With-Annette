@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sailinghawklabs.sweatwithannette.domain.model.Workout
 import com.sailinghawklabs.sweatwithannette.screens.exerciseScreen.components.AreYouSureDialog
-import com.sailinghawklabs.sweatwithannette.ui.theme.ExerciseTimeTheme
+import com.sailinghawklabs.sweatwithannette.ui.theme.SweatAnnetteTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -182,7 +182,7 @@ fun HistoryItem(
 @Preview
 @Composable
 fun HistoryScreenPreview() {
-    ExerciseTimeTheme {
+    SweatAnnetteTheme {
         HistoryItem(
             workout = Workout(
                 date = "Tue 6-Dec-2022 4:09:31 PM",
