@@ -1,5 +1,6 @@
 package com.sailinghawklabs.sweatwithannette.data.local.repository
 
+import android.util.Log
 import com.sailinghawklabs.sweatwithannette.data.local.WorkoutDao
 import com.sailinghawklabs.sweatwithannette.data.local.entity.ActiveSet
 import com.sailinghawklabs.sweatwithannette.data.local.entity.ExerciseMasterEntity
@@ -25,9 +26,10 @@ class WorkoutHistoryRepositoryImpl @Inject constructor(
 ) : WorkoutHistoryRepository {
 
 
-    override suspend fun setupDefaults() = withContext(Dispatchers.IO) {
+    override suspend fun setupDefaults() {
         // setup the default exercise lists and sets. Maybe move all of this to the Repository?
-        setMasterExerciseList(DefaultExerciseList.toMasterExerciseEntities())
+        setMasterExerciseList(masterList = DefaultExerciseList.toMasterExerciseEntities() )
+
         addWorkoutSet(
             workoutSet = WorkoutSet(DEFAULT_WORKOUT_SET_NAME, DefaultExerciseList)
         )
@@ -35,29 +37,33 @@ class WorkoutHistoryRepositoryImpl @Inject constructor(
             workoutSet = WorkoutSet("Aerobics Only", AerobicOnlyExerciseList)
         )
 
-        if (getActiveWorkoutSetName() == "")
+        val activeWorkoutSet = getActiveWorkoutSetName()
+        Log.d("WorkoutHistoryRepositoryImpl", "setupDefaults: activeWorkoutSet = $activeWorkoutSet")
+
+        if (activeWorkoutSet == "")
             setActiveWorkoutSetName(DEFAULT_WORKOUT_SET_NAME)
+
 
     }
 
     // Workout history functions ---------------------------------------------------------
-    override suspend fun addWorkout(workout: Workout) = withContext(Dispatchers.IO) {
+    override suspend fun addWorkout(workout: Workout)  {
         dao.insertWorkout(workout.toWorkoutEntity())
     }
 
-    override suspend fun deleteWorkout(workout: Workout) = withContext(Dispatchers.IO) {
+    override suspend fun deleteWorkout(workout: Workout)  {
         dao.deleteWorkout(workout.toWorkoutEntity())
     }
 
-    override suspend fun getWorkoutHistory(): Flow<List<Workout>> = withContext(Dispatchers.IO) {
+    override suspend fun getWorkoutHistory(): Flow<List<Workout>>  =
         dao.fetchAllWorkouts().map { workoutEntities ->
             workoutEntities.map { it.toWorkout() }
         }
-    }
+
 
     // Custom WorkoutSet functions ----------------------------------------------------------------
 
-    override suspend fun addWorkoutSet(workoutSet: WorkoutSet) = withContext(Dispatchers.IO) {
+    override suspend fun addWorkoutSet(workoutSet: WorkoutSet)  {
         val workoutSetEntity = WorkoutSetEntity(
             name = workoutSet.name,
             exercises = workoutSet.exerciseList.map { it.id }
@@ -73,18 +79,17 @@ class WorkoutHistoryRepositoryImpl @Inject constructor(
         dao.deleteWorkoutSet(workoutSetName)
     }
 
-    override suspend fun setActiveWorkoutSetName(workoutSetName: String) =
-        withContext(Dispatchers.IO) {
-            dao.setActiveWorkoutSet(ActiveSet(workoutSetName))
+    override suspend fun setActiveWorkoutSetName(workoutSetName: String) {
+            dao.setActiveWorkoutSet(ActiveSet(setName = workoutSetName))
         }
 
-    override suspend fun getActiveWorkoutSetName(): String = withContext(Dispatchers.IO) {
-        dao.getActiveWorkoutSet()?.setName ?: ""
-    }
+    override suspend fun getActiveWorkoutSetName(): String =
+        dao.getActiveWorkoutSet() ?: ""
 
-    override suspend fun getAllWorkoutSets(): List<WorkoutSet> = withContext(Dispatchers.IO) {
+
+    override suspend fun getAllWorkoutSets(): List<WorkoutSet> {
         val allWorkoutSetEntities = dao.getAllWorkoutSet()
-        allWorkoutSetEntities.map { it ->
+        return allWorkoutSetEntities.map { it ->
             WorkoutSet(
                 name = it.name,
                 exerciseList = it.exercises.map { id ->
@@ -94,27 +99,24 @@ class WorkoutHistoryRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getWorkoutSet(workoutSetName: String): WorkoutSet =
-        withContext(Dispatchers.IO) {
-            val workoutSetEnity = dao.getWorkoutSet(workoutSetName)
+    override suspend fun getWorkoutSet(workoutSetName: String): WorkoutSet  {
+        val workoutSetEnity = dao.getWorkoutSet(workoutSetName)
 
-            WorkoutSet(
-                name = workoutSetEnity.name,
-                exerciseList = workoutSetEnity.exercises.map {
-                    dao.getMasterExercise(it).toExercise()
-                }
-            )
-        }
+        return WorkoutSet(
+            name = workoutSetEnity.name,
+            exerciseList = workoutSetEnity.exercises.map {
+                dao.getMasterExercise(it).toExercise()
+            }
+        )
+    }
 
 
     // Master Exercise List functions -------------------------------------------------------------
 
     override suspend fun setMasterExerciseList(masterList: List<ExerciseMasterEntity>) =
-        withContext(Dispatchers.IO) {
-            dao.setMasterExerciseList(masterList)
-        }
+        dao.setMasterExerciseList(masterList)
 
-    override suspend fun deleteMasterExerciseList() = withContext(Dispatchers.IO) {
+    override suspend fun deleteMasterExerciseList() {
         TODO("Not yet implemented")
     }
 }

@@ -55,16 +55,16 @@ interface WorkoutDao {
     }
 
     @Query("SELECT * FROM ${WorkoutSetEntity.TABLE_NAME} WHERE name = :workoutSetName")
-    fun getWorkoutSet(workoutSetName: String): WorkoutSetEntity
+    suspend fun getWorkoutSet(workoutSetName: String): WorkoutSetEntity
 
     @Query("SELECT * FROM ${WorkoutSetEntity.TABLE_NAME}")
-    fun getAllWorkoutSet(): List<WorkoutSetEntity>
+    suspend fun getAllWorkoutSet(): List<WorkoutSetEntity>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun setActiveWorkoutSet(activeSet: ActiveSet)
 
     @Query("SELECT setName FROM ${ActiveSet.TABLE_NAME}")
-    suspend fun getActiveWorkoutSet(): ActiveSet?
+    suspend fun getActiveWorkoutSet(): String?
 
 
 }

@@ -113,7 +113,7 @@ fun WorkoutSetsScreen(
                     WorkoutSetItem(
                         workoutSet = workoutSet,
                         selected = selected,
-                        onClick = {viewModel.selectWorkoutSet(workoutSet.name)},
+                        onClick = { viewModel.selectWorkoutSet(workoutSet.name) },
                     )
                     Divider(thickness = 4.dp, color = Color.Black)
                 }

@@ -1,5 +1,6 @@
 package com.sailinghawklabs.sweatwithannette.screens.workoutSetsScreen
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sailinghawklabs.sweatwithannette.domain.WorkoutHistoryRepository
@@ -15,7 +16,6 @@ class WorkoutSetViewModel @Inject constructor(
     val repository: WorkoutHistoryRepository,
 ) : ViewModel() {
 
-
     var workoutSetName = MutableStateFlow("")
         private set
 
@@ -29,9 +29,7 @@ class WorkoutSetViewModel @Inject constructor(
 
     fun selectWorkoutSet(newName: String) {
         workoutSetName.value = newName
-        viewModelScope.launch {
-            repository.setActiveWorkoutSetName(newName)
-        }
+        setWorkoutSetName()
     }
 
     private fun getWorkoutSets() = viewModelScope.launch {
@@ -39,7 +37,12 @@ class WorkoutSetViewModel @Inject constructor(
         workOutSets.value = results
     }
 
+    private fun setWorkoutSetName() = viewModelScope.launch {
+        repository.setActiveWorkoutSetName(workoutSetName.value)
+    }
+
     private fun getWorkoutSetName() = viewModelScope.launch {
         workoutSetName.value = repository.getActiveWorkoutSetName()
+        Log.d("WorkoutSetViewModel", "getWorkoutSetName: ${workoutSetName.value}")
     }
 }

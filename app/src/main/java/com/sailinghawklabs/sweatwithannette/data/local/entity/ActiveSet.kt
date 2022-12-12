@@ -7,6 +7,8 @@ import androidx.room.PrimaryKey
 data class ActiveSet(
 
     @PrimaryKey(autoGenerate = false)
+    val id: Int = 1,
+
     val setName: String
 
 ) {
