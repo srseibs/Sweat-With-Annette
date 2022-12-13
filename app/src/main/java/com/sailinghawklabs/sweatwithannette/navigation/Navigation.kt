@@ -1,7 +1,5 @@
 package com.sailinghawklabs.sweatwithannette.navigation
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -13,18 +11,16 @@ import com.sailinghawklabs.sweatwithannette.screens.historyScreen.HistoryScreen
 import com.sailinghawklabs.sweatwithannette.screens.welcomeScreen.StartScreen
 import com.sailinghawklabs.sweatwithannette.screens.workoutSetsScreen.WorkoutSetsScreen
 
-
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Navigation(
     navController: NavHostController,
 ) {
     NavHost(
         navController = navController,
-        startDestination = NavigationRoutes.StartScreen.route
+        startDestination = NavigationRoutes.WelcomeScreen.route
     ) {
         composable(
-            route = NavigationRoutes.StartScreen.route
+            route = NavigationRoutes.WelcomeScreen.route
         ) {
             StartScreen(
                 onStart = {
@@ -60,8 +56,8 @@ fun Navigation(
         ) {
             FinishedScreen(
                 goBack = {
-                    navController.popBackStack(NavigationRoutes.StartScreen.route, inclusive = true)
-                    navController.navigate(NavigationRoutes.StartScreen.route)
+                    navController.popBackStack(NavigationRoutes.WelcomeScreen.route, inclusive = true)
+                    navController.navigate(NavigationRoutes.WelcomeScreen.route)
                 }
             )
 

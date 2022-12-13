@@ -27,13 +27,19 @@ interface WorkoutDao {
     @Query("SELECT * FROM ${WorkoutEntity.TABLE_NAME} ORDER BY date DESC")
     fun fetchAllWorkouts(): Flow<List<WorkoutEntity>>
 
+
     // Master list of Exercises ---------------------------------------------------
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun setMasterExerciseList(masterExercises: List<ExerciseMasterEntity>)
 
+    @Query("SELECT * FROM ${ExerciseMasterEntity.TABLE_NAME}")
+    fun getMasterExerciseList(): Flow<List<ExerciseMasterEntity>>
+
     @Query("SELECT * FROM ${ExerciseMasterEntity.TABLE_NAME} WHERE id = :masterIndex")
     suspend fun getMasterExercise(masterIndex: Int): ExerciseMasterEntity
 
+    @Query("DELETE FROM ${ExerciseMasterEntity.TABLE_NAME}")
+    suspend fun deleteMasterExerciseList()
 
     // Custom workout sets -------------------------------------------------------
     @Insert
@@ -55,16 +61,16 @@ interface WorkoutDao {
     }
 
     @Query("SELECT * FROM ${WorkoutSetEntity.TABLE_NAME} WHERE name = :workoutSetName")
-    suspend fun getWorkoutSet(workoutSetName: String): WorkoutSetEntity
+    fun getWorkoutSet(workoutSetName: String): Flow<WorkoutSetEntity>
 
     @Query("SELECT * FROM ${WorkoutSetEntity.TABLE_NAME}")
-    suspend fun getAllWorkoutSet(): List<WorkoutSetEntity>
+    fun getAllWorkoutSet(): Flow<List<WorkoutSetEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun setActiveWorkoutSet(activeSet: ActiveSet)
 
     @Query("SELECT setName FROM ${ActiveSet.TABLE_NAME}")
-    suspend fun getActiveWorkoutSet(): String?
+    fun getActiveWorkoutSet(): Flow<String?>
 
 
 }

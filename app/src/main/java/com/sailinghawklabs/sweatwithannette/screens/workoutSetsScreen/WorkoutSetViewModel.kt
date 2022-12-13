@@ -1,13 +1,14 @@
 package com.sailinghawklabs.sweatwithannette.screens.workoutSetsScreen
 
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sailinghawklabs.sweatwithannette.domain.WorkoutHistoryRepository
 import com.sailinghawklabs.sweatwithannette.domain.model.WorkoutSet
-
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,10 +17,10 @@ class WorkoutSetViewModel @Inject constructor(
     val repository: WorkoutHistoryRepository,
 ) : ViewModel() {
 
-    var workoutSetName = MutableStateFlow("")
+    var workoutSetName by mutableStateOf("")
         private set
 
-    var workOutSets = MutableStateFlow<List<WorkoutSet>>(emptyList())
+    var workOutSets by mutableStateOf<List<WorkoutSet>>(emptyList())
         private set
 
     init {
@@ -28,21 +29,25 @@ class WorkoutSetViewModel @Inject constructor(
     }
 
     fun selectWorkoutSet(newName: String) {
-        workoutSetName.value = newName
+        workoutSetName = newName
         setWorkoutSetName()
     }
 
     private fun getWorkoutSets() = viewModelScope.launch {
-        val results = repository.getAllWorkoutSets()
-        workOutSets.value = results
+        repository.getAllWorkoutSets().collect{
+            workOutSets = it
+        }
+
     }
 
     private fun setWorkoutSetName() = viewModelScope.launch {
-        repository.setActiveWorkoutSetName(workoutSetName.value)
+        repository.setActiveWorkoutSetName(workoutSetName)
+
     }
 
     private fun getWorkoutSetName() = viewModelScope.launch {
-        workoutSetName.value = repository.getActiveWorkoutSetName()
-        Log.d("WorkoutSetViewModel", "getWorkoutSetName: ${workoutSetName.value}")
+        repository.getActiveWorkoutSetName().collect {it ->
+            workoutSetName = it ?: "null"
+        }
     }
 }

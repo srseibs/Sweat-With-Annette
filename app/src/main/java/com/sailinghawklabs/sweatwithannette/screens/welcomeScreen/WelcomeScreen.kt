@@ -51,7 +51,7 @@ fun StartScreen(
         goToBmi = goToBmi,
         goToHistory = goToHistory,
         goToWorkoutSets = goToWorkoutSets,
-        selectedWorkout = viewModel.workoutSetName.value
+        selectedWorkout = viewModel.workoutSetName
     )
 }
 

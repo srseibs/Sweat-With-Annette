@@ -1,7 +1,9 @@
 package com.sailinghawklabs.sweatwithannette.screens.welcomeScreen
 
-import androidx.compose.runtime.State
+import android.util.Log
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sailinghawklabs.sweatwithannette.domain.WorkoutHistoryRepository
@@ -14,17 +16,17 @@ class WelcomeViewModel @Inject constructor(
     private val repository: WorkoutHistoryRepository,
 ) : ViewModel() {
 
+    var workoutSetName by mutableStateOf("")
+        private set
+
     init {
         setupEmptyDatabase()
-    }
-
-    getWorkoutSetName()
-
-    var _workoutSetName = mutableStateOf("")
-    val workoutSetName: State<String> = _workoutSetName
-
-    private fun getWorkoutSetName() = viewModelScope.launch {
-        _workoutSetName.value = repository.getActiveWorkoutSetName() ?: ""
+        viewModelScope.launch {
+            repository.getActiveWorkoutSetName().collect {
+                workoutSetName = it ?: "null"
+                Log.d("WelcomeViewModel", "workoutSetName: $it")
+            }
+        }
     }
 
     private fun setupEmptyDatabase() {
@@ -32,6 +34,4 @@ class WelcomeViewModel @Inject constructor(
             repository.setupDefaults()
         }
     }
-
-
 }

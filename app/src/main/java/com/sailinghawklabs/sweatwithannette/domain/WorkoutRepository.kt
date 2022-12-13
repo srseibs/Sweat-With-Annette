@@ -17,14 +17,16 @@ interface WorkoutHistoryRepository {
     // Master set of all possible exercises
     suspend fun setMasterExerciseList(masterList: List<ExerciseMasterEntity>)
     suspend fun deleteMasterExerciseList()
+    suspend fun getMasterExerciseList(): Flow<List<ExerciseMasterEntity>>
+    suspend fun getMasterExercise(masterIndex: Int): ExerciseMasterEntity
 
     // Workout Sets - user-customizable sets of exercises
     suspend fun addWorkoutSet(workoutSet: WorkoutSet)
     suspend fun deleteWorkoutSet(workoutSetName: String)
-    suspend fun getAllWorkoutSets(): List<WorkoutSet>
-    suspend fun getWorkoutSet(workoutSetName: String): WorkoutSet
+    suspend fun getAllWorkoutSets(): Flow<List<WorkoutSet>>
+    suspend fun getWorkoutSet(workoutSetName: String): Flow<WorkoutSet>
     suspend fun setActiveWorkoutSetName(workoutSetName: String)
-    suspend fun getActiveWorkoutSetName(): String
+    suspend fun getActiveWorkoutSetName(): Flow<String?>
 
 
 
