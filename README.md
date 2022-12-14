@@ -3,9 +3,9 @@
 <img src="/app/src/main/res/drawable/start_logo.png" width="20%">
 
 
-This project is based on the 7 Minute Workout app that is part by Udemy Course called "The Complete Android 12 & Kotlin Development Masterclass" by Denis Panjuta. The course is an excellent course which was created several years ago. 
+This project is based on the 7 Minute Workout app that is one of many apps in the Udemy Course called "The Complete Android 12 & Kotlin Development Masterclass" by Denis Panjuta. The is an excellent course which was created several years ago. 
 
-I recently used this app from that course as a vehicle to practice what I have learned in the 2 years since I took the cours. I added many new elements:
+I recently used this app from that course as a vehicle to practice what I have learned in the 2 years since I took the course. I added many new elements:
 - _**MVVM Architecture**_ was used.
   * Repository is used to insulate ViewModels from the Database. 
   * ViewModels are used to insulate the Screens from the Repository.
@@ -26,6 +26,7 @@ I recently used this app from that course as a vehicle to practice what I have l
   * TextToSpeech
   * MediaPlayer for sound effects
   * Timer (which will now Pause when deciding to abort a workout)
+- _**Workout Sets**_ created to allow custom subsets of the master list of exercises.
 
   
 
