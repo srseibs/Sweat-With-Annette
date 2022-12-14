@@ -3,7 +3,7 @@
 <img src="/app/src/main/res/drawable/start_logo.png" width="20%">
 
 
-This project is based on the 7 Minute Workout app that is one of many apps in the Udemy Course called "The Complete Android 12 & Kotlin Development Masterclass" by Denis Panjuta. The is an excellent course which was created several years ago. 
+This project is based on the 7 Minute Workout app that is one of many apps in the Udemy Course called "The Complete Android 12 & Kotlin Development Masterclass" by Denis Panjuta. This an excellent course which was created several years ago. 
 
 I recently used this app from that course as a vehicle to practice what I have learned in the 2 years since I took the course. I added many new elements:
 - _**MVVM Architecture**_ was used.
