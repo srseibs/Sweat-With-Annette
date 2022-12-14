@@ -21,7 +21,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.Closeable
-import java.util.*
 import javax.inject.Inject
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
@@ -30,7 +29,7 @@ import kotlin.time.Duration.Companion.seconds
 @HiltViewModel
 class ExerciseViewModel @Inject constructor(
     private val repository: WorkoutHistoryRepository,
-    ) : ViewModel(), DefaultLifecycleObserver {
+) : ViewModel(), DefaultLifecycleObserver {
 
     companion object {
         private const val debug = true
@@ -69,8 +68,6 @@ class ExerciseViewModel @Inject constructor(
 
                         delay(600) // to allow sounds to play first
 
-                        txtToSpeech.language = Locale.US
-                        txtToSpeech.setSpeechRate(1.0f)
                         txtToSpeech.speak(
                             text,
                             TextToSpeech.QUEUE_FLUSH,
@@ -80,7 +77,6 @@ class ExerciseViewModel @Inject constructor(
                     }
                 }
             }
-
         }
     }
 
@@ -99,11 +95,16 @@ class ExerciseViewModel @Inject constructor(
     private fun timerDone() {
         advanceToNextState()
     }
+
     fun pauseTimer() = exerciseTimer.pauseTimer(true)
     fun resumeTimer() = exerciseTimer.pauseTimer(false)
 
     // observable states ===================================================
     var exerciseList: List<Exercise> by mutableStateOf(emptyList())
+        private set
+
+    var workoutSetName: String by mutableStateOf("")
+        private set
 
     var exerciseImageId: Int? by mutableStateOf(null)
         private set
@@ -209,12 +210,13 @@ class ExerciseViewModel @Inject constructor(
     private fun getExerciseList() {
         // repository.getExerciseList() eventually
         viewModelScope.launch {
-            repository.getActiveWorkoutSetName().collect{ workoutSetName ->
-                if (workoutSetName.isNullOrBlank()) {
+            repository.getActiveWorkoutSetName().collect { activeWorkoutSetName ->
+                if (activeWorkoutSetName.isNullOrBlank()) {
                     throw Exception("Workout Set name is empty.")
                 }
-                repository.getWorkoutSet(workoutSetName).collect{
+                repository.getWorkoutSet(activeWorkoutSetName).collect {
                     exerciseList = it.exerciseList
+                    workoutSetName = activeWorkoutSetName
                     resetState()
                     advanceToNextState()
                 }

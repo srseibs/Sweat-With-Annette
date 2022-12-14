@@ -1,9 +1,7 @@
 package com.sailinghawklabs.sweatwithannette.screens.exerciseScreen
 
-import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.annotation.DrawableRes
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -53,7 +51,6 @@ import com.sailinghawklabs.sweatwithannette.util.DefaultExerciseList
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ExerciseScreen(
     modifier: Modifier = Modifier,
@@ -118,7 +115,8 @@ fun ExerciseScreen(
         textValue = viewModel.textValue,
         timeDuration = viewModel.timeDuration.value,
         numExercises = viewModel.exerciseList.size,
-        exercisesComplete = viewModel.exercisesComplete
+        exercisesComplete = viewModel.exercisesComplete,
+        setName = "Workout Set: ${viewModel.workoutSetName}",
     )
 
 }
@@ -136,6 +134,7 @@ fun ExerciseScreenContent(
     textValue: String,
     numExercises: Int,
     exercisesComplete: Int,
+    setName: String = "Workout Set : Default",
 ) {
 
     Scaffold(
@@ -146,7 +145,7 @@ fun ExerciseScreenContent(
                 ),
                 title = {
                     Text(
-                        text = "Sweat with Annette",
+                        text = setName,
                         style = MaterialTheme.typography.titleLarge
                     )
                 },
@@ -171,7 +170,6 @@ fun ExerciseScreenContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Bottom,
         ) {
-
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
