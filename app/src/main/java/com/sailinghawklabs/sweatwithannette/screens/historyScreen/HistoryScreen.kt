@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.outlined.Check
@@ -155,7 +156,7 @@ fun HistoryItem(
                 )
             else
                 Icon(
-                    imageVector = Icons.Default.Warning,
+                    imageVector = Icons.Default.Close,
                     contentDescription = "Workout not done"
                 )
         }

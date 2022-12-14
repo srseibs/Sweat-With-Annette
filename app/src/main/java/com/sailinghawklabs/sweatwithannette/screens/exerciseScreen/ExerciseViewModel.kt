@@ -14,9 +14,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sailinghawklabs.sweatwithannette.R
+import com.sailinghawklabs.sweatwithannette.domain.WorkoutHistoryRepository
 import com.sailinghawklabs.sweatwithannette.domain.model.Exercise
 import com.sailinghawklabs.sweatwithannette.screens.exerciseScreen.components.ExerciseTimer
-import com.sailinghawklabs.sweatwithannette.util.DefaultExerciseList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -29,7 +29,8 @@ import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class ExerciseViewModel @Inject constructor(
-) : ViewModel(), DefaultLifecycleObserver {
+    private val repository: WorkoutHistoryRepository,
+    ) : ViewModel(), DefaultLifecycleObserver {
 
     companion object {
         private const val debug = true
@@ -101,7 +102,7 @@ class ExerciseViewModel @Inject constructor(
     fun pauseTimer() = exerciseTimer.pauseTimer(true)
     fun resumeTimer() = exerciseTimer.pauseTimer(false)
 
-    // observable states
+    // observable states ===================================================
     var exerciseList: List<Exercise> by mutableStateOf(emptyList())
 
     var exerciseImageId: Int? by mutableStateOf(null)
@@ -208,9 +209,16 @@ class ExerciseViewModel @Inject constructor(
     private fun getExerciseList() {
         // repository.getExerciseList() eventually
         viewModelScope.launch {
-            exerciseList = DefaultExerciseList
-            resetState()
-            advanceToNextState()
+            repository.getActiveWorkoutSetName().collect{ workoutSetName ->
+                if (workoutSetName.isNullOrBlank()) {
+                    throw Exception("Workout Set name is empty.")
+                }
+                repository.getWorkoutSet(workoutSetName).collect{
+                    exerciseList = it.exerciseList
+                    resetState()
+                    advanceToNextState()
+                }
+            }
         }
     }
 

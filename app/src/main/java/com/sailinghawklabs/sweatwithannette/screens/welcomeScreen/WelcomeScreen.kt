@@ -106,18 +106,22 @@ fun StartScreenContent(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically,
             ){
+                Text(
+                    modifier = Modifier.clickable { goToWorkoutSets() },
+                    text = "Workout: ",
+                    style = MaterialTheme.typography.titleLarge
+                )
+                Text(
+                    modifier = Modifier.clickable { goToWorkoutSets() },
+                    text = selectedWorkout,
+                    style = MaterialTheme.typography.headlineMedium
+                )
                 IconButton(onClick = goToWorkoutSets) {
                     Icon(
                         imageVector = Icons.Default.Edit,
                         contentDescription = "Edit Icon"
                     )
                 }
-                Text(
-                    modifier = Modifier.clickable { goToWorkoutSets() },
-                    text = "Workout: $selectedWorkout",
-                    style = MaterialTheme.typography.headlineSmall
-                )
-
             }
             CircleButton(
                 modifier = Modifier.size(120.dp),

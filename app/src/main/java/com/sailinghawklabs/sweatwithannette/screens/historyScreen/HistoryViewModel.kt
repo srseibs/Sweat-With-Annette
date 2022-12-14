@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.sailinghawklabs.sweatwithannette.domain.WorkoutHistoryRepository
 import com.sailinghawklabs.sweatwithannette.domain.model.Workout
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -24,8 +25,20 @@ class HistoryViewModel @Inject constructor(
     var workoutHistory by mutableStateOf<List<Workout>>(emptyList())
         private set
 
+    private var workoutSetName: String = ""
+
+
     init {
+        getWorkoutSetName()
         getAllWorkouts()
+    }
+
+    private fun getWorkoutSetName() {
+        viewModelScope.launch {
+            repository.getActiveWorkoutSetName().collect(){
+                workoutSetName = it ?: "null"
+            }
+        }
     }
 
     fun deleteWorkout(workout: Workout) {
@@ -43,7 +56,8 @@ class HistoryViewModel @Inject constructor(
             repository.addWorkout(
                 Workout(
                     date = current,
-                    complete = completed
+                    complete = completed,
+                    setName = workoutSetName
                 )
             )
         }
