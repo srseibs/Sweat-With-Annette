@@ -2,8 +2,10 @@ package com.sailinghawklabs.sweatwithannette.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.sailinghawklabs.sweatwithannette.screens.bmiScreen.BmiScreen
 import com.sailinghawklabs.sweatwithannette.screens.exerciseScreen.ExerciseScreen
 import com.sailinghawklabs.sweatwithannette.screens.finishedScreen.FinishedScreen
@@ -57,7 +59,10 @@ fun Navigation(
         ) {
             FinishedScreen(
                 goBack = {
-                    navController.popBackStack(NavigationRoutes.WelcomeScreen.route, inclusive = true)
+                    navController.popBackStack(
+                        NavigationRoutes.WelcomeScreen.route,
+                        inclusive = true
+                    )
                     navController.navigate(NavigationRoutes.WelcomeScreen.route)
                 }
             )
@@ -92,15 +97,21 @@ fun Navigation(
                     navController.popBackStack()
                 },
                 goToWorkOutEdit = {
-                    navController.navigate(NavigationRoutes.WorkoutEditScreen.route)
+                    navController.navigate(
+                        route = "${NavigationRoutes.WorkoutEditScreen.route}/workout_name={${it}}"
+                    )
                 }
             )
         }
 
         composable(
-            route = NavigationRoutes.WorkoutEditScreen.route
-        ){
+            route = "${NavigationRoutes.WorkoutEditScreen.route}?workout_name={workout_name}",
+            arguments = listOf(
+                navArgument("workout_name") { defaultValue = "" }
+            )
+        ) { backStackEntry ->
             WorkoutEditScreen(
+                workoutName = backStackEntry.arguments?.getString("workout_name") ?: "",
                 goBack = {
                     navController.popBackStack()
                 },

@@ -55,7 +55,7 @@ fun WorkoutSetsScreen(
     modifier: Modifier = Modifier,
     viewModel: WorkoutSetViewModel = hiltViewModel(),
     goBack: () -> Unit = {},
-    goToWorkOutEdit: () -> Unit,
+    goToWorkOutEdit: (workoutName: String?) -> Unit,
 ) {
 
     val workoutSets = viewModel.workOutSets
@@ -85,7 +85,9 @@ fun WorkoutSetsScreen(
             )
         },
         floatingActionButton = {
-            LargeFloatingActionButton(onClick = { goToWorkOutEdit() }) {
+            LargeFloatingActionButton(
+                onClick = { goToWorkOutEdit(null) }
+            ) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = null,
@@ -112,7 +114,8 @@ fun WorkoutSetsScreen(
                     WorkoutSetItem(
                         workoutSet = workoutSet,
                         selected = selected,
-                        onClick = { viewModel.selectWorkoutSet(workoutSet.name) },
+                        onSelected = { viewModel.selectWorkoutSet(workoutSet.name) },
+                        onEdit = { goToWorkOutEdit(workoutSet.name)}
                     )
                     Divider(thickness = 4.dp, color = Color.Black)
                 }
@@ -127,7 +130,8 @@ fun WorkoutSetItem(
     modifier: Modifier = Modifier,
     workoutSet: WorkoutSet,
     selected: Boolean,
-    onClick: () -> Unit,
+    onSelected: () -> Unit,
+    onEdit:() -> Unit,
 ) {
     Row(modifier = modifier.fillMaxWidth()) {
         Column(
@@ -144,10 +148,10 @@ fun WorkoutSetItem(
             Row {
                 Checkbox(
                     checked = selected,
-                    onCheckedChange = { onClick() }
+                    onCheckedChange = { onSelected() }
                 )
 
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = { onEdit() }) {
                     Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit Workout")
                 }
             }
@@ -168,7 +172,7 @@ fun WorkoutSetItem(
                     .padding(8.dp)
             ) {
                 items(workoutSet.exerciseList) { exercise ->
-                    Divider(thickness = 4.dp, color = Color.Black)
+                    Divider(thickness = 1.dp, color = Color.Black)
                     Column(
                         modifier = Modifier
                             .size(120.dp)
@@ -205,7 +209,8 @@ fun WorkoutSetItemPreview() {
         Surface() {
             WorkoutSetItem(
                 selected = true,
-                onClick = {},
+                onSelected = {},
+                onEdit = {},
                 workoutSet = WorkoutSet(
                     name = "Test Workout",
                     exerciseList = DefaultExerciseList,

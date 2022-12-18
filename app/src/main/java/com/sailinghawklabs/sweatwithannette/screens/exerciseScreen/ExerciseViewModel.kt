@@ -14,7 +14,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sailinghawklabs.sweatwithannette.R
-import com.sailinghawklabs.sweatwithannette.domain.WorkoutHistoryRepository
+import com.sailinghawklabs.sweatwithannette.domain.WorkoutRepository
 import com.sailinghawklabs.sweatwithannette.domain.model.Exercise
 import com.sailinghawklabs.sweatwithannette.screens.exerciseScreen.components.ExerciseTimer
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,7 +28,7 @@ import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class ExerciseViewModel @Inject constructor(
-    private val repository: WorkoutHistoryRepository,
+    private val repository: WorkoutRepository,
 ) : ViewModel(), DefaultLifecycleObserver {
 
     companion object {

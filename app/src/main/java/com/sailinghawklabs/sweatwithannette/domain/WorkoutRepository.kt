@@ -5,7 +5,7 @@ import com.sailinghawklabs.sweatwithannette.domain.model.Workout
 import com.sailinghawklabs.sweatwithannette.domain.model.WorkoutSet
 import kotlinx.coroutines.flow.Flow
 
-interface WorkoutHistoryRepository {
+interface WorkoutRepository {
 
     suspend fun setupDefaults()
 
@@ -27,7 +27,5 @@ interface WorkoutHistoryRepository {
     suspend fun getWorkoutSet(workoutSetName: String): Flow<WorkoutSet>
     suspend fun setActiveWorkoutSetName(workoutSetName: String)
     suspend fun getActiveWorkoutSetName(): Flow<String?>
-
-
 
 }

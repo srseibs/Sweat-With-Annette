@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,21 +42,33 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.sailinghawklabs.sweatwithannette.R
 import com.sailinghawklabs.sweatwithannette.domain.model.Exercise
 import com.sailinghawklabs.sweatwithannette.domain.model.WorkoutSet
-import com.sailinghawklabs.sweatwithannette.screens.workoutSetsScreen.WorkoutSetViewModel
 import com.sailinghawklabs.sweatwithannette.ui.theme.SweatAnnetteTheme
 import com.sailinghawklabs.sweatwithannette.util.DemoWorkoutSet1
 
-@OptIn(ExperimentalMaterial3Api::class)
+enum class ScreenMode {
+    EDIT, ADD,
+}
+
 @Composable
 fun WorkoutEditScreen(
     modifier: Modifier = Modifier,
-    viewModel: WorkoutSetViewModel = hiltViewModel(),
+    viewModel: WorkoutSetEditViewModel = hiltViewModel(),
     goBack: () -> Unit = {},
+    workoutName: String,
 ) {
 
+    val workoutSet = viewModel.workoutSet
+    var screenMode = ScreenMode.ADD
+
+    if (workoutName.isNotEmpty()) {
+        viewModel.loadWorkoutSet(workoutName)
+        screenMode = ScreenMode.EDIT
+    }
+
     WorkoutEditScreenContent(
-        workoutSet = DemoWorkoutSet1,
-        onNameChanged = { }
+        workoutSet = workoutSet,
+        onNameChanged = { },
+        screenMode = screenMode,
     )
 }
 
@@ -65,8 +78,17 @@ fun WorkoutEditScreenContent(
     modifier: Modifier = Modifier,
     goBack: () -> Unit = {},
     workoutSet: WorkoutSet,
+    screenMode: ScreenMode,
     onNameChanged: (String) -> Unit
 ) {
+
+    val titleBarText = remember {
+        if (screenMode == ScreenMode.EDIT)
+            "Edit Workout"
+        else
+            "Create Workout"
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -75,7 +97,7 @@ fun WorkoutEditScreenContent(
                 ),
                 title = {
                     Text(
-                        text = "Edit/Create Workout",
+                        text = titleBarText,
                         style = MaterialTheme.typography.titleLarge
                     )
                 },
@@ -118,7 +140,7 @@ fun WorkoutEditScreenContent(
                 items(
                     items = workoutSet.exerciseList,
                 ) {
-                    Divider(thickness = 4.dp, color = Color.Black)
+                    Divider(thickness = 1.dp, color = Color.Black)
                     WorkOutEditItem(exercise = it)
                 }
             }
@@ -172,8 +194,9 @@ fun WorkOutEditItem(
         Image(
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.primaryContainer)
-                .width(84.dp),
-            contentScale = ContentScale.FillHeight,
+                .fillMaxWidth(.40f),
+            alignment = Alignment.Center,
+            contentScale = ContentScale.Fit,
             painter = painterResource(id = exercise.imageResourceId),
             contentDescription = "Exercise image",
         )
@@ -191,7 +214,8 @@ fun WorkoutEditScreenPreview() {
     SweatAnnetteTheme {
         WorkoutEditScreenContent(
             workoutSet = DemoWorkoutSet1,
-            onNameChanged = {}
+            onNameChanged = {},
+            screenMode = ScreenMode.EDIT,
         )
     }
 }

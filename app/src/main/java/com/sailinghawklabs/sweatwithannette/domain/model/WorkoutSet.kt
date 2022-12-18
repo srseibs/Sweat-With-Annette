@@ -5,5 +5,7 @@ data class WorkoutSet(
     val exerciseList: List<Exercise>
 )
 
+val emptyWorkoutSet = WorkoutSet("", emptyList())
+
 
 

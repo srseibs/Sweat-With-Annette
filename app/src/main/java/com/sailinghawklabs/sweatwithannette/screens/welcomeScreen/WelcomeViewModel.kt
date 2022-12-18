@@ -6,14 +6,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sailinghawklabs.sweatwithannette.domain.WorkoutHistoryRepository
+import com.sailinghawklabs.sweatwithannette.domain.WorkoutRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class WelcomeViewModel @Inject constructor(
-    private val repository: WorkoutHistoryRepository,
+    private val repository: WorkoutRepository,
 ) : ViewModel() {
 
     var workoutSetName by mutableStateOf("")

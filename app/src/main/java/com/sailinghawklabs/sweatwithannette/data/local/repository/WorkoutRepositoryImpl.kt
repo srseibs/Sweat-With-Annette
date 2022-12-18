@@ -9,7 +9,7 @@ import com.sailinghawklabs.sweatwithannette.data.mapper.toExercise
 import com.sailinghawklabs.sweatwithannette.data.mapper.toMasterExerciseEntities
 import com.sailinghawklabs.sweatwithannette.data.mapper.toWorkout
 import com.sailinghawklabs.sweatwithannette.data.mapper.toWorkoutEntity
-import com.sailinghawklabs.sweatwithannette.domain.WorkoutHistoryRepository
+import com.sailinghawklabs.sweatwithannette.domain.WorkoutRepository
 import com.sailinghawklabs.sweatwithannette.domain.model.Workout
 import com.sailinghawklabs.sweatwithannette.domain.model.WorkoutSet
 import com.sailinghawklabs.sweatwithannette.util.AerobicOnlyExerciseList
@@ -26,7 +26,7 @@ import javax.inject.Inject
 class WorkoutHistoryRepositoryImpl @Inject constructor(
     val dao: WorkoutDao,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default,
-) : WorkoutHistoryRepository {
+) : WorkoutRepository {
 
     override suspend fun setupDefaults() = withContext(defaultDispatcher) {
         setMasterExerciseList(masterList = DefaultExerciseList.toMasterExerciseEntities())

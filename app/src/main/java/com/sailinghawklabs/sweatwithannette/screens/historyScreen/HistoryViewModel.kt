@@ -7,10 +7,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sailinghawklabs.sweatwithannette.domain.WorkoutHistoryRepository
+import com.sailinghawklabs.sweatwithannette.domain.WorkoutRepository
 import com.sailinghawklabs.sweatwithannette.domain.model.Workout
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -18,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HistoryViewModel @Inject constructor(
-    private val repository:WorkoutHistoryRepository,
+    private val repository:WorkoutRepository,
 ) : ViewModel() {
 
 

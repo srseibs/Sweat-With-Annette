@@ -2,7 +2,7 @@ package com.sailinghawklabs.sweatwithannette.di
 
 import com.sailinghawklabs.sweatwithannette.data.local.WorkoutDao
 import com.sailinghawklabs.sweatwithannette.data.local.repository.WorkoutHistoryRepositoryImpl
-import com.sailinghawklabs.sweatwithannette.domain.WorkoutHistoryRepository
+import com.sailinghawklabs.sweatwithannette.domain.WorkoutRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,7 +15,7 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideRepository(dao: WorkoutDao): WorkoutHistoryRepository =
+    fun provideRepository(dao: WorkoutDao): WorkoutRepository =
         WorkoutHistoryRepositoryImpl(dao)
 
 
