@@ -2,6 +2,7 @@ package com.sailinghawklabs.sweatwithannette.util
 
 import com.sailinghawklabs.sweatwithannette.R
 import com.sailinghawklabs.sweatwithannette.domain.model.Exercise
+import com.sailinghawklabs.sweatwithannette.domain.model.WorkoutSet
 
 const val DEFAULT_WORKOUT_SET_NAME = "Default"
 
@@ -91,4 +92,9 @@ val AerobicOnlyExerciseList = listOf(
         imageResourceId = R.drawable.ic_high_knees_running_in_place,
     ),
 
+)
+
+val DemoWorkoutSet1 = WorkoutSet(
+    name = "Demo Set 1",
+    exerciseList = AerobicOnlyExerciseList
 )

@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -54,6 +55,7 @@ fun WorkoutSetsScreen(
     modifier: Modifier = Modifier,
     viewModel: WorkoutSetViewModel = hiltViewModel(),
     goBack: () -> Unit = {},
+    goToWorkOutEdit: () -> Unit,
 ) {
 
     val workoutSets = viewModel.workOutSets
@@ -83,7 +85,7 @@ fun WorkoutSetsScreen(
             )
         },
         floatingActionButton = {
-            LargeFloatingActionButton(onClick = { }) {
+            LargeFloatingActionButton(onClick = { goToWorkOutEdit() }) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = null,
@@ -139,10 +141,17 @@ fun WorkoutSetItem(
                 style = MaterialTheme.typography.titleMedium,
                 textAlign = TextAlign.Center
             )
-            Checkbox(
-                checked = selected,
-                onCheckedChange = { onClick() }
-            )
+            Row {
+                Checkbox(
+                    checked = selected,
+                    onCheckedChange = { onClick() }
+                )
+
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit Workout")
+                }
+            }
+
         }
 
         Spacer(modifier = Modifier.width(16.dp))
@@ -161,7 +170,9 @@ fun WorkoutSetItem(
                 items(workoutSet.exerciseList) { exercise ->
                     Divider(thickness = 4.dp, color = Color.Black)
                     Column(
-                        modifier = Modifier.size(120.dp).padding(2.dp),
+                        modifier = Modifier
+                            .size(120.dp)
+                            .padding(2.dp),
                         verticalArrangement = Arrangement.Bottom,
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {

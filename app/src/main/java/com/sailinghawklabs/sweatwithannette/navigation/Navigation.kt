@@ -9,6 +9,7 @@ import com.sailinghawklabs.sweatwithannette.screens.exerciseScreen.ExerciseScree
 import com.sailinghawklabs.sweatwithannette.screens.finishedScreen.FinishedScreen
 import com.sailinghawklabs.sweatwithannette.screens.historyScreen.HistoryScreen
 import com.sailinghawklabs.sweatwithannette.screens.welcomeScreen.StartScreen
+import com.sailinghawklabs.sweatwithannette.screens.workoutEdit.WorkoutEditScreen
 import com.sailinghawklabs.sweatwithannette.screens.workoutSetsScreen.WorkoutSetsScreen
 
 @Composable
@@ -89,7 +90,20 @@ fun Navigation(
             WorkoutSetsScreen(
                 goBack = {
                     navController.popBackStack()
+                },
+                goToWorkOutEdit = {
+                    navController.navigate(NavigationRoutes.WorkoutEditScreen.route)
                 }
+            )
+        }
+
+        composable(
+            route = NavigationRoutes.WorkoutEditScreen.route
+        ){
+            WorkoutEditScreen(
+                goBack = {
+                    navController.popBackStack()
+                },
             )
         }
 
