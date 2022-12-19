@@ -55,12 +55,11 @@ fun WorkoutSetsScreen(
     modifier: Modifier = Modifier,
     viewModel: WorkoutSetViewModel = hiltViewModel(),
     goBack: () -> Unit = {},
-    goToWorkOutEdit: (workoutName: String?) -> Unit,
+    goToWorkOutEdit: (String?) -> Unit,
 ) {
 
     val workoutSets = viewModel.workOutSets
     val selectedSetName = viewModel.workoutSetName
-
 
     Scaffold(
         topBar = {
@@ -90,7 +89,7 @@ fun WorkoutSetsScreen(
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = null,
+                    contentDescription = "Create new Workout",
                 )
             }
         }

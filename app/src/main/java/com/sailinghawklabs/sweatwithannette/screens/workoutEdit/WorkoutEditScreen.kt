@@ -44,6 +44,7 @@ import com.sailinghawklabs.sweatwithannette.domain.model.Exercise
 import com.sailinghawklabs.sweatwithannette.domain.model.WorkoutSet
 import com.sailinghawklabs.sweatwithannette.ui.theme.SweatAnnetteTheme
 import com.sailinghawklabs.sweatwithannette.util.DemoWorkoutSet1
+import com.sailinghawklabs.sweatwithannette.util.dragdrop.DragDropColumn
 
 enum class ScreenMode {
     EDIT, ADD,
@@ -58,11 +59,10 @@ fun WorkoutEditScreen(
 ) {
 
     val workoutSet = viewModel.workoutSet
-    var screenMode = ScreenMode.ADD
+    var screenMode = viewModel.screenMode
 
     if (workoutName.isNotEmpty()) {
         viewModel.loadWorkoutSet(workoutName)
-        screenMode = ScreenMode.EDIT
     }
 
     WorkoutEditScreenContent(
@@ -136,13 +136,14 @@ fun WorkoutEditScreenContent(
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            LazyColumn {
-                items(
-                    items = workoutSet.exerciseList,
-                ) {
+            DragDropColumn(
+                items = workoutSet.exerciseList,
+                onSwap = {from, to ->
+
+                }
+            ) {
                     Divider(thickness = 1.dp, color = Color.Black)
                     WorkOutEditItem(exercise = it)
-                }
             }
         }
     }

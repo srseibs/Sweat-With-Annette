@@ -2,7 +2,6 @@ package com.sailinghawklabs.sweatwithannette.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
@@ -63,7 +62,7 @@ fun Navigation(
                         NavigationRoutes.WelcomeScreen.route,
                         inclusive = true
                     )
-                    navController.navigate(NavigationRoutes.WelcomeScreen.route)
+//                    navController.navigate(NavigationRoutes.WelcomeScreen.route)
                 }
             )
 
@@ -97,26 +96,29 @@ fun Navigation(
                     navController.popBackStack()
                 },
                 goToWorkOutEdit = {
+                    val baseRoute = NavigationRoutes.WorkoutEditScreen.route
+                    val arg = if (it == null) "" else "?workoutName=$it"
                     navController.navigate(
-                        route = "${NavigationRoutes.WorkoutEditScreen.route}/workout_name={${it}}"
+                        route = "$baseRoute$arg"
                     )
                 }
-            )
-        }
-
-        composable(
-            route = "${NavigationRoutes.WorkoutEditScreen.route}?workout_name={workout_name}",
-            arguments = listOf(
-                navArgument("workout_name") { defaultValue = "" }
-            )
-        ) { backStackEntry ->
-            WorkoutEditScreen(
-                workoutName = backStackEntry.arguments?.getString("workout_name") ?: "",
-                goBack = {
-                    navController.popBackStack()
-                },
-            )
-        }
-
+        )
     }
+
+    composable(
+        route = "${NavigationRoutes.WorkoutEditScreen.route}?workoutName={workoutName}",
+        arguments = listOf(
+            navArgument("workoutName") { defaultValue = "" }
+        )
+    ) { backStackEntry ->
+        val workoutName = backStackEntry.arguments?.getString("workoutName")
+        WorkoutEditScreen(
+            workoutName = workoutName ?: "",
+            goBack = {
+                navController.popBackStack()
+            },
+        )
+    }
+
+}
 }

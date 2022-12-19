@@ -19,6 +19,9 @@ class WorkoutSetEditViewModel @Inject constructor(
     var workoutSet by mutableStateOf(emptyWorkoutSet)
         private set
 
+    var screenMode by mutableStateOf(ScreenMode.ADD)
+        private set
+
     fun saveWorkoutSet() {
     }
 
@@ -26,11 +29,14 @@ class WorkoutSetEditViewModel @Inject constructor(
         if (workoutName.isNotEmpty()) {
             viewModelScope.launch {
                 repository.getWorkoutSet(workoutName).collect {
-                    if (it != null) {
+                    it?.let{
                         workoutSet = it
+                        screenMode = ScreenMode.EDIT
                     }
                 }
             }
+        } else {
+            screenMode = ScreenMode.ADD
         }
     }
 
