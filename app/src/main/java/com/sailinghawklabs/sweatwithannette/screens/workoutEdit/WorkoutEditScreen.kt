@@ -1,8 +1,10 @@
 package com.sailinghawklabs.sweatwithannette.screens.workoutEdit
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,12 +12,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -55,20 +55,19 @@ fun WorkoutEditScreen(
     modifier: Modifier = Modifier,
     viewModel: WorkoutSetEditViewModel = hiltViewModel(),
     goBack: () -> Unit = {},
-    workoutName: String,
 ) {
 
     val workoutSet = viewModel.workoutSet
-    var screenMode = viewModel.screenMode
-
-    if (workoutName.isNotEmpty()) {
-        viewModel.loadWorkoutSet(workoutName)
-    }
+    val screenMode = viewModel.screenMode
 
     WorkoutEditScreenContent(
+        modifier = modifier,
+        goBack = goBack,
         workoutSet = workoutSet,
         onNameChanged = { },
+        onDeleteExercise = viewModel::deleteExerciseFromWorkoutSet,
         screenMode = screenMode,
+        swapExercise = viewModel::swapExercises
     )
 }
 
@@ -76,11 +75,15 @@ fun WorkoutEditScreen(
 @Composable
 fun WorkoutEditScreenContent(
     modifier: Modifier = Modifier,
-    goBack: () -> Unit = {},
+    goBack: () -> Unit,
     workoutSet: WorkoutSet,
     screenMode: ScreenMode,
-    onNameChanged: (String) -> Unit
+    onNameChanged: (String) -> Unit,
+    onDeleteExercise: (index:Int) -> Unit,
+    swapExercise: (from:Int, to:Int) -> Unit,
 ) {
+
+    Log.d("Edit", workoutSet.exerciseList.map{it.id }.toString() )
 
     val titleBarText = remember {
         if (screenMode == ScreenMode.EDIT)
@@ -112,6 +115,12 @@ fun WorkoutEditScreenContent(
                 actions = {
                     IconButton(onClick = { /*TODO*/ }) {
                         Icon(
+                            imageVector = Icons.Default.Done,
+                            contentDescription = "Save Edits"
+                        )
+                    }
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(
                             imageVector = Icons.Default.Delete,
                             contentDescription = "Delete WorkoutSet"
                         )
@@ -136,17 +145,37 @@ fun WorkoutEditScreenContent(
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            DragDropColumn(
-                items = workoutSet.exerciseList,
-                onSwap = {from, to ->
-
+            if (workoutSet.exerciseList.isEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(48.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Press the + button to add exercises to this workout",
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.headlineMedium,
+                    )
                 }
-            ) {
+
+            } else {
+                DragDropColumn(
+                    items = workoutSet.exerciseList,
+                    onSwap = {from, to ->
+                        swapExercise(from, to)
+                    }
+                ) {item, index ->
                     Divider(thickness = 1.dp, color = Color.Black)
                     Spacer(Modifier.height(2.dp))
-                    WorkOutEditItem(exercise = it)
+                    WorkOutEditItem(
+                        exercise = item,
+                        onDeleteItem = { onDeleteExercise(index) }
+                    )
+                }
             }
-            Divider(thickness = 1.dp, color = Color.Black)
+
+
         }
     }
 }
@@ -155,6 +184,7 @@ fun WorkoutEditScreenContent(
 fun WorkOutEditItem(
     modifier: Modifier = Modifier,
     exercise: Exercise,
+    onDeleteItem: () -> Unit,
 ) {
     Row(
         modifier = modifier
@@ -203,7 +233,7 @@ fun WorkOutEditItem(
             painter = painterResource(id = exercise.imageResourceId),
             contentDescription = "Exercise image",
         )
-        IconButton(onClick = { /*TODO*/ }) {
+        IconButton(onClick = { onDeleteItem() }) {
             Icon(imageVector = Icons.Default.Delete,
             contentDescription = "Delete Exercise")
         }
@@ -219,6 +249,9 @@ fun WorkoutEditScreenPreview() {
             workoutSet = DemoWorkoutSet1,
             onNameChanged = {},
             screenMode = ScreenMode.EDIT,
+            swapExercise = { _, _ -> },
+            onDeleteExercise = { },
+            goBack = {},
         )
     }
 }

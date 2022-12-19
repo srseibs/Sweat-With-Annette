@@ -102,23 +102,20 @@ fun Navigation(
                         route = "$baseRoute$arg"
                     )
                 }
-        )
-    }
+            )
+        }
 
-    composable(
-        route = "${NavigationRoutes.WorkoutEditScreen.route}?workoutName={workoutName}",
-        arguments = listOf(
-            navArgument("workoutName") { defaultValue = "" }
-        )
-    ) { backStackEntry ->
-        val workoutName = backStackEntry.arguments?.getString("workoutName")
-        WorkoutEditScreen(
-            workoutName = workoutName ?: "",
-            goBack = {
-                navController.popBackStack()
-            },
-        )
+        composable(
+            route = "${NavigationRoutes.WorkoutEditScreen.route}?workoutName={workoutName}",
+            arguments = listOf(
+                navArgument("workoutName") { defaultValue = "" }
+            )
+        ) { backStackEntry ->
+            WorkoutEditScreen(
+                goBack = {
+                    navController.popBackStack()
+                },
+            )
+        }
     }
-
-}
 }

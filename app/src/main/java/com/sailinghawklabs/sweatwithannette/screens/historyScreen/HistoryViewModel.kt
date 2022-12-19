@@ -1,7 +1,5 @@
 package com.sailinghawklabs.sweatwithannette.screens.historyScreen
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -34,7 +32,7 @@ class HistoryViewModel @Inject constructor(
 
     private fun getWorkoutSetName() {
         viewModelScope.launch {
-            repository.getActiveWorkoutSetName().collect(){
+            repository.getActiveWorkoutSetName().collect {
                 workoutSetName = it ?: "null"
             }
         }
@@ -46,7 +44,6 @@ class HistoryViewModel @Inject constructor(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun addWorkoutToDatabase(completed: Boolean) {
         // Tue 6-Dec-2022 2:12:12 PM
         val formatter = DateTimeFormatter.ofPattern("E d-LLL-yyyy h:mm:ss a")

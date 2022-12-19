@@ -3,6 +3,7 @@ package com.sailinghawklabs.sweatwithannette.screens.workoutEdit
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sailinghawklabs.sweatwithannette.domain.WorkoutRepository
@@ -14,6 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class WorkoutSetEditViewModel @Inject constructor(
     val repository: WorkoutRepository,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     var workoutSet by mutableStateOf(emptyWorkoutSet)
@@ -22,7 +24,28 @@ class WorkoutSetEditViewModel @Inject constructor(
     var screenMode by mutableStateOf(ScreenMode.ADD)
         private set
 
+    private val passedWorkoutName = savedStateHandle["workoutName"] ?: "missing"
+
+    init {
+        if (passedWorkoutName != "") {
+            loadWorkoutSet(passedWorkoutName)
+        }
+    }
+
     fun saveWorkoutSet() {
+    }
+
+    fun swapExercises(from:Int, to:Int) {
+        val fromExercise = workoutSet.exerciseList[from]
+        val toExercise = workoutSet.exerciseList[to]
+        val newList = workoutSet.exerciseList.toMutableList()
+        newList[from] = toExercise
+        newList[to] = fromExercise
+
+        workoutSet = workoutSet.copy(
+            exerciseList = newList,
+        )
+
     }
 
     fun loadWorkoutSet(workoutName: String) {
@@ -44,7 +67,13 @@ class WorkoutSetEditViewModel @Inject constructor(
     fun deleteWorkoutSet() {
     }
 
-    fun deleteExerciseFromWorkoutSet() {
+    fun deleteExerciseFromWorkoutSet(index: Int) {
+        val newList = workoutSet.exerciseList.toMutableList()
+        newList.removeAt(index)
+        workoutSet = workoutSet.copy(
+            exerciseList = newList
+        )
+
     }
 
 
