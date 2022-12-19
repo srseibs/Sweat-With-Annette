@@ -143,8 +143,10 @@ fun WorkoutEditScreenContent(
                 }
             ) {
                     Divider(thickness = 1.dp, color = Color.Black)
+                    Spacer(Modifier.height(2.dp))
                     WorkOutEditItem(exercise = it)
             }
+            Divider(thickness = 1.dp, color = Color.Black)
         }
     }
 }
