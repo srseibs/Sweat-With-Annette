@@ -14,40 +14,61 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
+
 @HiltViewModel
 class WorkoutSetEditViewModel @Inject constructor(
     val repository: WorkoutRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
+    enum class ScreenMode {
+        EDIT, ADD, INIT
+    }
     sealed class EventToUi {
-        data class EntryError(val message: String): EventToUi()
+        data class EntryError(val message: String) : EventToUi()
     }
 
     private val _errorMessageToUi = MutableSharedFlow<EventToUi>()
     val errorMessageToUi = _errorMessageToUi.asSharedFlow()
+    private fun emitMessage(message: String) {
+        viewModelScope.launch {
+            _errorMessageToUi.emit(EventToUi.EntryError(message))
+        }
+    }
 
     var workoutSet by mutableStateOf(emptyWorkoutSet)
         private set
 
-    var screenMode by mutableStateOf(ScreenMode.ADD)
+    var screenMode by mutableStateOf(ScreenMode.INIT)
         private set
 
-    private val passedWorkoutName = savedStateHandle["workoutName"] ?: "missing"
+    private val workoutNameParameter = savedStateHandle["workoutName"] ?: "missing"
 
     var showSaveButton by mutableStateOf(false)
         private set
 
     init {
-        if (passedWorkoutName != "") {
-            loadWorkoutSet(passedWorkoutName)
+        if (workoutNameParameter != "") {
+            loadWorkoutSet(workoutNameParameter)
         }
     }
 
     fun saveWorkoutSet() {
-        viewModelScope.launch {
-            _errorMessageToUi.emit(EventToUi.EntryError("missing something"))
+        workoutSet = workoutSet.copy(
+            name = workoutSet.name.trim()
+        )
+
+        if (workoutSet.name.isBlank()) {
+            emitMessage("Workout Set name cannot be blank! Enter a name.")
+            return
         }
+
+        if (workoutSet.name == "Default") {
+            emitMessage("Default Workout set cannot be changed. Enter another name.")
+            return
+        }
+
         showSaveButton = false
     }
 
@@ -81,6 +102,13 @@ class WorkoutSetEditViewModel @Inject constructor(
         }
     }
 
+    fun workoutNameChanged(newName: String) {
+        workoutSet = workoutSet.copy(
+            name = newName,
+        )
+        showSaveButton = true
+    }
+
 
     fun deleteWorkoutSet() {
     }
@@ -91,8 +119,7 @@ class WorkoutSetEditViewModel @Inject constructor(
         workoutSet = workoutSet.copy(
             exerciseList = newList
         )
-        showSaveButton = true
-
+        showSaveButton = workoutSet.exerciseList.isNotEmpty()
     }
 
 

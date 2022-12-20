@@ -13,11 +13,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -36,7 +34,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -58,9 +55,6 @@ import com.sailinghawklabs.sweatwithannette.util.DemoWorkoutSet1
 import com.sailinghawklabs.sweatwithannette.util.dragdrop.DragDropColumn
 import kotlinx.coroutines.flow.collectLatest
 
-enum class ScreenMode {
-    EDIT, ADD,
-}
 
 @Composable
 fun WorkoutEditScreen(
@@ -70,11 +64,12 @@ fun WorkoutEditScreen(
 ) {
     var showSaveAlertDialog by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
 
     BackHandler {
         if (viewModel.showSaveButton) {
             showSaveAlertDialog = true
+        } else {
+            goBack()
         }
     }
 
@@ -88,7 +83,6 @@ fun WorkoutEditScreen(
                         duration = SnackbarDuration.Long,
                     )
                 }
-                else -> {}
             }
         }
     }
@@ -112,12 +106,14 @@ fun WorkoutEditScreen(
         goBack = {
             if (viewModel.showSaveButton) {
                 showSaveAlertDialog = true
-            } else { goBack() }
+            } else {
+                goBack()
+            }
         },
         showSave = viewModel.showSaveButton,
         onSavePressed = { viewModel.saveWorkoutSet() },
         workoutSet = viewModel.workoutSet,
-        onNameChanged = { },
+        onNameChanged = { viewModel.workoutNameChanged(it)},
         onDeleteExercise = viewModel::deleteExerciseFromWorkoutSet,
         screenMode = viewModel.screenMode,
         swapExercise = viewModel::swapExercises,
@@ -133,21 +129,23 @@ fun WorkoutEditScreenContent(
     showSave: Boolean = true,
     onSavePressed: () -> Unit,
     workoutSet: WorkoutSet,
-    screenMode: ScreenMode,
+    screenMode: WorkoutSetEditViewModel.ScreenMode,
     onNameChanged: (String) -> Unit,
     onDeleteExercise: (index: Int) -> Unit,
     swapExercise: (from: Int, to: Int) -> Unit,
     snackbarHostState: SnackbarHostState,
 ) {
 
-    Log.d("Edit", workoutSet.exerciseList.map { it.id }.toString())
-
-    val titleBarText = remember {
-        if (screenMode == ScreenMode.EDIT)
-            "Edit Workout"
+    Log.d("screenMode", "WorkoutEditScreenContent: $screenMode")
+    val titleBarText =
+        if (screenMode == WorkoutSetEditViewModel.ScreenMode.EDIT) {
+            if (showSave)
+                "Edit Workout (changed)"
+            else
+                "Edit Workout"
+        }
         else
             "Create Workout"
-    }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -205,7 +203,7 @@ fun WorkoutEditScreenContent(
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = workoutSet.name,
-                onValueChange = { },
+                onValueChange = { onNameChanged(it) },
                 label = { Text("Workout Name") }
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -239,8 +237,6 @@ fun WorkoutEditScreenContent(
                     )
                 }
             }
-
-
         }
     }
 }
@@ -315,7 +311,7 @@ fun WorkoutEditScreenPreview() {
         WorkoutEditScreenContent(
             workoutSet = DemoWorkoutSet1,
             onNameChanged = {},
-            screenMode = ScreenMode.EDIT,
+            screenMode = WorkoutSetEditViewModel.ScreenMode.EDIT,
             swapExercise = { _, _ -> },
             onDeleteExercise = { },
             goBack = {},
