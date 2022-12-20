@@ -9,6 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.sailinghawklabs.sweatwithannette.domain.WorkoutRepository
 import com.sailinghawklabs.sweatwithannette.domain.model.emptyWorkoutSet
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,6 +20,13 @@ class WorkoutSetEditViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
+    sealed class EventToUi {
+        data class EntryError(val message: String): EventToUi()
+    }
+
+    private val _errorMessageToUi = MutableSharedFlow<EventToUi>()
+    val errorMessageToUi = _errorMessageToUi.asSharedFlow()
+
     var workoutSet by mutableStateOf(emptyWorkoutSet)
         private set
 
@@ -26,6 +35,9 @@ class WorkoutSetEditViewModel @Inject constructor(
 
     private val passedWorkoutName = savedStateHandle["workoutName"] ?: "missing"
 
+    var showSaveButton by mutableStateOf(false)
+        private set
+
     init {
         if (passedWorkoutName != "") {
             loadWorkoutSet(passedWorkoutName)
@@ -33,9 +45,14 @@ class WorkoutSetEditViewModel @Inject constructor(
     }
 
     fun saveWorkoutSet() {
+        viewModelScope.launch {
+            _errorMessageToUi.emit(EventToUi.EntryError("missing something"))
+        }
+        showSaveButton = false
     }
 
-    fun swapExercises(from:Int, to:Int) {
+
+    fun swapExercises(from: Int, to: Int) {
         val fromExercise = workoutSet.exerciseList[from]
         val toExercise = workoutSet.exerciseList[to]
         val newList = workoutSet.exerciseList.toMutableList()
@@ -45,6 +62,7 @@ class WorkoutSetEditViewModel @Inject constructor(
         workoutSet = workoutSet.copy(
             exerciseList = newList,
         )
+        showSaveButton = true
 
     }
 
@@ -52,7 +70,7 @@ class WorkoutSetEditViewModel @Inject constructor(
         if (workoutName.isNotEmpty()) {
             viewModelScope.launch {
                 repository.getWorkoutSet(workoutName).collect {
-                    it?.let{
+                    it?.let {
                         workoutSet = it
                         screenMode = ScreenMode.EDIT
                     }
@@ -73,6 +91,7 @@ class WorkoutSetEditViewModel @Inject constructor(
         workoutSet = workoutSet.copy(
             exerciseList = newList
         )
+        showSaveButton = true
 
     }
 

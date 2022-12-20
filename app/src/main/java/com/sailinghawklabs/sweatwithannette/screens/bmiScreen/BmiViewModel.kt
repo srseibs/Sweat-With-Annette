@@ -25,7 +25,6 @@ class BmiViewModel @Inject constructor() : ViewModel() {
     private val _isMessageShown = MutableSharedFlow<Boolean>()
     val isMessageShownFlow = _isMessageShown.asSharedFlow()
 
-
     fun onEvent(event: BmiEventsToViewModel) {
         bmiState = bmiState.copy(
             bmiCalculated = BmiState().bmiCalculated
