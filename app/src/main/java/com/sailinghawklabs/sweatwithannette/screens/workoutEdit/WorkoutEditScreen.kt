@@ -158,7 +158,6 @@ fun WorkoutEditScreenContent(
                 title = {
                     Text(
                         text = titleBarText,
-                        style = MaterialTheme.typography.titleLarge
                     )
                 },
                 navigationIcon = {
@@ -178,7 +177,6 @@ fun WorkoutEditScreenContent(
                             )
                         }
                     }
-
                     IconButton(
                         onClick = { /*TODO*/ },
                     ) {
