@@ -40,7 +40,7 @@ class HistoryViewModel @Inject constructor(
 
     fun deleteWorkout(workout: Workout) {
         viewModelScope.launch {
-            repository.deleteWorkout(workout)
+            repository.deleteFromWorkoutHistory(workout)
         }
     }
 
@@ -49,7 +49,7 @@ class HistoryViewModel @Inject constructor(
         val formatter = DateTimeFormatter.ofPattern("E d-LLL-yyyy h:mm:ss a")
         val current = LocalDateTime.now().format(formatter)
         viewModelScope.launch {
-            repository.addWorkout(
+            repository.addToWorkoutHistory(
                 Workout(
                     date = current,
                     complete = completed,

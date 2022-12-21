@@ -62,7 +62,7 @@ fun Navigation(
                         NavigationRoutes.WelcomeScreen.route,
                         inclusive = true
                     )
-//                    navController.navigate(NavigationRoutes.WelcomeScreen.route)
+                    navController.navigate(NavigationRoutes.WelcomeScreen.route)
                 }
             )
 

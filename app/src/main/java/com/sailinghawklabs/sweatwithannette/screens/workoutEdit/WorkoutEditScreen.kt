@@ -101,6 +101,21 @@ fun WorkoutEditScreen(
         )
     }
 
+    if (viewModel.showDeleteConfirmation) {
+        AreYouSureDialog(
+            title = "Delete Workout?",
+            detail = "Are you sure you want to delete '${viewModel.workoutSet.name}'?",
+            onConfirm = {
+                viewModel.deletionDialogConfirmed()
+                viewModel.deleteWorkoutSet()
+                goBack()
+            },
+            onDismiss = {
+                viewModel.deletionDialogConfirmed()
+            }
+        )
+    }
+
     WorkoutEditScreenContent(
         modifier = modifier,
         goBack = {
@@ -110,10 +125,13 @@ fun WorkoutEditScreen(
                 goBack()
             }
         },
+        onDeleteWorkout = {
+            viewModel.askDeleteWorkoutSet()
+        },
         showSave = viewModel.showSaveButton,
         onSavePressed = { viewModel.saveWorkoutSet() },
         workoutSet = viewModel.workoutSet,
-        onNameChanged = { viewModel.workoutNameChanged(it)},
+        onNameChanged = { viewModel.workoutNameChanged(it) },
         onDeleteExercise = viewModel::deleteExerciseFromWorkoutSet,
         screenMode = viewModel.screenMode,
         swapExercise = viewModel::swapExercises,
@@ -134,6 +152,7 @@ fun WorkoutEditScreenContent(
     onDeleteExercise: (index: Int) -> Unit,
     swapExercise: (from: Int, to: Int) -> Unit,
     snackbarHostState: SnackbarHostState,
+    onDeleteWorkout: () -> Unit,
 ) {
 
     Log.d("screenMode", "WorkoutEditScreenContent: $screenMode")
@@ -143,8 +162,7 @@ fun WorkoutEditScreenContent(
                 "Edit Workout (changed)"
             else
                 "Edit Workout"
-        }
-        else
+        } else
             "Create Workout"
 
     Scaffold(
@@ -178,7 +196,7 @@ fun WorkoutEditScreenContent(
                         }
                     }
                     IconButton(
-                        onClick = { /*TODO*/ },
+                        onClick = onDeleteWorkout,
                     ) {
                         Icon(
 
@@ -315,6 +333,7 @@ fun WorkoutEditScreenPreview() {
             goBack = {},
             onSavePressed = {},
             snackbarHostState = SnackbarHostState(),
+            onDeleteWorkout = {},
         )
     }
 }

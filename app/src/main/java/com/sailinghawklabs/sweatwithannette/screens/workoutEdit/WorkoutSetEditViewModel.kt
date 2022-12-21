@@ -1,5 +1,6 @@
 package com.sailinghawklabs.sweatwithannette.screens.workoutEdit
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -15,7 +16,6 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
-
 @HiltViewModel
 class WorkoutSetEditViewModel @Inject constructor(
     val repository: WorkoutRepository,
@@ -25,9 +25,11 @@ class WorkoutSetEditViewModel @Inject constructor(
     enum class ScreenMode {
         EDIT, ADD, INIT
     }
+
     sealed class EventToUi {
         data class EntryError(val message: String) : EventToUi()
     }
+
 
     private val _errorMessageToUi = MutableSharedFlow<EventToUi>()
     val errorMessageToUi = _errorMessageToUi.asSharedFlow()
@@ -47,6 +49,10 @@ class WorkoutSetEditViewModel @Inject constructor(
 
     var showSaveButton by mutableStateOf(false)
         private set
+
+    var showDeleteConfirmation by mutableStateOf(false)
+        private set
+
 
     init {
         if (workoutNameParameter != "") {
@@ -69,9 +75,12 @@ class WorkoutSetEditViewModel @Inject constructor(
             return
         }
 
+        viewModelScope.launch {
+            repository.addWorkoutSet(workoutSet)
+        }
+
         showSaveButton = false
     }
-
 
     fun swapExercises(from: Int, to: Int) {
         val fromExercise = workoutSet.exerciseList[from]
@@ -110,7 +119,26 @@ class WorkoutSetEditViewModel @Inject constructor(
     }
 
 
+    fun deletionDialogConfirmed() {
+        showDeleteConfirmation = false
+    }
+
+    fun askDeleteWorkoutSet() {
+        if (workoutSet.name == "Default") {
+            emitMessage("Default Workout set cannot be deleted. Edit and change the name.")
+            return
+        }
+        showDeleteConfirmation = true
+    }
+
     fun deleteWorkoutSet() {
+        if (workoutSet.name == "Default") {
+            emitMessage("Default Workout set cannot be deleted. Edit and change the name.")
+            return
+        }
+        viewModelScope.launch {
+            repository.deleteWorkoutSet(workoutSet.name)
+        }
     }
 
     fun deleteExerciseFromWorkoutSet(index: Int) {
@@ -121,6 +149,4 @@ class WorkoutSetEditViewModel @Inject constructor(
         )
         showSaveButton = workoutSet.exerciseList.isNotEmpty()
     }
-
-
 }

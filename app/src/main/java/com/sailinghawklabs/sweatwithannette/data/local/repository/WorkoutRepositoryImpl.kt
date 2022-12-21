@@ -46,11 +46,11 @@ class WorkoutHistoryRepositoryImpl @Inject constructor(
     }
 
     // Workout history functions ---------------------------------------------------------
-    override suspend fun addWorkout(workout: Workout) = withContext(defaultDispatcher) {
+    override suspend fun addToWorkoutHistory(workout: Workout) = withContext(defaultDispatcher) {
         dao.insertWorkout(workout.toWorkoutEntity())
     }
 
-    override suspend fun deleteWorkout(workout: Workout) = withContext(defaultDispatcher) {
+    override suspend fun deleteFromWorkoutHistory(workout: Workout) = withContext(defaultDispatcher) {
         dao.deleteWorkout(workout.toWorkoutEntity())
     }
 
@@ -68,7 +68,7 @@ class WorkoutHistoryRepositoryImpl @Inject constructor(
             name = workoutSet.name,
             exercises = workoutSet.exerciseList.map { it.id }
         )
-        dao.insertOrUpdateWorkOutSet(workoutSetEntity)
+        dao.addOrUpdateWorkOutSet(workoutSetEntity)
     }
 
     override suspend fun deleteWorkoutSet(workoutSetName: String) = withContext(defaultDispatcher) {

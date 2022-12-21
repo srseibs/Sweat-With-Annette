@@ -7,17 +7,14 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class IntListConverters {
-    @OptIn(ExperimentalSerializationApi::class)
     @TypeConverter
-    fun fromListInt(list: List<Int>) = Json.encodeToString(list)
+    fun fromListInt(list: List<Int>):String = Json.encodeToString(list)
 
-    @OptIn(ExperimentalSerializationApi::class)
     @TypeConverter
-    fun toListInt(value: String) = Json.decodeFromString<List<Int>>(value)
+    fun toListInt(value: String):List<Int> = Json.decodeFromString(value)
 }
 
 
-@OptIn(ExperimentalSerializationApi::class)
 class ExerciseMasterListConverters {
 
     @TypeConverter

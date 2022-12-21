@@ -23,6 +23,6 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideHistoryDao(db: WorkoutDatabase) =
-        db.historyDao()
+        db.workoutDao()
 
 }

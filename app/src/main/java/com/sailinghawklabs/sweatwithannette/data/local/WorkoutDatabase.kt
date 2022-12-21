@@ -21,5 +21,5 @@ import com.sailinghawklabs.sweatwithannette.data.local.entity.WorkoutSetEntity
 )
 @TypeConverters(IntListConverters::class)
 abstract class WorkoutDatabase : RoomDatabase() {
-    abstract fun historyDao(): WorkoutDao
+    abstract fun workoutDao(): WorkoutDao
 }

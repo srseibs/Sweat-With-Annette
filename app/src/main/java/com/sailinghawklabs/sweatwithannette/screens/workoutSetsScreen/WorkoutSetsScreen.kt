@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeFloatingActionButton
@@ -84,11 +85,13 @@ fun WorkoutSetsScreen(
             )
         },
         floatingActionButton = {
-            LargeFloatingActionButton(
-                onClick = { goToWorkOutEdit(null) }
+            FloatingActionButton(
+                onClick = { goToWorkOutEdit(null) },
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
+                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
                     contentDescription = "Create new Workout",
                 )
             }
@@ -99,6 +102,7 @@ fun WorkoutSetsScreen(
                 .padding(paddingValues)
                 .fillMaxSize()
                 .padding(16.dp)
+                .background(MaterialTheme.colorScheme.background)
         ) {
 
             Text(text = "Selected Workout :    $selectedSetName")

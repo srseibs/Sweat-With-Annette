@@ -1,13 +1,11 @@
 package com.sailinghawklabs.sweatwithannette.data.local
 
-import android.database.sqlite.SQLiteConstraintException
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import androidx.room.Update
 import com.sailinghawklabs.sweatwithannette.data.local.entity.ActiveSet
 import com.sailinghawklabs.sweatwithannette.data.local.entity.ExerciseMasterEntity
 import com.sailinghawklabs.sweatwithannette.data.local.entity.WorkoutEntity
@@ -48,15 +46,13 @@ interface WorkoutDao {
     @Query("DELETE FROM ${WorkoutSetEntity.TABLE_NAME} WHERE name = :workoutSetName")
     suspend fun deleteWorkoutSet(workoutSetName: String)
 
-    @Update
-    suspend fun updateWorkoutSet(workoutSet: WorkoutSetEntity)
+    @Query("UPDATE ${WorkoutSetEntity.TABLE_NAME} SET exercises = :exercises WHERE name = :workoutName")
+    suspend fun updateWorkoutSet(workoutName: String, exercises: List<Int>): Int
 
     @Transaction
-    suspend fun insertOrUpdateWorkOutSet(workoutSet: WorkoutSetEntity) {
-        try {
+    suspend fun addOrUpdateWorkOutSet(workoutSet: WorkoutSetEntity) {
+        if (updateWorkoutSet(workoutSet.name, workoutSet.exercises) == 0) {
             insertWorkoutSet(workoutSet)
-        } catch (e: SQLiteConstraintException) {
-            updateWorkoutSet(workoutSet)
         }
     }
 
@@ -71,7 +67,6 @@ interface WorkoutDao {
 
     @Query("SELECT setName FROM ${ActiveSet.TABLE_NAME}")
     fun getActiveWorkoutSet(): Flow<String?>
-
 
 }
 
