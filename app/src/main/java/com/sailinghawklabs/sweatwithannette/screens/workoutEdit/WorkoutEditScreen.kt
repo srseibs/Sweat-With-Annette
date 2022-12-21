@@ -271,9 +271,39 @@ fun WorkOutEditItem(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        IconButton(onClick = { onDeleteItem() }) {
+            Icon(
+                imageVector = Icons.Default.Delete,
+                contentDescription = "Delete Exercise"
+            )
+        }
+
+        Text(
+            modifier = Modifier
+                .weight(1f)
+                .padding(16.dp),
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.titleSmall,
+            text = exercise.name,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+        )
+
+        Image(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.primaryContainer)
+                .weight(1f),
+//                .fillMaxWidth(.40f),
+            alignment = Alignment.Center,
+            contentScale = ContentScale.Fit,
+            painter = painterResource(id = exercise.imageResourceId),
+            contentDescription = "Exercise image",
+        )
+
         Column(
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(start = 8.dp),
         ) {
             IconButton(
                 onClick = {}
@@ -288,32 +318,6 @@ fun WorkOutEditItem(
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.bodySmall,
                 fontStyle = FontStyle.Italic,
-            )
-        }
-
-        Text(
-            modifier = Modifier
-                .weight(1f)
-                .padding(16.dp),
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.titleSmall,
-            text = exercise.name,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis,
-        )
-        Image(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.primaryContainer)
-                .fillMaxWidth(.40f),
-            alignment = Alignment.Center,
-            contentScale = ContentScale.Fit,
-            painter = painterResource(id = exercise.imageResourceId),
-            contentDescription = "Exercise image",
-        )
-        IconButton(onClick = { onDeleteItem() }) {
-            Icon(
-                imageVector = Icons.Default.Delete,
-                contentDescription = "Delete Exercise"
             )
         }
     }
