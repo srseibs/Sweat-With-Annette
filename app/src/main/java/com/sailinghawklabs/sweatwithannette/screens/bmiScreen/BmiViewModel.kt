@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sailinghawklabs.sweatwithannette.util.RidiculouslyLargeBmi
 import com.sailinghawklabs.sweatwithannette.util.diagnoseBmi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -69,13 +70,23 @@ class BmiViewModel @Inject constructor() : ViewModel() {
             bmiCalculated = BmiState().bmiCalculated
         )
         if (validateInputs()) {
-            val bmi = weightInKilograms / (heightInMeters * heightInMeters)
+            var bmi = weightInKilograms / (heightInMeters * heightInMeters)
+            val bmiDisplay: String
+            if (bmi > RidiculouslyLargeBmi) {
+                bmiDisplay = "> ${"%.0f".format(RidiculouslyLargeBmi)}"
+                bmi = RidiculouslyLargeBmi
+            } else {
+                bmiDisplay = "%.1f".format(bmi)
+            }
+
+            Log.d("BmiViewModel", "calculateBmi: $bmi, $bmiDisplay")
+
             bmiState = bmiState.copy(
-                bmiCalculated = "%.1f".format(bmi),
+                bmiCalculated = bmiDisplay,
                 bmiDiagnosis = diagnoseBmi(bmi),
             )
         } else {
-            viewModelScope.launch{ _isMessageShown.emit(true) }
+            viewModelScope.launch { _isMessageShown.emit(true) }
         }
     }
 
@@ -164,7 +175,10 @@ class BmiViewModel @Inject constructor() : ViewModel() {
         valueString: String,
     ): Pair<String, Float> {
 
-        Log.d("BmiViewModel", "tryConvertStringToFloat: label = $label, value = '$valueString', isEmpty:${valueString.isEmpty()}")
+        Log.d(
+            "BmiViewModel",
+            "tryConvertStringToFloat: label = $label, value = '$valueString', isEmpty:${valueString.isEmpty()}"
+        )
 
         if (valueString.isEmpty())
             return Pair("$label: value cannot be empty", 0f)

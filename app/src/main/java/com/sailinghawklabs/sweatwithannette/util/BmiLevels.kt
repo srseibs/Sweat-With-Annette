@@ -7,7 +7,10 @@ data class BmiDiagnosis(
 )
 
 val NullBmiDiagnosis = BmiDiagnosis(-99f, "null", "null")
+
 const val NullBmiString = "?"
+
+const val RidiculouslyLargeBmi = 2000f
 
 val BmiLevels = listOf<BmiDiagnosis>(
     BmiDiagnosis(
@@ -46,9 +49,14 @@ val BmiLevels = listOf<BmiDiagnosis>(
         diagnosis = "This is a serious condition! Act now to take better care of yourself. Maybe workout or eat less"
     ),
     BmiDiagnosis(
-        bmiLessThan = Float.MAX_VALUE,
+        bmiLessThan = 50f,
         label = "Very Severely Obese",
         diagnosis = "This is critical! Act now to take better care of yourself. Maybe workout or eat less"
+    ),
+    BmiDiagnosis(
+        bmiLessThan = RidiculouslyLargeBmi+10f,
+        label = "Possible non-human detected",
+        diagnosis = "It is unclear how you are still living with a BMI this high. Contact researchers."
     )
 )
 
