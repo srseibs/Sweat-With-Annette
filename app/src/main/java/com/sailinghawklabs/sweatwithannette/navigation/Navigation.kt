@@ -45,7 +45,7 @@ fun Navigation(
         ) {
             ExerciseScreen(
                 goBack = {
-                    navController.popBackStack()
+                         navController.navigate(NavigationRoutes.WelcomeScreen.route)
                 },
                 allDone = {
                     navController.navigate(NavigationRoutes.FinishedScreen.route)

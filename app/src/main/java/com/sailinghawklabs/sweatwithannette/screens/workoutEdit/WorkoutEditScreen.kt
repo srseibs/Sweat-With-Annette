@@ -73,6 +73,13 @@ fun WorkoutEditScreen(
         }
     }
 
+    if (viewModel.screenMode == WorkoutSetEditViewModel.ScreenMode.DONE) {
+        Log.d("DBG1", "WorkoutEditScreen: DONE -> goBack()")
+        goBack()
+        return
+    }
+
+
     LaunchedEffect(key1 = showSaveAlertDialog) {
         viewModel.errorMessageToUi.collectLatest { message ->
             when (message) {
@@ -107,11 +114,9 @@ fun WorkoutEditScreen(
             detail = "Are you sure you want to delete '${viewModel.workoutSet.name}'?",
             onConfirm = {
                 viewModel.deletionDialogConfirmed()
-                viewModel.deleteWorkoutSet()
-                goBack()
             },
             onDismiss = {
-                viewModel.deletionDialogConfirmed()
+                viewModel.deletionDialogDismissed()
             }
         )
     }

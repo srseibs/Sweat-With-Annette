@@ -23,7 +23,7 @@ class WorkoutSetEditViewModel @Inject constructor(
 ) : ViewModel() {
 
     enum class ScreenMode {
-        EDIT, ADD, INIT
+        EDIT, ADD, INIT, DONE
     }
 
     sealed class EventToUi {
@@ -77,6 +77,8 @@ class WorkoutSetEditViewModel @Inject constructor(
 
         viewModelScope.launch {
             repository.addWorkoutSet(workoutSet)
+            screenMode = ScreenMode.DONE
+            loadWorkoutSet(workoutSet.name)
         }
 
         showSaveButton = false
@@ -99,7 +101,7 @@ class WorkoutSetEditViewModel @Inject constructor(
     fun loadWorkoutSet(workoutName: String) {
         if (workoutName.isNotEmpty()) {
             viewModelScope.launch {
-                repository.getWorkoutSet(workoutName).collect {
+                repository.getWorkoutSet(workoutName).let {
                     it?.let {
                         workoutSet = it
                         screenMode = ScreenMode.EDIT
@@ -121,6 +123,11 @@ class WorkoutSetEditViewModel @Inject constructor(
 
     fun deletionDialogConfirmed() {
         showDeleteConfirmation = false
+        deleteWorkoutSet()
+    }
+
+    fun deletionDialogDismissed() {
+        showDeleteConfirmation = false
     }
 
     fun askDeleteWorkoutSet() {
@@ -138,6 +145,7 @@ class WorkoutSetEditViewModel @Inject constructor(
         }
         viewModelScope.launch {
             repository.deleteWorkoutSet(workoutSet.name)
+            screenMode = ScreenMode.DONE
         }
     }
 

@@ -1,5 +1,6 @@
 package com.sailinghawklabs.sweatwithannette.screens.welcomeScreen
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
@@ -45,6 +46,8 @@ fun StartScreen(
     goToWorkoutSets: () -> Unit,
     viewModel: WelcomeViewModel = hiltViewModel()
 ) {
+
+    Log.d("WelcomeScreen", "entered")
     StartScreenContent(
         modifier = modifier,
         onStart = onStart,

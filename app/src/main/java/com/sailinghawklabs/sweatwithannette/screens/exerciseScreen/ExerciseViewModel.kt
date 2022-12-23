@@ -184,7 +184,7 @@ class ExerciseViewModel @Inject constructor(
             ExerciseState.Exercising -> {
                 playSound = null
                 exerciseImageId = activeExercise!!.imageResourceId
-                textPrompt = "Workout:"
+                textPrompt = "Exercise:"
                 textValue = activeExercise!!.name
                 startTimer(EXERCISE_TIME, TIMER_INTERVAL)
                 spokenPrompt = activeExercise!!.name
@@ -210,11 +210,11 @@ class ExerciseViewModel @Inject constructor(
     private fun getExerciseList() {
         // repository.getExerciseList() eventually
         viewModelScope.launch {
-            repository.getActiveWorkoutSetName().collect { activeWorkoutSetName ->
-                if (activeWorkoutSetName.isNullOrBlank()) {
+            repository.getActiveWorkoutSetName().let { activeWorkoutSetName ->
+                if (activeWorkoutSetName.isBlank()) {
                     throw Exception("Workout Set name is empty.")
                 }
-                repository.getWorkoutSet(activeWorkoutSetName).collect {
+                repository.getWorkoutSet(activeWorkoutSetName).let {
                     exerciseList = it.exerciseList
                     workoutSetName = activeWorkoutSetName
                     resetState()

@@ -10,7 +10,7 @@ import com.sailinghawklabs.sweatwithannette.data.local.entity.ActiveSet
 import com.sailinghawklabs.sweatwithannette.data.local.entity.ExerciseMasterEntity
 import com.sailinghawklabs.sweatwithannette.data.local.entity.WorkoutEntity
 import com.sailinghawklabs.sweatwithannette.data.local.entity.WorkoutSetEntity
-import kotlinx.coroutines.flow.Flow
+
 
 @Dao
 interface WorkoutDao {
@@ -23,7 +23,7 @@ interface WorkoutDao {
     suspend fun deleteWorkout(history: WorkoutEntity)
 
     @Query("SELECT * FROM ${WorkoutEntity.TABLE_NAME} ORDER BY date DESC")
-    fun fetchAllWorkouts(): Flow<List<WorkoutEntity>>
+    suspend fun fetchAllWorkouts(): List<WorkoutEntity>
 
 
     // Master list of Exercises ---------------------------------------------------
@@ -31,7 +31,7 @@ interface WorkoutDao {
     suspend fun setMasterExerciseList(masterExercises: List<ExerciseMasterEntity>)
 
     @Query("SELECT * FROM ${ExerciseMasterEntity.TABLE_NAME}")
-    fun getMasterExerciseList(): Flow<List<ExerciseMasterEntity>>
+    fun getMasterExerciseList(): List<ExerciseMasterEntity>
 
     @Query("SELECT * FROM ${ExerciseMasterEntity.TABLE_NAME} WHERE id = :masterIndex")
     suspend fun getMasterExercise(masterIndex: Int): ExerciseMasterEntity
@@ -57,16 +57,16 @@ interface WorkoutDao {
     }
 
     @Query("SELECT * FROM ${WorkoutSetEntity.TABLE_NAME} WHERE name = :workoutSetName")
-    fun getWorkoutSet(workoutSetName: String): Flow<WorkoutSetEntity>
+    suspend fun getWorkoutSet(workoutSetName: String): WorkoutSetEntity
 
     @Query("SELECT * FROM ${WorkoutSetEntity.TABLE_NAME}")
-    fun getAllWorkoutSet(): Flow<List<WorkoutSetEntity>>
+    suspend fun getAllWorkoutSet(): List<WorkoutSetEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun setActiveWorkoutSet(activeSet: ActiveSet)
 
     @Query("SELECT setName FROM ${ActiveSet.TABLE_NAME}")
-    fun getActiveWorkoutSet(): Flow<String?>
+    suspend fun getActiveWorkoutSet(): String?
 
 }
 
