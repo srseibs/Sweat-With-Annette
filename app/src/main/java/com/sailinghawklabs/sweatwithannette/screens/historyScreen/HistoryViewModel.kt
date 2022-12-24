@@ -61,7 +61,7 @@ class HistoryViewModel @Inject constructor(
 
     private fun getAllWorkouts() {
         viewModelScope.launch {
-            repository.getWorkoutHistory().let { workoutList ->
+            repository.getWorkoutHistory().collect { workoutList ->
                 workoutHistory = workoutList
             }
         }

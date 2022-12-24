@@ -33,7 +33,7 @@ class WorkoutSetViewModel @Inject constructor(
     }
 
     private fun getWorkoutSets() = viewModelScope.launch {
-        repository.getAllWorkoutSets().let{
+        repository.getAllWorkoutSets().collect{
             workOutSets = it
         }
 
