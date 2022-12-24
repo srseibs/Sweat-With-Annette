@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.navigation.navigation
 import com.sailinghawklabs.sweatwithannette.screens.bmiScreen.BmiScreen
 import com.sailinghawklabs.sweatwithannette.screens.exerciseScreen.ExerciseScreen
 import com.sailinghawklabs.sweatwithannette.screens.finishedScreen.FinishedScreen
@@ -45,10 +46,14 @@ fun Navigation(
         ) {
             ExerciseScreen(
                 goBack = {
-                         navController.navigate(NavigationRoutes.WelcomeScreen.route)
+                    navController.navigate(NavigationRoutes.WelcomeScreen.route){
+                        popUpTo(NavigationRoutes.WelcomeScreen.route){inclusive = true}
+                    }
                 },
                 allDone = {
-                    navController.navigate(NavigationRoutes.FinishedScreen.route)
+                    navController.navigate(NavigationRoutes.FinishedScreen.route){
+                        popUpTo(NavigationRoutes.FinishedScreen.route){inclusive = true}
+                    }
                 }
             )
         }
