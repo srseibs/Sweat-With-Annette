@@ -67,11 +67,11 @@ interface WorkoutDao {
     suspend fun setActiveWorkoutSet(activeSet: ActiveSet)
 
     @Query("SELECT setName FROM ${ActiveSet.TABLE_NAME}")
-    fun getActiveWorkoutSet(): String?
+    fun getActiveWorkoutSet(): Flow<List<String?>>
 
 }
 
-//     val date: String,
+//    val date: String,
 //    val setName: String,
 //    val complete: Boolean,
 //

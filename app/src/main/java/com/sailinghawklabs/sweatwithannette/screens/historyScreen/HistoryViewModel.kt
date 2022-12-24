@@ -32,8 +32,8 @@ class HistoryViewModel @Inject constructor(
 
     private fun getWorkoutSetName() {
         viewModelScope.launch {
-            repository.getActiveWorkoutSetName().let {
-                workoutSetName = it
+            repository.getActiveWorkoutSetName().collect {
+                workoutSetName = it[0]
             }
         }
     }

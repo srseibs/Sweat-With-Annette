@@ -19,12 +19,13 @@ import com.sailinghawklabs.sweatwithannette.util.DefaultExerciseList
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class WorkoutHistoryRepositoryImpl @Inject constructor(
-    val dao: WorkoutDao,
+    private val dao: WorkoutDao,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default,
 ) : WorkoutRepository {
 
@@ -37,7 +38,7 @@ class WorkoutHistoryRepositoryImpl @Inject constructor(
         addWorkoutSet(
             workoutSet = WorkoutSet("Aerobics Only", AerobicOnlyExerciseList)
         )
-        val activeWorkout = getActiveWorkoutSetName()
+        val activeWorkout = getActiveWorkoutSetName().first()
         Log.d("workout", "activeWorkout: $activeWorkout")
         if (activeWorkout.isEmpty()) {
             setActiveWorkoutSetName(DEFAULT_WORKOUT_SET_NAME)
@@ -76,7 +77,7 @@ class WorkoutHistoryRepositoryImpl @Inject constructor(
 
     override suspend fun deleteWorkoutSet(workoutSetName: String) = withContext(defaultDispatcher) {
         // remove this from the selected, and replace with DEFAULT, if needed
-        val activeWorkoutName = getActiveWorkoutSetName()
+        val activeWorkoutName = getActiveWorkoutSetName().first()[0]
         if (activeWorkoutName == workoutSetName) {
             setActiveWorkoutSetName(DEFAULT_WORKOUT_SET_NAME)
         }
@@ -90,8 +91,10 @@ class WorkoutHistoryRepositoryImpl @Inject constructor(
             dao.setActiveWorkoutSet(ActiveSet(setName = workoutSetName))
         }
 
-    override suspend fun getActiveWorkoutSetName() = withContext(defaultDispatcher) {
-        dao.getActiveWorkoutSet() ?: ""
+    override suspend fun getActiveWorkoutSetName(): Flow<List<String>> = withContext(defaultDispatcher) {
+        dao.getActiveWorkoutSet().map {list ->
+            list.map { it ?: "" }
+        }
     }
 
     override suspend fun getAllWorkoutSets(): Flow<List<WorkoutSet>> =

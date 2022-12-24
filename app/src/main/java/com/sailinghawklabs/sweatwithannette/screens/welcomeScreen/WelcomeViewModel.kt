@@ -22,8 +22,8 @@ class WelcomeViewModel @Inject constructor(
     init {
         setupEmptyDatabase()
         viewModelScope.launch {
-            repository.getActiveWorkoutSetName().let {
-                workoutSetName = it ?: "null"
+            repository.getActiveWorkoutSetName().collect {
+                workoutSetName = it[0]
                 Log.d("WelcomeViewModel", "workoutSetName: $it")
             }
         }
