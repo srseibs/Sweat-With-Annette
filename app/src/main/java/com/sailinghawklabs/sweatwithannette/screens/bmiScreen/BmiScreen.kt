@@ -240,7 +240,8 @@ fun BmiScreenContent(
         if (bmiDiagnosis != NullBmiDiagnosis && bmiValue != NullBmiString) {
             Text(
                 text = bmiDiagnosis.label,
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Center,
             )
             Text(
                 text = bmiDiagnosis.diagnosis,

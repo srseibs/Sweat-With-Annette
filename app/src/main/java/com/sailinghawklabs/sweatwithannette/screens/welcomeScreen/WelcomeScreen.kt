@@ -48,7 +48,7 @@ fun StartScreen(
 ) {
 
     Log.d("WelcomeScreen", "entered")
-    StartScreenContent(
+    WelcomeScreenContent(
         modifier = modifier,
         onStart = onStart,
         goToBmi = goToBmi,
@@ -59,7 +59,7 @@ fun StartScreen(
 }
 
 @Composable
-fun StartScreenContent(
+fun WelcomeScreenContent(
     modifier: Modifier = Modifier,
     onStart: () -> Unit,
     goToBmi: () -> Unit,
@@ -75,12 +75,16 @@ fun StartScreenContent(
         verticalArrangement = Arrangement.SpaceAround
     ) {
 
+        Log.d("Screen", "WelcomeScreenContent: ")
+        Text("Welcome screen")
+
         val logoState = remember {
             MutableTransitionState(false).apply {
                 // Start the animation immediately.
                 targetState = true
             }
         }
+        Log.d("Screen", "WelcomeScreenContent: selectedWorkout: $selectedWorkout")
 
         AnimatedVisibility(
             visibleState = logoState,
@@ -96,6 +100,7 @@ fun StartScreenContent(
                 contentDescription = "app logo"
             )
         }
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -172,11 +177,7 @@ fun StartScreenContent(
                     )
                 }
             }
-
-
         }
-
-
     }
 }
 
@@ -185,7 +186,7 @@ fun StartScreenContent(
 @Composable
 fun StartScreenPreview() {
     SweatAnnetteTheme {
-        StartScreenContent(
+        WelcomeScreenContent(
             onStart = {},
             goToBmi = {},
             goToHistory = {},

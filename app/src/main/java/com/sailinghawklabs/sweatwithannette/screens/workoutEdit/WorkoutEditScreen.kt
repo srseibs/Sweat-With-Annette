@@ -31,6 +31,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -59,9 +60,10 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun WorkoutEditScreen(
     modifier: Modifier = Modifier,
-    viewModel: WorkoutSetEditViewModel = hiltViewModel(),
+    viewModel: WorkoutEditViewModel = hiltViewModel(),
     goBack: () -> Unit = {},
 ) {
+    Log.d("Screen", "WorkoutEditScreen: ")
     var showSaveAlertDialog by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -73,17 +75,17 @@ fun WorkoutEditScreen(
         }
     }
 
-    if (viewModel.screenMode == WorkoutSetEditViewModel.ScreenMode.DONE) {
-        Log.d("DBG1", "WorkoutEditScreen: DONE -> goBack()")
-        goBack()
-        return
+    LaunchedEffect(key1 = viewModel.screenMode) {
+        if (viewModel.screenMode == WorkoutEditViewModel.ScreenMode.DONE) {
+            Log.d("DBG1", "WorkoutEditScreen: DONE -> goBack()")
+            goBack()
+        }
     }
-
 
     LaunchedEffect(key1 = showSaveAlertDialog) {
         viewModel.errorMessageToUi.collectLatest { message ->
             when (message) {
-                is WorkoutSetEditViewModel.EventToUi.EntryError -> {
+                is WorkoutEditViewModel.EventToUi.EntryError -> {
                     snackbarHostState.showSnackbar(
                         message = message.message,
                         actionLabel = "Dismiss",
@@ -152,7 +154,7 @@ fun WorkoutEditScreenContent(
     showSave: Boolean = true,
     onSavePressed: () -> Unit,
     workoutSet: WorkoutSet,
-    screenMode: WorkoutSetEditViewModel.ScreenMode,
+    screenMode: WorkoutEditViewModel.ScreenMode,
     onNameChanged: (String) -> Unit,
     onDeleteExercise: (index: Int) -> Unit,
     swapExercise: (from: Int, to: Int) -> Unit,
@@ -162,7 +164,7 @@ fun WorkoutEditScreenContent(
 
     Log.d("screenMode", "WorkoutEditScreenContent: $screenMode")
     val titleBarText =
-        if (screenMode == WorkoutSetEditViewModel.ScreenMode.EDIT) {
+        if (screenMode == WorkoutEditViewModel.ScreenMode.EDIT) {
             if (showSave)
                 "Edit Workout (changed)"
             else
@@ -336,7 +338,7 @@ fun WorkoutEditScreenPreview() {
         WorkoutEditScreenContent(
             workoutSet = DemoWorkoutSet1,
             onNameChanged = {},
-            screenMode = WorkoutSetEditViewModel.ScreenMode.EDIT,
+            screenMode = WorkoutEditViewModel.ScreenMode.EDIT,
             swapExercise = { _, _ -> },
             onDeleteExercise = { },
             goBack = {},

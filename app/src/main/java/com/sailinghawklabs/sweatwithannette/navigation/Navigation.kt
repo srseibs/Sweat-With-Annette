@@ -1,18 +1,18 @@
 package com.sailinghawklabs.sweatwithannette.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import androidx.navigation.navigation
 import com.sailinghawklabs.sweatwithannette.screens.bmiScreen.BmiScreen
 import com.sailinghawklabs.sweatwithannette.screens.exerciseScreen.ExerciseScreen
 import com.sailinghawklabs.sweatwithannette.screens.finishedScreen.FinishedScreen
 import com.sailinghawklabs.sweatwithannette.screens.historyScreen.HistoryScreen
 import com.sailinghawklabs.sweatwithannette.screens.welcomeScreen.StartScreen
 import com.sailinghawklabs.sweatwithannette.screens.workoutEdit.WorkoutEditScreen
-import com.sailinghawklabs.sweatwithannette.screens.workoutSetsScreen.WorkoutSetsScreen
+import com.sailinghawklabs.sweatwithannette.screens.workoutsScreen.WorkoutsScreen
 
 @Composable
 fun Navigation(
@@ -22,6 +22,12 @@ fun Navigation(
         navController = navController,
         startDestination = NavigationRoutes.WelcomeScreen.route
     ) {
+
+        navController.addOnDestinationChangedListener{_,destination, _ ->
+            Log.d("Navigation", "Navigation route: ${destination.route}")
+        }
+
+
         composable(
             route = NavigationRoutes.WelcomeScreen.route
         ) {
@@ -96,7 +102,7 @@ fun Navigation(
         composable(
             route = NavigationRoutes.WorkoutSetsScreen.route
         ) {
-            WorkoutSetsScreen(
+            WorkoutsScreen(
                 goBack = {
                     navController.popBackStack()
                 },
@@ -118,8 +124,9 @@ fun Navigation(
         ) { backStackEntry ->
             WorkoutEditScreen(
                 goBack = {
-                    navController.popBackStack()
-                },
+                    navController.navigate(NavigationRoutes.WorkoutSetsScreen.route){
+                        popUpTo(NavigationRoutes.WorkoutSetsScreen.route){inclusive = true}
+                    }                },
             )
         }
     }

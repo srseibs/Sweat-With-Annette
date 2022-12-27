@@ -1,6 +1,5 @@
 package com.sailinghawklabs.sweatwithannette.screens.workoutEdit
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -17,7 +16,7 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class WorkoutSetEditViewModel @Inject constructor(
+class WorkoutEditViewModel @Inject constructor(
     val repository: WorkoutRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {

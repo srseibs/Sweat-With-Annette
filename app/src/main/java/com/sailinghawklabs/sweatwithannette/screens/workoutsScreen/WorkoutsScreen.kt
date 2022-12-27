@@ -1,5 +1,6 @@
-package com.sailinghawklabs.sweatwithannette.screens.workoutSetsScreen
+package com.sailinghawklabs.sweatwithannette.screens.workoutsScreen
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -27,7 +28,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -52,15 +52,20 @@ import com.sailinghawklabs.sweatwithannette.util.DefaultExerciseList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WorkoutSetsScreen(
+fun WorkoutsScreen(
     modifier: Modifier = Modifier,
-    viewModel: WorkoutSetViewModel = hiltViewModel(),
+    viewModel: WorkoutsViewModel = hiltViewModel(),
     goBack: () -> Unit = {},
     goToWorkOutEdit: (String?) -> Unit,
 ) {
 
     val workoutSets = viewModel.workOutSets
     val selectedSetName = viewModel.workoutSetName
+    Log.d("WorkoutsScreen", "selectedSet = $selectedSetName")
+
+    if (selectedSetName.isEmpty()) {
+        return
+    }
 
     Scaffold(
         topBar = {
