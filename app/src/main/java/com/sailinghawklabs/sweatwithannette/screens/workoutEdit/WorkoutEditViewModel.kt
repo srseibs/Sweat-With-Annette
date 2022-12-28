@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sailinghawklabs.sweatwithannette.data.mapper.toExercise
 import com.sailinghawklabs.sweatwithannette.domain.WorkoutRepository
 import com.sailinghawklabs.sweatwithannette.domain.model.emptyWorkoutSet
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -144,6 +145,15 @@ class WorkoutEditViewModel @Inject constructor(
         viewModelScope.launch {
             repository.deleteWorkoutSet(workoutSet.name)
             screenMode = ScreenMode.DONE
+        }
+    }
+
+    fun addExerciseToWorkout(exerciseId: Int) {
+        viewModelScope.launch {
+            val exercise = repository.getMasterExercise(exerciseId).toExercise()
+            workoutSet = workoutSet.copy(
+                exerciseList = workoutSet.exerciseList.toMutableList() + exercise
+            )
         }
     }
 

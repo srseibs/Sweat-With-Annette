@@ -33,7 +33,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -69,7 +68,7 @@ fun WorkoutEditScreen(
 ) {
     Log.d("Screen", "WorkoutEditScreen: ")
     var showSaveAlertDialog by remember { mutableStateOf(false) }
-    var showPickerDialog by remember { mutableStateOf(false)}
+    var showPickerDialog by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
 
     BackHandler {
@@ -120,7 +119,12 @@ fun WorkoutEditScreen(
         ExercisePickerDialog(
             title = "Select Exercises to Add",
             exerciseList = DefaultExerciseList,
-            onSelect = { showPickerDialog = false },
+            onSelect = { exerciseIds ->
+                showPickerDialog = false
+                exerciseIds.forEach {
+                    viewModel.addExerciseToWorkout(it)
+                }
+            },
             onCancel = { showPickerDialog = false }
         )
     }
@@ -375,7 +379,7 @@ fun WorkoutEditScreenPreview() {
             onSavePressed = {},
             snackbarHostState = SnackbarHostState(),
             onDeleteWorkout = {},
-            onShowPickerDialog =  {},
+            onShowPickerDialog = {},
         )
     }
 }
