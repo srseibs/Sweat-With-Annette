@@ -1,7 +1,6 @@
 package com.sailinghawklabs.sweatwithannette.data.local.entity
 
 import androidx.room.TypeConverter
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -15,12 +14,12 @@ class IntListConverters {
 }
 
 
-class ExerciseMasterListConverters {
-
-    @TypeConverter
-    fun fromListExerciseMasterEntity(list: List<ExerciseMasterEntity>) = Json.encodeToString(list)
-
-    @TypeConverter
-    fun toListExerciseMasterEntity(value: String) = Json.decodeFromString<List<ExerciseMasterEntity>>(value)
-
-}
+//class ExerciseMasterListConverters {
+//
+//    @TypeConverter
+//    fun fromListExerciseMasterEntity(list: List<ExerciseMasterEntity>) = Json.encodeToString(list)
+//
+//    @TypeConverter
+//    fun toListExerciseMasterEntity(value: String) = Json.decodeFromString<List<ExerciseMasterEntity>>(value)
+//
+//}

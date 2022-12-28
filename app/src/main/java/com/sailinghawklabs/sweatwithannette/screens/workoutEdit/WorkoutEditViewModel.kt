@@ -1,6 +1,5 @@
 package com.sailinghawklabs.sweatwithannette.screens.workoutEdit
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -104,11 +103,11 @@ class WorkoutEditViewModel @Inject constructor(
 
     }
 
-    fun loadWorkoutSet(workoutName: String) {
+    private fun loadWorkoutSet(workoutName: String) {
         if (workoutName.isNotEmpty()) {
             viewModelScope.launch {
                 repository.getWorkoutSet(workoutName).let {
-                    it?.let {
+                    it.let {
                         workoutSet = it
                         screenMode = ScreenMode.EDIT
                     }
@@ -143,7 +142,7 @@ class WorkoutEditViewModel @Inject constructor(
         showDeleteConfirmation = true
     }
 
-    fun deleteWorkoutSet() {
+    private fun deleteWorkoutSet() {
         if (workoutSet.name == "Default") {
             emitMessage("Default Workout set cannot be deleted. Edit and change the name.")
             return
@@ -163,21 +162,6 @@ class WorkoutEditViewModel @Inject constructor(
             }
             workoutSet = workoutSet.copy(
                 exerciseList = newList
-            )
-        }
-    }
-
-
-    fun addExerciseToWorkout(exerciseId: Int) {
-        viewModelScope.launch {
-            val exercise = repository.getMasterExercise(exerciseId).toExercise()
-            Log.d("WorkoutEditViewModel", "addExercise($exerciseId), ${exercise.id}")
-            workoutSet = workoutSet.copy(
-                exerciseList = workoutSet.exerciseList.toMutableList() + exercise
-            )
-            Log.d(
-                "WorkoutEditViewModel",
-                "addExercise result: ${workoutSet.exerciseList.map { it.id }}"
             )
         }
     }

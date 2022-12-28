@@ -19,7 +19,6 @@ import com.sailinghawklabs.sweatwithannette.domain.model.Exercise
 import com.sailinghawklabs.sweatwithannette.screens.exerciseScreen.components.ExerciseTimer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import java.io.Closeable
 import javax.inject.Inject
