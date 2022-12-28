@@ -185,6 +185,7 @@ fun HistoryScreenPreview() {
     SweatAnnetteTheme {
         HistoryItem(
             workout = Workout(
+                id = 0,
                 date = "Tue 6-Dec-2022 4:09:31 PM",
                 complete = true,
                 setName = "Default Workout"

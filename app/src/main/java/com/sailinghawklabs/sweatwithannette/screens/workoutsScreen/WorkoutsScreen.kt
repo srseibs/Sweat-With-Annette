@@ -75,7 +75,7 @@ fun WorkoutsScreen(
                 ),
                 title = {
                     Text(
-                        text = "Workout Selections",
+                        text = "Workout Manager",
                         style = MaterialTheme.typography.titleLarge
                     )
                 },

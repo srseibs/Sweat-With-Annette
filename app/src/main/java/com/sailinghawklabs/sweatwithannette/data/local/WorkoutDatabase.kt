@@ -5,7 +5,6 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.sailinghawklabs.sweatwithannette.data.local.entity.ActiveSet
 import com.sailinghawklabs.sweatwithannette.data.local.entity.ExerciseMasterEntity
-import com.sailinghawklabs.sweatwithannette.data.local.entity.ExerciseMasterListConverters
 import com.sailinghawklabs.sweatwithannette.data.local.entity.IntListConverters
 import com.sailinghawklabs.sweatwithannette.data.local.entity.WorkoutEntity
 import com.sailinghawklabs.sweatwithannette.data.local.entity.WorkoutSetEntity
@@ -23,7 +22,6 @@ import com.sailinghawklabs.sweatwithannette.data.local.entity.WorkoutSetEntity
 
 @TypeConverters(
     IntListConverters::class,
-    ExerciseMasterListConverters::class
 )
 
 abstract class WorkoutDatabase : RoomDatabase() {

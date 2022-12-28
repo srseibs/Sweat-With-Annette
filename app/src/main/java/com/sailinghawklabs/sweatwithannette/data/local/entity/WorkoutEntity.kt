@@ -6,7 +6,8 @@ import androidx.room.PrimaryKey
 @Entity(tableName = WorkoutEntity.TABLE_NAME)
 data class WorkoutEntity(
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    val id: Long,
     val date: String,
     val setName: String,
     val complete: Boolean,

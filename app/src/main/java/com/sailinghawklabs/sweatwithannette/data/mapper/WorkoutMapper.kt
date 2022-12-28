@@ -7,6 +7,7 @@ import com.sailinghawklabs.sweatwithannette.domain.model.Workout
 
 fun Workout.toWorkoutEntity() =
     WorkoutEntity(
+        id = id,
         date = date,
         complete = complete,
         setName = setName,
@@ -15,6 +16,7 @@ fun Workout.toWorkoutEntity() =
 
 fun WorkoutEntity.toWorkout() =
     Workout(
+        id = id,
         date = date,
         complete = complete,
         setName = setName

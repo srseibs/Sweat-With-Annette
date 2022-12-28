@@ -23,7 +23,7 @@ interface WorkoutDao {
     @Delete
     suspend fun deleteWorkout(history: WorkoutEntity)
 
-    @Query("SELECT * FROM ${WorkoutEntity.TABLE_NAME} ORDER BY date DESC")
+    @Query("SELECT * FROM ${WorkoutEntity.TABLE_NAME}")
     fun fetchAllWorkouts(): Flow<List<WorkoutEntity>>
 
 

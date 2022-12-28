@@ -51,6 +51,7 @@ class HistoryViewModel @Inject constructor(
         viewModelScope.launch {
             repository.addToWorkoutHistory(
                 Workout(
+                    id = 0,
                     date = current,
                     complete = completed,
                     setName = workoutSetName
