@@ -1,10 +1,6 @@
 package com.sailinghawklabs.sweatwithannette.screens.exerciseScreen.components
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.SpringSpec
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -109,7 +105,7 @@ fun ExercisePickerDialog(
 
                                     Crossfade(
                                         targetState = isSelected,
-                                    ) {isSelected ->
+                                    ) { isSelected ->
                                         if (isSelected) {
                                             Icon(
                                                 modifier = Modifier.size(48.dp),
@@ -152,16 +148,19 @@ fun ExercisePickerDialog(
                             .padding(16.dp),
                         horizontalArrangement = Arrangement.End,
                     ) {
-                        Button(onClick = { onCancel() }) {
+                        Button(
+                            onClick = { onCancel() })
+                        {
                             Text(text = cancelLabel)
                         }
                         Spacer(modifier = Modifier.width(16.dp))
-                        Button(onClick = { /*TODO*/ }) {
+                        Button(
+                            onClick = { onSelect(selections) })
+                        {
                             Text(text = selectLabel)
                         }
                     }
                 }
-
             }
         }
     }
