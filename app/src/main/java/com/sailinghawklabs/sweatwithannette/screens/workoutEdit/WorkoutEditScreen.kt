@@ -14,10 +14,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -51,7 +53,9 @@ import com.sailinghawklabs.sweatwithannette.R
 import com.sailinghawklabs.sweatwithannette.domain.model.Exercise
 import com.sailinghawklabs.sweatwithannette.domain.model.WorkoutSet
 import com.sailinghawklabs.sweatwithannette.screens.exerciseScreen.components.AreYouSureDialog
+import com.sailinghawklabs.sweatwithannette.screens.exerciseScreen.components.ExercisePickerDialog
 import com.sailinghawklabs.sweatwithannette.ui.theme.SweatAnnetteTheme
+import com.sailinghawklabs.sweatwithannette.util.DefaultExerciseList
 import com.sailinghawklabs.sweatwithannette.util.DemoWorkoutSet1
 import com.sailinghawklabs.sweatwithannette.util.dragdrop.DragDropColumn
 import kotlinx.coroutines.flow.collectLatest
@@ -65,6 +69,7 @@ fun WorkoutEditScreen(
 ) {
     Log.d("Screen", "WorkoutEditScreen: ")
     var showSaveAlertDialog by remember { mutableStateOf(false) }
+    var showPickerDialog by remember { mutableStateOf(false)}
     val snackbarHostState = remember { SnackbarHostState() }
 
     BackHandler {
@@ -110,6 +115,16 @@ fun WorkoutEditScreen(
         )
     }
 
+
+    if (showPickerDialog) {
+        ExercisePickerDialog(
+            title = "Select Exercises to Add",
+            exerciseList = DefaultExerciseList,
+            onSelect = { showPickerDialog = false },
+            onCancel = { showPickerDialog = false }
+        )
+    }
+
     if (viewModel.showDeleteConfirmation) {
         AreYouSureDialog(
             title = "Delete Workout?",
@@ -143,6 +158,7 @@ fun WorkoutEditScreen(
         screenMode = viewModel.screenMode,
         swapExercise = viewModel::swapExercises,
         snackbarHostState = snackbarHostState,
+        onShowPickerDialog = { showPickerDialog = true }
     )
 }
 
@@ -157,6 +173,7 @@ fun WorkoutEditScreenContent(
     screenMode: WorkoutEditViewModel.ScreenMode,
     onNameChanged: (String) -> Unit,
     onDeleteExercise: (index: Int) -> Unit,
+    onShowPickerDialog: () -> Unit,
     swapExercise: (from: Int, to: Int) -> Unit,
     snackbarHostState: SnackbarHostState,
     onDeleteWorkout: () -> Unit,
@@ -174,6 +191,19 @@ fun WorkoutEditScreenContent(
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
+
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { onShowPickerDialog() },
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                    contentDescription = "Add Exercise",
+                )
+            }
+        },
 
         topBar = {
             TopAppBar(
@@ -345,6 +375,7 @@ fun WorkoutEditScreenPreview() {
             onSavePressed = {},
             snackbarHostState = SnackbarHostState(),
             onDeleteWorkout = {},
+            onShowPickerDialog =  {},
         )
     }
 }

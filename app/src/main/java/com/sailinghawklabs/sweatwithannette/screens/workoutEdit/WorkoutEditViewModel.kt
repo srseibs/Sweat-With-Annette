@@ -119,7 +119,6 @@ class WorkoutEditViewModel @Inject constructor(
         showSaveButton = true
     }
 
-
     fun deletionDialogConfirmed() {
         showDeleteConfirmation = false
         deleteWorkoutSet()
