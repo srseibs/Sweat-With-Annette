@@ -13,8 +13,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
@@ -28,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -72,11 +75,8 @@ fun WelcomeScreenContent(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primaryContainer),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceAround
+        verticalArrangement = Arrangement.Bottom
     ) {
-
-        Log.d("Screen", "WelcomeScreenContent: ")
-        Text("Welcome screen")
 
         val logoState = remember {
             MutableTransitionState(false).apply {
@@ -84,17 +84,18 @@ fun WelcomeScreenContent(
                 targetState = true
             }
         }
-        Log.d("Screen", "WelcomeScreenContent: selectedWorkout: $selectedWorkout")
 
         AnimatedVisibility(
+            modifier = Modifier.fillMaxHeight().weight(1f),
             visibleState = logoState,
-            enter = fadeIn(animationSpec = tween(2000))
-                    + slideInHorizontally(animationSpec = tween(2000))
-                    + expandIn(animationSpec = tween(2000)),
+            enter = fadeIn(animationSpec = tween(1500))
+                    + slideInHorizontally(animationSpec = tween(1000)),
 
             ) {
             Image(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth(),
+
                 contentScale = ContentScale.FillWidth,
                 painter = painterResource(id = R.drawable.start_logo),
                 contentDescription = "app logo"
@@ -103,10 +104,11 @@ fun WelcomeScreenContent(
 
         Column(
             modifier = Modifier
+                .padding(32.dp)
                 .fillMaxWidth()
                 .wrapContentHeight(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
+            verticalArrangement = Arrangement.Bottom,
         ) {
 
             Row(

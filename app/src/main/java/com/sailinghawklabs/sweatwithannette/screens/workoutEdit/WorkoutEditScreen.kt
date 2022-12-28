@@ -120,10 +120,11 @@ fun WorkoutEditScreen(
             title = "Select Exercises to Add",
             exerciseList = DefaultExerciseList,
             onSelect = { exerciseIds ->
+                Log.d("WorkoutEditScreen", "pickerList: $exerciseIds")
+
+                    viewModel.addExercisesToWorkout(exerciseIds)
+
                 showPickerDialog = false
-                exerciseIds.forEach {
-                    viewModel.addExerciseToWorkout(it)
-                }
             },
             onCancel = { showPickerDialog = false }
         )
@@ -240,7 +241,6 @@ fun WorkoutEditScreenContent(
                         onClick = onDeleteWorkout,
                     ) {
                         Icon(
-
                             imageVector = Icons.Default.Delete,
                             contentDescription = "Delete WorkoutSet"
                         )
@@ -261,7 +261,8 @@ fun WorkoutEditScreenContent(
                 modifier = Modifier.fillMaxWidth(),
                 value = workoutSet.name,
                 onValueChange = { onNameChanged(it) },
-                label = { Text("Workout Name") }
+                label = { Text("Workout Name") },
+                placeholder = { Text("<enter a workout name>") }
             )
             Spacer(modifier = Modifier.height(16.dp))
 

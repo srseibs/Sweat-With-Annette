@@ -155,7 +155,7 @@ fun ExercisePickerDialog(
                         }
                         Spacer(modifier = Modifier.width(16.dp))
                         Button(
-                            onClick = { onSelect(selections) })
+                            onClick = { onSelect(selections.toList()) })
                         {
                             Text(text = selectLabel)
                         }

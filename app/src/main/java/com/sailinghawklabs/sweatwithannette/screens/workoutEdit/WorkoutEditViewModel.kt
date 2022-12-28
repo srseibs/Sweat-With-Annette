@@ -1,5 +1,6 @@
 package com.sailinghawklabs.sweatwithannette.screens.workoutEdit
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -72,6 +73,11 @@ class WorkoutEditViewModel @Inject constructor(
 
         if (workoutSet.name == "Default") {
             emitMessage("Default Workout set cannot be changed. Enter another name.")
+            return
+        }
+
+        if (workoutSet.exerciseList.isEmpty()) {
+            emitMessage("Workout must contain at least one exercise. Add exercises.")
             return
         }
 
@@ -148,11 +154,30 @@ class WorkoutEditViewModel @Inject constructor(
         }
     }
 
+    fun addExercisesToWorkout(exerciseIds: List<Int>) {
+        viewModelScope.launch {
+            val newList = workoutSet.exerciseList.toMutableList()
+            exerciseIds.forEach { newId ->
+                val exercise = repository.getMasterExercise(newId).toExercise()
+                newList.add(exercise)
+            }
+            workoutSet = workoutSet.copy(
+                exerciseList = newList
+            )
+        }
+    }
+
+
     fun addExerciseToWorkout(exerciseId: Int) {
         viewModelScope.launch {
             val exercise = repository.getMasterExercise(exerciseId).toExercise()
+            Log.d("WorkoutEditViewModel", "addExercise($exerciseId), ${exercise.id}")
             workoutSet = workoutSet.copy(
                 exerciseList = workoutSet.exerciseList.toMutableList() + exercise
+            )
+            Log.d(
+                "WorkoutEditViewModel",
+                "addExercise result: ${workoutSet.exerciseList.map { it.id }}"
             )
         }
     }
