@@ -63,7 +63,7 @@ class HistoryViewModel @Inject constructor(
     private fun getAllWorkouts() {
         viewModelScope.launch {
             repository.getWorkoutHistory().collect { workoutList ->
-                workoutHistory = workoutList
+                workoutHistory = workoutList.sortedByDescending { it.id }
             }
         }
     }
