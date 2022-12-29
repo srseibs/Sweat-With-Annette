@@ -29,8 +29,13 @@ I recently used this app from that course as a vehicle to practice what I have l
   * TextToSpeech
   * MediaPlayer for sound effects
   * Timer (which will now Pause when deciding to abort a workout)
-- _**Workout Sets**_ created to allow custom subsets of the master list of exercises.
-- Created Unit tests for BMI Diagnoses and Instrumented tests for Room database
+- _**Custom Workouts**_ created to allow custom subsets of the master list of exercises.
+  * Drag-to-reorder in Lazy list
+  * ViewModel-based validation of field edits
+  * Active workout, custom lists stored in Room database
+- Created some tests
+  * Unit tests for BMI Diagnoses 
+  * Instrumented tests for Room database
 
   
 
