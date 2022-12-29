@@ -16,6 +16,9 @@ I recently used this app from that course as a vehicle to practice what I have l
 - _**Material 3**_ design was used.
   * A custom color scheme is implemented and applied logically throughout the app.
 - Single Activity was used, no fragments
+- _**Custom Workout**_ manager/creator/editor
+  * Drag-to-reorder in Lazy list
+  * ViewModel-based validation of field edits
 - All dependencies brought up to date (as of December 1, 2022)
 - _**Navigation**_ is used to go between the screens.
 - _**Dagger/Hilt**_ is used to:
