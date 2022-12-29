@@ -26,7 +26,6 @@ interface WorkoutDao {
     @Query("SELECT * FROM ${WorkoutEntity.TABLE_NAME}")
     fun fetchAllWorkouts(): Flow<List<WorkoutEntity>>
 
-
     // Master list of Exercises ---------------------------------------------------
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun setMasterExerciseList(masterExercises: List<ExerciseMasterEntity>)
@@ -70,32 +69,3 @@ interface WorkoutDao {
     fun getActiveWorkoutSet(): Flow<List<String?>>
 
 }
-
-//    val date: String,
-//    val setName: String,
-//    val complete: Boolean,
-//
-//
-//) {
-//    companion object {
-//        const val TABLE_NAME = "WorkoutTable"
-
-// WorkoutTable
-// Date                     setName            complete
-// 12-Dec-2022 10:11:12 PM   "Mike's Quickie"   true
-// 12-Dec-2022 10:54:00 PM   "Mike's Quickie"   true
-// 12-Dec-2022 11:33:12 PM   "Default"          false
-
-//ExerciseMasterTable  - how to prepopulate?
-//Id   Name               Image
-// 1    "Jumping Jacks"    R.id.bbb
-// 2    "Lunge"            R.id.xxx
-// 3    "Jump"             R.id.xxx
-// 4    "Situp"            R.id.xxx
-// 5    "Push UP"          R.id.xxx
-//
-//
-//WorkoutSetsTable  - Lists in room need to use DataConverter and GSON
-//Id  Name                Exercises
-// 1  "Default"           1,2,3,4,5
-// 2  "Mike's Quickie"    4,1,3

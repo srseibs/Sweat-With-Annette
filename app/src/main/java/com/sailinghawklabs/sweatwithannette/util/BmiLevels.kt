@@ -60,5 +60,10 @@ val BmiLevels = listOf<BmiDiagnosis>(
     )
 )
 
-fun diagnoseBmi(bmiValue: Float) =
-    BmiLevels.first { bmiValue < it.bmiLessThan }
+fun diagnoseBmi(bmiValue: Float): BmiDiagnosis {
+
+    var limitedBmiValue = minOf(bmiValue, RidiculouslyLargeBmi)
+    limitedBmiValue = maxOf(limitedBmiValue, 0f)
+
+    return BmiLevels.first { limitedBmiValue < it.bmiLessThan }
+}
