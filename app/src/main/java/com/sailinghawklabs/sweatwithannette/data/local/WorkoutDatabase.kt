@@ -6,13 +6,13 @@ import androidx.room.TypeConverters
 import com.sailinghawklabs.sweatwithannette.data.local.entity.ActiveSet
 import com.sailinghawklabs.sweatwithannette.data.local.entity.ExerciseMasterEntity
 import com.sailinghawklabs.sweatwithannette.data.local.entity.IntListConverters
+import com.sailinghawklabs.sweatwithannette.data.local.entity.SessionEntity
 import com.sailinghawklabs.sweatwithannette.data.local.entity.WorkoutEntity
-import com.sailinghawklabs.sweatwithannette.data.local.entity.WorkoutSetEntity
 
 @Database(
     entities = [
+        SessionEntity::class,
         WorkoutEntity::class,
-        WorkoutSetEntity::class,
         ExerciseMasterEntity::class,
         ActiveSet::class,
     ],

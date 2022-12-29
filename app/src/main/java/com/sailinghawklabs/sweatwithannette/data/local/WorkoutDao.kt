@@ -8,23 +8,23 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.sailinghawklabs.sweatwithannette.data.local.entity.ActiveSet
 import com.sailinghawklabs.sweatwithannette.data.local.entity.ExerciseMasterEntity
+import com.sailinghawklabs.sweatwithannette.data.local.entity.SessionEntity
 import com.sailinghawklabs.sweatwithannette.data.local.entity.WorkoutEntity
-import com.sailinghawklabs.sweatwithannette.data.local.entity.WorkoutSetEntity
 import kotlinx.coroutines.flow.Flow
 
 
 @Dao
 interface WorkoutDao {
 
-    // Workout History ----------------------------------------------------------
+    // Session History ----------------------------------------------------------
     @Insert
-    suspend fun insertWorkout(history: WorkoutEntity)
+    suspend fun insertSession(history: SessionEntity)
 
     @Delete
-    suspend fun deleteWorkout(history: WorkoutEntity)
+    suspend fun deleteWorkout(history: SessionEntity)
 
-    @Query("SELECT * FROM ${WorkoutEntity.TABLE_NAME}")
-    fun fetchAllWorkouts(): Flow<List<WorkoutEntity>>
+    @Query("SELECT * FROM ${SessionEntity.TABLE_NAME}")
+    fun fetchAllWorkouts(): Flow<List<SessionEntity>>
 
     // Master list of Exercises ---------------------------------------------------
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -39,33 +39,33 @@ interface WorkoutDao {
     @Query("DELETE FROM ${ExerciseMasterEntity.TABLE_NAME}")
     suspend fun deleteMasterExerciseList()
 
-    // Custom workout sets -------------------------------------------------------
+    // Custom workouts -------------------------------------------------------
     @Insert
-    suspend fun insertWorkoutSet(workoutSet: WorkoutSetEntity)
+    suspend fun insertWorkout(workoutSet: WorkoutEntity)
 
-    @Query("DELETE FROM ${WorkoutSetEntity.TABLE_NAME} WHERE name = :workoutSetName")
-    suspend fun deleteWorkoutSet(workoutSetName: String)
+    @Query("DELETE FROM ${WorkoutEntity.TABLE_NAME} WHERE name = :workoutName")
+    suspend fun deleteWorkout(workoutName: String)
 
-    @Query("UPDATE ${WorkoutSetEntity.TABLE_NAME} SET exercises = :exercises WHERE name = :workoutName")
-    suspend fun updateWorkoutSet(workoutName: String, exercises: List<Int>): Int
+    @Query("UPDATE ${WorkoutEntity.TABLE_NAME} SET exercises = :exercises WHERE name = :workoutName")
+    suspend fun updateWorkout(workoutName: String, exercises: List<Int>): Int
 
     @Transaction
-    suspend fun addOrUpdateWorkOutSet(workoutSet: WorkoutSetEntity) {
-        if (updateWorkoutSet(workoutSet.name, workoutSet.exercises) == 0) {
-            insertWorkoutSet(workoutSet)
+    suspend fun addOrUpdateWorkout(workoutEntity: WorkoutEntity) {
+        if (updateWorkout(workoutEntity.name, workoutEntity.exercises) == 0) {
+            insertWorkout(workoutEntity)
         }
     }
 
-    @Query("SELECT * FROM ${WorkoutSetEntity.TABLE_NAME} WHERE name = :workoutSetName")
-    suspend fun getWorkoutSet(workoutSetName: String): WorkoutSetEntity
+    @Query("SELECT * FROM ${WorkoutEntity.TABLE_NAME} WHERE name = :workoutName")
+    suspend fun getWorkout(workoutName: String): WorkoutEntity
 
-    @Query("SELECT * FROM ${WorkoutSetEntity.TABLE_NAME}")
-    fun getAllWorkoutSet(): Flow<List<WorkoutSetEntity>>
+    @Query("SELECT * FROM ${WorkoutEntity.TABLE_NAME}")
+    fun getAllWorkouts(): Flow<List<WorkoutEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun setActiveWorkoutSet(activeSet: ActiveSet)
+    suspend fun setActiveWorkout(activeSet: ActiveSet)
 
     @Query("SELECT setName FROM ${ActiveSet.TABLE_NAME}")
-    fun getActiveWorkoutSet(): Flow<List<String?>>
+    fun getActiveWorkout(): Flow<List<String?>>
 
 }

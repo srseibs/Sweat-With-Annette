@@ -2,25 +2,19 @@
 
 package com.sailinghawklabs.sweatwithannette.data.local
 
-import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
 import com.sailinghawklabs.sweatwithannette.data.local.entity.ActiveSet
-import com.sailinghawklabs.sweatwithannette.data.local.entity.WorkoutEntity
+import com.sailinghawklabs.sweatwithannette.data.local.entity.SessionEntity
 import com.sailinghawklabs.sweatwithannette.data.mapper.toExerciseMasterEntity
 import com.sailinghawklabs.sweatwithannette.util.DefaultExerciseList
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -36,14 +30,14 @@ import javax.inject.Named
 @SmallTest
 class WorkoutDaoTest {
 
-    val dummyWorkoutEntity1 = WorkoutEntity(
+    val dummySessionEntity1 = SessionEntity(
         id = 0,
         date = "Monday, not Tuesday",
         setName = "Basic Workout",
         complete = false,
     )
 
-    val dummyWorkoutEntity2 = WorkoutEntity(
+    val dummySessionEntity2 = SessionEntity(
         id = 0,
         date = "Monday, not Tuesday",
         setName = "Hard Workout",
@@ -83,19 +77,19 @@ class WorkoutDaoTest {
 
     @Test
     fun insertWorkout() = runTest(UnconfinedTestDispatcher()) {
-        workoutDao.insertWorkout(dummyWorkoutEntity1)
-        workoutDao.insertWorkout(dummyWorkoutEntity2)
+        workoutDao.insertSession(dummySessionEntity1)
+        workoutDao.insertSession(dummySessionEntity2)
         val workouts = workoutDao.fetchAllWorkouts().conflate().first()
-        assertThat(workouts[0].date).isEqualTo(dummyWorkoutEntity1.date)
-        assertThat(workouts[0].setName).isEqualTo(dummyWorkoutEntity1.setName)
-        assertThat(workouts[1].date).isEqualTo(dummyWorkoutEntity2.date)
-        assertThat(workouts[1].setName).isEqualTo(dummyWorkoutEntity2.setName)
+        assertThat(workouts[0].date).isEqualTo(dummySessionEntity1.date)
+        assertThat(workouts[0].setName).isEqualTo(dummySessionEntity1.setName)
+        assertThat(workouts[1].date).isEqualTo(dummySessionEntity2.date)
+        assertThat(workouts[1].setName).isEqualTo(dummySessionEntity2.setName)
     }
 
     @Test
     fun deleteWorkout() = runTest(UnconfinedTestDispatcher()) {
-        workoutDao.insertWorkout(dummyWorkoutEntity1)
-        workoutDao.insertWorkout(dummyWorkoutEntity2)
+        workoutDao.insertSession(dummySessionEntity1)
+        workoutDao.insertSession(dummySessionEntity2)
         val workouts = workoutDao.fetchAllWorkouts().conflate().first()
         assertWithMessage("Inserted two").that(workouts.size).isEqualTo(2)
 
@@ -104,8 +98,8 @@ class WorkoutDaoTest {
 
         assertWithMessage("After deleting 1").that(workouts2.size).isEqualTo(1)
 
-        assertThat(workouts2[0].date).isEqualTo(dummyWorkoutEntity1.date)
-        assertThat(workouts2[0].setName).isEqualTo(dummyWorkoutEntity1.setName)
+        assertThat(workouts2[0].date).isEqualTo(dummySessionEntity1.date)
+        assertThat(workouts2[0].setName).isEqualTo(dummySessionEntity1.setName)
     }
 
     @Test
@@ -126,8 +120,8 @@ class WorkoutDaoTest {
 
     @Test
     fun setChangeActiveWorkoutSet() = runTest(UnconfinedTestDispatcher()) {
-        workoutDao.setActiveWorkoutSet(dummyActiveSet1)
-        var activeSetReadback = workoutDao.getActiveWorkoutSet().conflate().first()
+        workoutDao.setActiveWorkout(dummyActiveSet1)
+        var activeSetReadback = workoutDao.getActiveWorkout().conflate().first()
         assertWithMessage("Set and readback Active Set")
             .that(activeSetReadback[0]).isEqualTo(dummyActiveSet1.setName)
     }
