@@ -27,6 +27,7 @@ I recently used this app from that course as a vehicle to practice what I have l
   * MediaPlayer for sound effects
   * Timer (which will now Pause when deciding to abort a workout)
 - _**Workout Sets**_ created to allow custom subsets of the master list of exercises.
+- Created Unit tests for BMI Diagnoses and Instrumented tests for Room database
 
   
 
