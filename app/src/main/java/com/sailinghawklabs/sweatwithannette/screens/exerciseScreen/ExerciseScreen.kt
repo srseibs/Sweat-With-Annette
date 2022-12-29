@@ -1,6 +1,5 @@
 package com.sailinghawklabs.sweatwithannette.screens.exerciseScreen
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
@@ -70,8 +69,8 @@ fun ExerciseScreen(
     if (showAlertDialog) {
         viewModel.pauseTimer()
         AreYouSureDialog(
-            title = "Quit Exercises?",
-            detail = "Are you sure you want to abandon your exercise?",
+            title = "Quit Workout?",
+            detail = "Are you sure you want to abandon your workout?",
             onConfirm = {
                 showAlertDialog = false
                 finishedViewModel.addWorkoutToDatabase(false)
@@ -117,7 +116,7 @@ fun ExerciseScreen(
         timeDuration = viewModel.timeDuration.value,
         numExercises = viewModel.exerciseList.size,
         exercisesComplete = viewModel.exercisesComplete,
-        setName = "Workout Set: ${viewModel.workoutSetName}",
+        workoutTitle = "Workout: ${viewModel.workoutSetName}",
     )
 
 }
@@ -135,10 +134,8 @@ fun ExerciseScreenContent(
     textValue: String,
     numExercises: Int,
     exercisesComplete: Int,
-    setName: String = "Workout Set : Default",
+    workoutTitle: String = "Workout: Default",
 ) {
-    Log.d("Screen", "ExerciseScreen: ")
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -147,7 +144,7 @@ fun ExerciseScreenContent(
                 ),
                 title = {
                     Text(
-                        text = setName,
+                        text = workoutTitle,
                         style = MaterialTheme.typography.titleLarge
                     )
                 },

@@ -78,7 +78,7 @@ fun HistoryScreen(
                 ),
                 title = {
                     Text(
-                        text = "Exercise History",
+                        text = "Workout History",
                         style = MaterialTheme.typography.titleLarge
                     )
                 },
