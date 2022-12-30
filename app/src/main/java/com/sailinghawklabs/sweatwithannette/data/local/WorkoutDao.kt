@@ -16,9 +16,9 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface WorkoutDao {
 
-    // Session History ----------------------------------------------------------
+    // Workout Session History ----------------------------------------------------------
     @Insert
-    suspend fun insertSession(history: SessionEntity)
+    suspend fun insertWorkoutSession(history: SessionEntity)
 
     @Delete
     suspend fun deleteWorkout(history: SessionEntity)
@@ -66,6 +66,6 @@ interface WorkoutDao {
     suspend fun setActiveWorkout(activeSet: ActiveSet)
 
     @Query("SELECT setName FROM ${ActiveSet.TABLE_NAME}")
-    fun getActiveWorkout(): Flow<List<String?>>
+    fun getActiveWorkout(): Flow<String?>
 
 }

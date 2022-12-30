@@ -1,6 +1,5 @@
 package com.sailinghawklabs.sweatwithannette.screens.workoutsScreen
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -9,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.sailinghawklabs.sweatwithannette.domain.WorkoutRepository
 import com.sailinghawklabs.sweatwithannette.domain.model.WorkoutSet
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,7 +34,7 @@ class WorkoutsViewModel @Inject constructor(
     }
 
     private fun getWorkoutSets() = viewModelScope.launch {
-        repository.getAllWorkoutSets().collect{
+        repository.getAllWorkoutSets().collect {
             workOutSets = it
         }
 
@@ -46,10 +46,6 @@ class WorkoutsViewModel @Inject constructor(
     }
 
     private fun getWorkoutSetName() = viewModelScope.launch {
-        repository.getActiveWorkoutSetName().collect {it ->
-            Log.d("WorkoutsViewModel", "getWorkoutSetName: $it")
-            val newName = it[0]
-            workoutSetName = newName
-        }
+        workoutSetName = repository.getActiveWorkoutSetName().first()
     }
 }

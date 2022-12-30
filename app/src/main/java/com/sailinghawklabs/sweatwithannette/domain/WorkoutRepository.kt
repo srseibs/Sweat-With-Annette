@@ -28,6 +28,6 @@ interface WorkoutRepository {
     suspend fun getWorkoutSet(workoutSetName: String): WorkoutSet
     // ... active set
     suspend fun setActiveWorkoutSetName(workoutSetName: String)
-    suspend fun getActiveWorkoutSetName(): Flow<List<String>>
+    suspend fun getActiveWorkoutSetName(): Flow<String>
 
 }

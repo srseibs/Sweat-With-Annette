@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.sailinghawklabs.sweatwithannette.domain.WorkoutRepository
 import com.sailinghawklabs.sweatwithannette.domain.model.Workout
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -15,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HistoryViewModel @Inject constructor(
-    private val repository:WorkoutRepository,
+    private val repository: WorkoutRepository,
 ) : ViewModel() {
 
 
@@ -32,9 +33,7 @@ class HistoryViewModel @Inject constructor(
 
     private fun getWorkoutSetName() {
         viewModelScope.launch {
-            repository.getActiveWorkoutSetName().collect {
-                workoutSetName = it[0]
-            }
+            workoutSetName = repository.getActiveWorkoutSetName().first()
         }
     }
 

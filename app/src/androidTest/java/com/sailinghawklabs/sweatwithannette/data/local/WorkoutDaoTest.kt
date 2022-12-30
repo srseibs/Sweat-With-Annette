@@ -77,8 +77,8 @@ class WorkoutDaoTest {
 
     @Test
     fun insertWorkout() = runTest(UnconfinedTestDispatcher()) {
-        workoutDao.insertSession(dummySessionEntity1)
-        workoutDao.insertSession(dummySessionEntity2)
+        workoutDao.insertWorkoutSession(dummySessionEntity1)
+        workoutDao.insertWorkoutSession(dummySessionEntity2)
         val workouts = workoutDao.fetchAllWorkouts().conflate().first()
         assertThat(workouts[0].date).isEqualTo(dummySessionEntity1.date)
         assertThat(workouts[0].setName).isEqualTo(dummySessionEntity1.setName)
@@ -88,8 +88,8 @@ class WorkoutDaoTest {
 
     @Test
     fun deleteWorkout() = runTest(UnconfinedTestDispatcher()) {
-        workoutDao.insertSession(dummySessionEntity1)
-        workoutDao.insertSession(dummySessionEntity2)
+        workoutDao.insertWorkoutSession(dummySessionEntity1)
+        workoutDao.insertWorkoutSession(dummySessionEntity2)
         val workouts = workoutDao.fetchAllWorkouts().conflate().first()
         assertWithMessage("Inserted two").that(workouts.size).isEqualTo(2)
 
@@ -121,9 +121,9 @@ class WorkoutDaoTest {
     @Test
     fun setChangeActiveWorkoutSet() = runTest(UnconfinedTestDispatcher()) {
         workoutDao.setActiveWorkout(dummyActiveSet1)
-        var activeSetReadback = workoutDao.getActiveWorkout().conflate().first()
+        val activeSetReadback = workoutDao.getActiveWorkout().conflate().first()
         assertWithMessage("Set and readback Active Set")
-            .that(activeSetReadback[0]).isEqualTo(dummyActiveSet1.setName)
+            .that(activeSetReadback).isEqualTo(dummyActiveSet1.setName)
     }
 
 }

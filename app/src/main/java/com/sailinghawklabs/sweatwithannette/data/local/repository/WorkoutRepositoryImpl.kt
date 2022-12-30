@@ -20,6 +20,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -48,7 +49,7 @@ class WorkoutHistoryRepositoryImpl @Inject constructor(
 
     // Workout history functions ---------------------------------------------------------
     override suspend fun addToWorkoutHistory(workout: Workout) = withContext(defaultDispatcher) {
-        dao.insertSession(workout.toWorkoutEntity())
+        dao.insertWorkoutSession(workout.toWorkoutEntity())
     }
 
     override suspend fun deleteFromWorkoutHistory(workout: Workout) =
@@ -77,11 +78,10 @@ class WorkoutHistoryRepositoryImpl @Inject constructor(
 
     override suspend fun deleteWorkoutSet(workoutSetName: String) = withContext(defaultDispatcher) {
         // remove this from the selected, and replace with DEFAULT, if needed
-        val activeWorkoutName = getActiveWorkoutSetName().first()[0]
+        val activeWorkoutName = getActiveWorkoutSetName().first()
         if (activeWorkoutName == workoutSetName) {
             setActiveWorkoutSetName(DEFAULT_WORKOUT_SET_NAME)
         }
-
         dao.deleteWorkout(workoutSetName)
     }
 
@@ -91,10 +91,8 @@ class WorkoutHistoryRepositoryImpl @Inject constructor(
             dao.setActiveWorkout(ActiveSet(setName = workoutSetName))
         }
 
-    override suspend fun getActiveWorkoutSetName(): Flow<List<String>> = withContext(defaultDispatcher) {
-        dao.getActiveWorkout().map {list ->
-            list.map { it ?: "" }
-        }
+    override suspend fun getActiveWorkoutSetName() = flow() {
+        dao.getActiveWorkout().collect { emit(it ?: "") }
     }
 
     override suspend fun getAllWorkoutSets(): Flow<List<WorkoutSet>> =

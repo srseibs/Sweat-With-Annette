@@ -1,6 +1,5 @@
 package com.sailinghawklabs.sweatwithannette.screens.welcomeScreen
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -23,8 +22,7 @@ class WelcomeViewModel @Inject constructor(
         setupEmptyDatabase()
         viewModelScope.launch {
             repository.getActiveWorkoutSetName().collect {
-                workoutSetName = it[0]
-                Log.d("WelcomeViewModel", "workoutSetName: $it")
+                workoutSetName = it
             }
         }
     }

@@ -19,6 +19,7 @@ import com.sailinghawklabs.sweatwithannette.domain.model.Exercise
 import com.sailinghawklabs.sweatwithannette.screens.exerciseScreen.components.ExerciseTimer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.io.Closeable
 import javax.inject.Inject
@@ -208,22 +209,20 @@ class ExerciseViewModel @Inject constructor(
     }
 
     private fun getExerciseList() {
-        // repository.getExerciseList() eventually
         viewModelScope.launch {
-            repository.getActiveWorkoutSetName().collect { flowList ->
-                val activeWorkoutSetName = flowList[0]
-                if (activeWorkoutSetName.isEmpty()) {
-                    throw Exception("Workout Set name is empty.")
-                }
-                repository.getWorkoutSet(activeWorkoutSetName).let {
-                    exerciseList = it.exerciseList
-                    workoutSetName = activeWorkoutSetName
-                    resetState()
-                    advanceToNextState()
-                }
+            val activeWorkoutName = repository.getActiveWorkoutSetName().first()
+            if (activeWorkoutName.isEmpty()) {
+                throw Exception("Workout Set name is empty.")
+            }
+            repository.getWorkoutSet(activeWorkoutName).let {
+                exerciseList = it.exerciseList
+                workoutSetName = activeWorkoutName
+                resetState()
+                advanceToNextState()
             }
         }
     }
+
 
     fun stopBackground() {
         Log.d("ExerciseViewModel", "stopBackground")
